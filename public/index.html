@@ -4,19 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Gym">
-<meta name="theme-color" content="#111111">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link rel="stylesheet" href="/style.css">
 <title>Gym</title>
-<style>
-  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-       background:#111;color:#fff;font-family:-apple-system,system-ui,sans-serif;text-align:center}
-  h1{font-size:2rem;margin:0 0 .5rem} p{color:#aaa;margin:0}
-</style>
 </head>
 <body>
-  <main>
-    <h1>Gym</h1>
-    <p>La app está publicada y funciona.</p>
-  </main>
+<main id="view"></main>
+<div id="restbar"></div>
+<nav id="tabs"></nav>
+<script src="/routines.js"></script>
+<script src="/app.js"></script>
 </body>
 </html>

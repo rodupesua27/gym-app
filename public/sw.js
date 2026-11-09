@@ -1,5 +1,5 @@
 // Service worker: primero red (para que los cambios se vean al reabrir), con copia local sin conexión.
-var CACHE = 'gym-v1';
+var CACHE = 'gym-v2';
 
 self.addEventListener('install', function () { self.skipWaiting(); });
 
@@ -17,7 +17,7 @@ self.addEventListener('fetch', function (e) {
   var r = e.request;
   if (r.method !== 'GET' || new URL(r.url).origin !== self.location.origin) return;
   e.respondWith(
-    fetch(r)
+    fetch(new Request(r, { cache: 'no-store' }))
       .then(function (res) {
         if (res && res.ok) {
           var cp = res.clone();

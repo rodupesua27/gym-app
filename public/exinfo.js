@@ -27,7 +27,7 @@ window.EXINFO = {
   ]
  },
  "Elevación frontal con barra (cable)": {
-  "img": null,
+  "img": "frontal_barra_cable",
   "m": [
    "Hombros"
   ],

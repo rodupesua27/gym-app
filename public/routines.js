@@ -1,7 +1,7 @@
 // Rutinas de entrenamiento. Este archivo es la fuente de verdad: Claude lo edita
 // cuando pides un cambio y la app lo recoge al abrirse.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-09d';
+window.ROUTINES_VERSION = '2026-11-09e';
 window.ROUTINES = [
   {
     id: 'd1',

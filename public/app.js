@@ -2,7 +2,7 @@
   'use strict';
 
   const ROUTINES = window.ROUTINES || [];
-  const K = { s: 'gym.sessions', a: 'gym.active', b: 'gym.body' };
+  const K = { s: 'gym.sessions', a: 'gym.active', b: 'gym.body', d: 'gym.diet' };
 
   const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
@@ -10,6 +10,7 @@
   let sessions = load(K.s, []);
   let active = load(K.a, null);
   let body = load(K.b, []);
+  let diet = load(K.d, {});
   let tab = 'registrar';
   let openId = null;
 
@@ -43,6 +44,7 @@
     registrar: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>',
     rutinas: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>',
     progreso: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
+    dieta: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v6a3 3 0 0 0 6 0V3M8 3v18M17 3c-2.2 1.6-3 4.2-3 8h3v10"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
   };
 
@@ -296,6 +298,76 @@
       <div class="row"><button class="btn" data-act="export">Exportar</button><label class="btn" for="imp">Importar</label><input type="file" id="imp" accept="application/json" hidden></div>`;
   }
 
+  // ---------- dieta ----------
+  const OIL_KCAL = 120;
+  function dayDiet() {
+    const k = isoDay(Date.now());
+    if (!diet[k]) diet[k] = {};
+    return diet[k];
+  }
+  function saveDiet() {
+    const ks = Object.keys(diet).sort();
+    while (ks.length > 60) delete diet[ks.shift()];
+    save(K.d, diet);
+  }
+  function dietTotals(day) {
+    const D = window.DIET || { slots: [], options: [] };
+    let eaten = 0, prot = 0, plan = 0;
+    D.slots.forEach(s => {
+      const c = day[s.id];
+      if (!c) return;
+      const o = D.options.find(x => x.id === c.opt);
+      if (!o) return;
+      const k = o.kcal + (c.oil || 0) * OIL_KCAL;
+      plan += k;
+      if (c.done) { eaten += k; prot += o.p; }
+    });
+    return { eaten, prot, plan };
+  }
+  function mealCard(slot, o, c) {
+    const k = o.kcal + (c.oil || 0) * OIL_KCAL;
+    return `<div class="meal ${c.done ? 'done' : ''}">
+      <div class="row between"><b>${esc(o.name)}</b><span class="pill">${thousands(k)} kcal</span></div>
+      <small>${o.p} g proteína · ${o.min} min${c.oil ? ' · +' + c.oil + ' cda aceite' : ''}</small>
+      <ul>${o.ingredients.map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+      <details><summary class="muted">Cómo se hace</summary><p>${esc(o.steps)}</p></details>
+      ${o.note ? `<p class="muted"><small>${esc(o.note)}</small></p>` : ''}
+      <div class="row">
+        <div class="row" style="gap:6px">
+          <button class="btn small" data-act="dietOil" data-slot="${slot}" data-d="-1">−</button>
+          <small>aceite ${c.oil || 0} cda</small>
+          <button class="btn small" data-act="dietOil" data-slot="${slot}" data-d="1">+</button>
+        </div>
+        <button class="btn small ${c.done ? '' : 'accent'}" style="margin-left:auto" data-act="dietDone" data-slot="${slot}">${c.done ? '✓ Comido' : 'Marcar comido'}</button>
+      </div></div>`;
+  }
+  function viewDieta() {
+    const D = window.DIET;
+    const T = window.DIET_TARGET || { kcal: 2900, protein: 120 };
+    if (!D) return '<h1>Dieta</h1><p class="muted">No hay datos de dieta.</p>';
+    const day = dayDiet();
+    const tot = dietTotals(day);
+    const pct = Math.min(100, 100 * tot.eaten / T.kcal);
+    const ppct = Math.min(100, 100 * tot.prot / T.protein);
+    const meals = D.slots.map(s => {
+      const opts = D.options.filter(o => o.slot === s.id);
+      const c = day[s.id];
+      const sel = c ? opts.find(o => o.id === c.opt) : null;
+      return `<h2>${esc(s.name)}</h2>
+        <div class="chips">${opts.map(o => `<button class="chip ${sel && sel.id === o.id ? 'on' : ''}" data-act="dietPick" data-slot="${s.id}" data-opt="${o.id}">${esc(o.short)}</button>`).join('')}</div>
+        ${sel ? mealCard(s.id, sel, c) : '<p class="muted"><small>Elige una opción.</small></p>'}`;
+    }).join('');
+    return `<h1>Dieta</h1>
+      <div class="card" style="cursor:default">
+        <div class="row between"><b style="margin:0">${thousands(tot.eaten)} <small>/ ${thousands(T.kcal)} kcal</small></b><small>plan del día: ${thousands(tot.plan)}</small></div>
+        <div class="bar"><div style="width:${pct}%"></div></div>
+        <div class="row between" style="margin-top:10px"><span>${Math.round(tot.prot)} <small>/ ${T.protein} g proteína</small></span></div>
+        <div class="bar"><div style="width:${ppct}%"></div></div>
+      </div>
+      ${meals}
+      <p class="muted" style="margin-top:20px"><small>Cifras aproximadas. Si en 3 semanas el peso no sube, sumamos aceite o mantequilla. Para cambiar el menú, dímelo en el chat.</small></p>`;
+  }
+
   function renderRest() {
     if (active && active.rest) {
       const left = Math.max(0, (active.rest.end - Date.now()) / 1000);
@@ -306,13 +378,13 @@
   }
 
   function render() {
-    $tabs.innerHTML = ['registrar', 'rutinas', 'progreso'].map(t =>
+    $tabs.innerHTML = ['registrar', 'rutinas', 'progreso', 'dieta'].map(t =>
       `<button class="${tab === t ? 'on' : ''}" data-act="tab" data-t="${t}">${ICON[t]}<span>${t[0].toUpperCase() + t.slice(1)}</span></button>`).join('');
     let html = '';
     if (active && tab !== 'registrar') {
       html += `<button class="banner" data-act="tab" data-t="registrar"><span>Entrenamiento en curso</span><span>Volver →</span></button>`;
     }
-    html += tab === 'registrar' ? viewRegistrar() : tab === 'rutinas' ? viewRutinas() : viewProgreso();
+    html += tab === 'registrar' ? viewRegistrar() : tab === 'rutinas' ? viewRutinas() : tab === 'dieta' ? viewDieta() : viewProgreso();
     $view.innerHTML = html;
     renderRest();
     keepAwake();
@@ -338,7 +410,8 @@
           [{ label: 'Cancelar', v: false }, { label: 'Importar', cls: 'accent', v: true }]);
         if (!ok) return;
         sessions = d.sessions; body = d.body;
-        save(K.s, sessions); save(K.b, body); render();
+        if (d.diet && typeof d.diet === 'object') diet = d.diet;
+        save(K.s, sessions); save(K.b, body); save(K.d, diet); render();
       } catch (e) {
         await sheet('<h3>Archivo no válido</h3><p class="muted">No parece una copia de esta app.</p>', [{ label: 'Vale', cls: 'accent', v: true }]);
       }
@@ -405,8 +478,22 @@
       body.sort((x, y) => x.ts - y.ts);
       save(K.b, body); render();
     }
+    else if (a === 'dietPick') {
+      const day = dayDiet(), sl = t.dataset.slot;
+      if (day[sl] && day[sl].opt === t.dataset.opt) return;
+      day[sl] = { opt: t.dataset.opt, done: false, oil: 0 };
+      saveDiet(); render();
+    }
+    else if (a === 'dietDone') {
+      const c = dayDiet()[t.dataset.slot];
+      if (c) { c.done = !c.done; saveDiet(); render(); }
+    }
+    else if (a === 'dietOil') {
+      const c = dayDiet()[t.dataset.slot];
+      if (c) { c.oil = Math.max(0, Math.min(4, (c.oil || 0) + (+t.dataset.d))); saveDiet(); render(); }
+    }
     else if (a === 'export') {
-      const blob = new Blob([JSON.stringify({ v: 1, sessions, body })], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ v: 1, sessions, body, diet })], { type: 'application/json' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = `gym-copia-${isoDay(Date.now())}.json`;

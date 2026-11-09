@@ -144,3 +144,15 @@ details.card summary::-webkit-details-marker { display: none; }
 details.card ul { margin: 12px 0 0; padding: 0; list-style: none; font-size: 15px; }
 details.card li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); }
 details.card li span:last-child { color: var(--muted); white-space: nowrap; }
+
+/* dieta */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.chip { background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 9px 14px; font-weight: 600; font-size: 14px; }
+.chip.on { background: var(--accent); border-color: var(--accent); color: #000; }
+.meal { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; }
+.meal.done { border-color: var(--accent); background: var(--accent-dim); }
+.meal ul { margin: 10px 0; padding-left: 18px; font-size: 15px; }
+.meal details { margin: 8px 0; font-size: 14px; }
+.meal summary { cursor: pointer; padding: 4px 0; }
+.bar { height: 8px; border-radius: 99px; background: var(--surface2); margin-top: 8px; overflow: hidden; }
+.bar > div { height: 100%; background: var(--accent); border-radius: 99px; transition: width .3s; }

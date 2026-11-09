@@ -2,7 +2,7 @@
   'use strict';
 
   const ROUTINES = window.ROUTINES || [];
-  const K = { s: 'gym.sessions', a: 'gym.active', b: 'gym.body', d: 'gym.diet' };
+  const K = { s: 'gym.sessions', a: 'gym.active', b: 'gym.body', d: 'gym.diet', p: 'gym.profile' };
 
   const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
@@ -11,6 +11,8 @@
   let active = load(K.a, null);
   let body = load(K.b, []);
   let diet = load(K.d, {});
+  let profile = load(K.p, { h: 178 });
+  let bmetric = 'kg', bAll = false, bDraft = null;
   let tab = 'registrar';
   let openId = null;
 
@@ -321,30 +323,100 @@
       }).join('')}`;
   }
 
-  function chart() {
-    const pts = body.slice(-30);
-    if (pts.length < 2) return '<p class="muted">Añade al menos 2 pesos para ver la gráfica.</p>';
-    const ks = pts.map(p => p.kg);
-    const mn = Math.min(...ks) - 0.3, mx = Math.max(...ks) + 0.3;
-    const W = 320, H = 110;
-    const x = i => 10 + i * (W - 20) / (pts.length - 1);
-    const y = k => H - 10 - (k - mn) * (H - 20) / (mx - mn);
-    const d = pts.map((p, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p.kg).toFixed(1)).join(' ');
+  const BM = [
+    { k: 'kg', n: 'Peso', u: 'kg' }, { k: 'f', n: '% grasa', u: '%' }, { k: 'fm', n: 'Masa grasa', u: 'kg' },
+    { k: 'ffm', n: 'Masa magra', u: 'kg' }, { k: 'mm', n: 'Músculo', u: 'kg' }, { k: 'wat', n: 'Agua', u: '%' },
+    { k: 'vis', n: 'Grasa visceral', u: '' }, { k: 'bmr', n: 'Metab. basal', u: 'kcal' }, { k: 'w', n: 'Cintura', u: 'cm' }
+  ];
+  const nv = v => (v === null || v === undefined || isNaN(v)) ? null : v;
+  function bval(b, k) {
+    if (k === 'fm') { if (nv(b.fm) !== null) return b.fm; return nv(b.f) !== null ? b.kg * b.f / 100 : null; }
+    if (k === 'ffm') {
+      if (nv(b.ffm) !== null) return b.ffm;
+      const fm = bval(b, 'fm'); return fm !== null ? b.kg - fm : null;
+    }
+    return nv(b[k]);
+  }
+  const bfmt = (v, u) => kgTxt(Math.round(v * 10) / 10) + (u ? ' ' + u : '');
+  const bUnit = k => BM.find(m => m.k === k).u;
+
+  function chart(k) {
+    const pts = body.map(b => ({ t: b.ts, v: bval(b, k) })).filter(p => p.v !== null).slice(-40);
+    if (pts.length < 2) return '<p class="muted">Añade al menos 2 registros de esta medida para ver la gráfica.</p>';
+    const vs = pts.map(p => p.v);
+    const pad2 = (Math.max(...vs) - Math.min(...vs)) * 0.15 || 0.3;
+    const mn = Math.min(...vs) - pad2, mx = Math.max(...vs) + pad2;
+    const t0 = pts[0].t, t1 = pts[pts.length - 1].t || 1;
+    const W = 320, H = 120;
+    const x = t => 12 + (t1 === t0 ? 0 : (t - t0) / (t1 - t0)) * (W - 24);
+    const y = v => H - 12 - (v - mn) * (H - 24) / (mx - mn);
+    const d = pts.map((p, i) => (i ? 'L' : 'M') + x(p.t).toFixed(1) + ' ' + y(p.v).toFixed(1)).join(' ');
+    const u = bUnit(k);
     return `<svg viewBox="0 0 ${W} ${H}" class="chart"><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-      ${pts.map((p, i) => `<circle cx="${x(i).toFixed(1)}" cy="${y(p.kg).toFixed(1)}" r="3" fill="var(--accent)"/>`).join('')}</svg>
-      <div class="row between muted"><small>mín ${kgTxt(Math.min(...ks))} kg</small><small>máx ${kgTxt(Math.max(...ks))} kg</small></div>`;
+      ${pts.map(p => `<circle cx="${x(p.t).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="3" fill="var(--accent)"/>`).join('')}</svg>
+      <div class="row between muted"><small>${dShort(t0)}</small><small>mín ${bfmt(Math.min(...vs), u)} · máx ${bfmt(Math.max(...vs), u)}</small><small>${dShort(t1)}</small></div>`;
+  }
+
+  const bField = (id, label, v, ph) => `<label class="fl"><small class="muted">${label}</small><input class="t" id="${id}" inputmode="decimal" placeholder="${ph || ''}" value="${nv(v) !== null ? String(v).replace('.', ',') : ''}"></label>`;
+
+  function bodyRow(b) {
+    const ex = [['f', '% grasa'], ['mm', 'músc.'], ['w', 'cintura']].map(([k, n]) => {
+      const v = bval(b, k); return v !== null ? `${bfmt(v, bUnit(k))} ${n}` : '';
+    }).filter(Boolean).join(' · ');
+    return `<button class="brow" data-act="openBody" data-ts="${b.ts}"><div class="row between"><span>${dShort(b.ts)} ${new Date(b.ts).getFullYear()}</span><b>${kgTxt(b.kg)} kg</b></div>${ex ? `<small class="muted">${ex}</small>` : ''}</button>`;
   }
 
   function viewProgreso() {
     const last7 = body.slice(-7);
     const avg = last7.length ? last7.reduce((a, b) => a + b.kg, 0) / last7.length : null;
-    const list = body.slice(-6).reverse();
+    const lastB = body.length ? body[body.length - 1] : null;
+    const firstB = body.length ? body[0] : null;
+    const h = profile.h;
+    const imc = lastB && h ? lastB.kg / Math.pow(h / 100, 2) : null;
+    const d = bDraft || {};
+    const dDay = d.ts ? isoDay(d.ts) : isoDay(Date.now());
+    const avail = BM.filter(m => body.some(b => bval(b, m.k) !== null));
+    if (!avail.some(m => m.k === bmetric)) bmetric = 'kg';
+    const cur = BM.find(m => m.k === bmetric);
+    const lastV = lastB ? bval(lastB, bmetric) : null;
+    const prevB = body.filter(b => bval(b, bmetric) !== null);
+    const delta = prevB.length > 1 ? bval(prevB[prevB.length - 1], bmetric) - bval(prevB[0], bmetric) : null;
+    const list = bAll ? body.slice().reverse() : body.slice(-8).reverse();
     return `<h1>Progreso</h1>
-      <h2 style="margin-top:0">Peso corporal</h2>
-      <div class="form"><input class="t" id="bkg" inputmode="decimal" placeholder="Peso (kg)"><input class="t" id="bw" inputmode="decimal" placeholder="Cintura (cm)"><button class="btn accent" data-act="saveBody">Guardar</button></div>
-      <p class="muted" style="margin:8px 0 14px"><small>Mejor siempre en ayunas, en la misma báscula.${avg ? ` Media últimas ${last7.length}: <b style="color:var(--text)">${kgTxt(avg)} kg</b>` : ''}</small></p>
-      ${chart()}
-      ${list.map(b => `<div class="row between" style="padding:6px 2px;border-bottom:1px solid var(--line)"><span>${dShort(b.ts)}</span><span>${kgTxt(b.kg)} kg${b.w ? ' · ' + kgTxt(b.w) + ' cm' : ''}</span></div>`).join('')}
+      <h2 style="margin-top:0">Medidas corporales</h2>
+      <section class="card">
+        <div class="grid2">
+          <label class="fl"><small class="muted">Fecha</small><input class="t" type="date" id="bdate" value="${dDay}" max="${isoDay(Date.now())}"></label>
+          ${bField('bkg', 'Peso (kg) *', d.kg, 'Obligatorio')}
+        </div>
+        <div class="grid2" style="margin-top:8px">
+          <label class="fl"><small class="muted">Altura (cm), fija</small><input class="t" id="hcm" inputmode="decimal" value="${h ? String(h).replace('.', ',') : ''}"></label>
+          <div class="fl"><small class="muted">IMC</small><div class="imc">${imc ? kgTxt(Math.round(imc * 10) / 10) : '–'}</div></div>
+        </div>
+        <details ${bDraft ? 'open' : ''} style="margin-top:10px"><summary>Más medidas (opcional)</summary>
+          <div class="grid2" style="margin-top:8px">
+            ${bField('bf', '% grasa corporal', d.f)}
+            ${bField('bfm', 'Masa grasa (kg)', d.fm)}
+            ${bField('bffm', 'Masa libre de grasa (kg)', d.ffm)}
+            ${bField('bmm', 'Masa muscular (kg)', d.mm)}
+            ${bField('bwat', 'Agua corporal (%)', d.wat)}
+            ${bField('bvis', 'Grasa visceral (nivel)', d.vis)}
+            ${bField('bbmr', 'Metabolismo basal (kcal)', d.bmr)}
+            ${bField('bw', 'Cintura (cm)', d.w)}
+          </div>
+          <p class="muted" style="margin:8px 0 0"><small>Si pones el peso y el % de grasa, la masa grasa y la masa magra se calculan solas.</small></p>
+        </details>
+        <button class="btn accent full" style="margin-top:12px" data-act="saveBody">${bDraft ? 'Guardar cambios' : 'Guardar'}</button>
+        ${bDraft ? '<button class="btn full" style="margin-top:8px" data-act="cancelBody">Cancelar edición</button>' : ''}
+        <p class="muted" style="margin:10px 0 0"><small>Cambia la fecha para meter pesos de semanas o meses atrás. Si ya hay un registro ese día, se reemplaza. Mejor en ayunas y en la misma báscula.</small></p>
+      </section>
+      <div class="chips" style="margin-top:14px">${avail.map(m => `<button class="chip ${m.k === bmetric ? 'on' : ''}" data-act="bmetric" data-k="${m.k}">${m.n}</button>`).join('')}</div>
+      <div class="row between" style="margin-bottom:8px"><span><b style="font-size:22px">${lastV !== null ? bfmt(lastV, cur.u) : '–'}</b> <small class="muted">${cur.n}</small></span>
+        <small class="muted">${delta !== null ? (delta > 0 ? '+' : '') + bfmt(delta, cur.u) + ' desde ' + dShort(prevB[0].ts) : ''}${bmetric === 'kg' && avg ? ` · media ${last7.length}: ${kgTxt(avg)} kg` : ''}</small></div>
+      ${chart(bmetric)}
+      <h2>Registros</h2>
+      ${list.length ? list.map(bodyRow).join('') : '<p class="muted">Todavía no hay registros.</p>'}
+      ${body.length > 8 ? `<button class="btn full" style="margin-top:8px" data-act="bAll">${bAll ? 'Ver menos' : 'Ver todos (' + body.length + ')'}</button>` : ''}
       <h2>Historial</h2>
       ${sessions.length ? sessions.slice().reverse().map(s => `<button class="sess" data-act="openSession" data-id="${s.id}">
         <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${thousands(volOf(s.exercises, false))} kg</span></div>
@@ -457,6 +529,7 @@
     persist(); updateStats();
   });
   $view.addEventListener('change', ev => {
+    if (ev.target.id === 'hcm') { const hh = num(ev.target.value); if (hh > 100 && hh < 250) { profile.h = hh; save(K.p, profile); render(); } return; }
     if (ev.target.id !== 'imp' || !ev.target.files[0]) return;
     const rd = new FileReader();
     rd.onload = async () => {
@@ -468,6 +541,7 @@
         if (!ok) return;
         sessions = d.sessions; body = d.body;
         if (d.diet && typeof d.diet === 'object') diet = d.diet;
+        if (d.profile && typeof d.profile === 'object') { profile = d.profile; save(K.p, profile); }
         save(K.s, sessions); save(K.b, body); save(K.d, diet); render();
       } catch (e) {
         await sheet('<h3>Archivo no válido</h3><p class="muted">No parece una copia de esta app.</p>', [{ label: 'Vale', cls: 'accent', v: true }]);
@@ -526,14 +600,33 @@
       if (ok) { sessions = sessions.filter(s => s.id !== id); save(K.s, sessions); openId = null; render(); }
     }
     else if (a === 'saveBody') {
-      const kg = num(document.getElementById('bkg').value);
-      if (isNaN(kg)) return;
-      const w = num(document.getElementById('bw').value);
-      const day = isoDay(Date.now());
+      const g = id => num(document.getElementById(id).value);
+      const kg = g('bkg');
+      if (isNaN(kg) || kg < 20 || kg > 300) { document.getElementById('bkg').focus(); return; }
+      const dv = document.getElementById('bdate').value;
+      const today = isoDay(Date.now());
+      const day = dv && dv <= today ? dv : today;
+      const e = { ts: day === today ? Date.now() : new Date(day + 'T12:00:00').getTime(), kg };
+      [['f', 'bf'], ['fm', 'bfm'], ['ffm', 'bffm'], ['mm', 'bmm'], ['wat', 'bwat'], ['vis', 'bvis'], ['bmr', 'bbmr'], ['w', 'bw']]
+        .forEach(([k, id]) => { const v = g(id); if (!isNaN(v)) e[k] = v; });
+      const hh = g('hcm'); if (!isNaN(hh) && hh > 100 && hh < 250) { profile.h = hh; save(K.p, profile); }
       body = body.filter(b => isoDay(b.ts) !== day);
-      body.push({ ts: Date.now(), kg, w: isNaN(w) ? null : w });
+      body.push(e);
       body.sort((x, y) => x.ts - y.ts);
+      bDraft = null;
       save(K.b, body); render();
+    }
+    else if (a === 'cancelBody') { bDraft = null; render(); }
+    else if (a === 'bmetric') { bmetric = t.dataset.k; render(); }
+    else if (a === 'bAll') { bAll = !bAll; render(); }
+    else if (a === 'openBody') {
+      const b = body.find(x => String(x.ts) === t.dataset.ts);
+      if (!b) return;
+      const rows = BM.map(m => { const v = bval(b, m.k); return v !== null ? `<div class="row between" style="padding:6px 0;border-bottom:1px solid var(--line)"><span class="muted">${m.n}</span><b>${bfmt(v, m.u)}</b></div>` : ''; }).join('');
+      const r = await sheet(`<h3>${dShort(b.ts)} ${new Date(b.ts).getFullYear()}</h3>${rows}`,
+        [{ label: 'Borrar', v: 'del' }, { label: 'Editar', v: 'edit' }, { label: 'Cerrar', cls: 'accent', v: false }]);
+      if (r === 'del') { body = body.filter(x => x !== b); save(K.b, body); render(); }
+      else if (r === 'edit') { bDraft = b; render(); window.scrollTo(0, 0); }
     }
     else if (a === 'toggleR') { openR = openR === t.dataset.id ? null : t.dataset.id; render(); }
     else if (a === 'exinfo') exSheet(t.dataset.ex);
@@ -552,7 +645,7 @@
       if (c) { c.oil = Math.max(0, Math.min(4, (c.oil || 0) + (+t.dataset.d))); saveDiet(); render(); }
     }
     else if (a === 'export') {
-      const blob = new Blob([JSON.stringify({ v: 1, sessions, body, diet })], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ v: 2, sessions, body, diet, profile })], { type: 'application/json' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = `gym-copia-${isoDay(Date.now())}.json`;

@@ -191,3 +191,13 @@ details.card li span:last-child { color: var(--muted); white-space: nowrap; }
 .exh { display: flex; gap: 12px; align-items: center; }
 .exth { flex: none; }
 .exth .th { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; display: block; }
+
+/* medidas corporales */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fl { display: block; min-width: 0; }
+.fl > small { display: block; margin: 0 0 4px 2px; }
+.imc { height: 46px; display: flex; align-items: center; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface2); font-size: 17px; font-weight: 700; }
+details > summary { cursor: pointer; font-weight: 600; padding: 8px 0; list-style: none; color: var(--accent); }
+details > summary::-webkit-details-marker { display: none; }
+.brow { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line); padding: 10px 2px; color: inherit; font: inherit; }
+input[type=date].t { min-width: 0; -webkit-appearance: none; appearance: none; }

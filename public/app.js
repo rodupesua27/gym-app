@@ -262,7 +262,7 @@
   const imgSrc = (i, k) => `/img/ex/${encodeURIComponent(i.img)}/${k}.jpg`;
   const thumb = (n, cls) => {
     const i = exInfo(n);
-    return i ? `<img class="${cls}" loading="lazy" alt="" src="${imgSrc(i, 0)}">`
+    return i && i.img ? `<img class="${cls}" loading="lazy" alt="" src="${imgSrc(i, 0)}">`
              : `<div class="${cls} ph">${ICON.registrar}</div>`;
   };
   function routineMuscles(r) {
@@ -287,8 +287,8 @@
     const last = le ? le.sets.filter(s => s.t === 'N').map(s => `${kgTxt(s.kg)}×${s.reps}`).join(' · ') : '';
     return sheet(
       `<h3>${esc(name)}</h3>
-       ${i ? `<div class="flip"><img src="${imgSrc(i, 0)}" alt=""><img src="${imgSrc(i, 1)}" alt=""></div>
-       <div class="mchips" style="margin-top:12px">${i.m.map(m => `<span class="mchip on">${esc(m)}</span>`).join('')}${i.s.map(m => `<span class="mchip">${esc(m)}</span>`).join('')}</div>` : ''}
+       ${i && i.img ? `<div class="flip"><img src="${imgSrc(i, 0)}" alt=""><img src="${imgSrc(i, 1)}" alt=""></div>` : ''}
+       ${i ? `<div class="mchips" style="margin-top:12px">${i.m.map(m => `<span class="mchip on">${esc(m)}</span>`).join('')}${i.s.map(m => `<span class="mchip">${esc(m)}</span>`).join('')}</div>` : ''}
        <div class="exstats"><div><small>Mejor peso</small><b>${best ? kgTxt(best) + ' kg' : '–'}</b></div>
        <div><small>Última vez</small><b>${esc(last || '–')}</b></div></div>`,
       [{ label: 'Cerrar', cls: 'accent', v: true }]

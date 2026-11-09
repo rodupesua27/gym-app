@@ -17,7 +17,7 @@ window.EXINFO = {
   ],
   "s": []
  },
- "Cables cruzados": {
+ "Cables cruzados (de arriba abajo)": {
   "img": "Cable_Crossover",
   "m": [
    "Pecho"
@@ -26,8 +26,8 @@ window.EXINFO = {
    "Hombros"
   ]
  },
- "Elevación frontal (cable)": {
-  "img": "Front_Cable_Raise",
+ "Elevación frontal con barra (cable)": {
+  "img": null,
   "m": [
    "Hombros"
   ],
@@ -43,8 +43,8 @@ window.EXINFO = {
    "Trapecio"
   ]
  },
- "Jalón de tríceps en polea": {
-  "img": "Triceps_Pushdown",
+ "Jalón de tríceps con barra V (polea)": {
+  "img": "Triceps_Pushdown_-_V-Bar_Attachment",
   "m": [
    "Tríceps"
   ],
@@ -149,13 +149,6 @@ window.EXINFO = {
   ],
   "s": []
  },
- "Curl de pierna sentado (máquina)": {
-  "img": "Seated_Leg_Curl",
-  "m": [
-   "Isquios"
-  ],
-  "s": []
- },
  "Abducción de cadera (máquina)": {
   "img": "Thigh_Abductor",
   "m": [
@@ -199,16 +192,6 @@ window.EXINFO = {
   ],
   "s": []
  },
- "Press inclinado (máquina)": {
-  "img": "Leverage_Incline_Chest_Press",
-  "m": [
-   "Pecho"
-  ],
-  "s": [
-   "Hombros",
-   "Tríceps"
-  ]
- },
  "Aperturas en polea de abajo arriba": {
   "img": "Low_Cable_Crossover",
   "m": [
@@ -218,15 +201,8 @@ window.EXINFO = {
    "Hombros"
   ]
  },
- "Aperturas inversas (máquina)": {
-  "img": "Reverse_Machine_Flyes",
-  "m": [
-   "Hombros"
-  ],
-  "s": []
- },
- "Elevación lateral (mancuerna)": {
-  "img": "Side_Lateral_Raise",
+ "Aperturas inversas en polea": {
+  "img": "Cable_Rear_Delt_Fly",
   "m": [
    "Hombros"
   ],
@@ -234,13 +210,6 @@ window.EXINFO = {
  },
  "Jalón de tríceps con cuerda": {
   "img": "Triceps_Pushdown_-_Rope_Attachment",
-  "m": [
-   "Tríceps"
-  ],
-  "s": []
- },
- "Extensión de tríceps por encima de la cabeza (mancuerna)": {
-  "img": "Standing_Dumbbell_Triceps_Extension",
   "m": [
    "Tríceps"
   ],
@@ -275,13 +244,6 @@ window.EXINFO = {
    "Hombros"
   ]
  },
- "Curl araña (mancuerna)": {
-  "img": "Spider_Curl",
-  "m": [
-   "Bíceps"
-  ],
-  "s": []
- },
  "Curl de bíceps (mancuerna)": {
   "img": "Dumbbell_Bicep_Curl",
   "m": [
@@ -291,8 +253,8 @@ window.EXINFO = {
    "Antebrazos"
   ]
  },
- "Curl de muñeca por detrás de la espalda (barra)": {
-  "img": "Standing_Palms-Up_Barbell_Behind_The_Back_Wrist_Curl",
+ "Curl de muñeca (polea alta)": {
+  "img": "Cable_Wrist_Curl",
   "m": [
    "Antebrazos"
   ],

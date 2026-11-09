@@ -325,8 +325,8 @@
 
   const BM = [
     { k: 'kg', n: 'Peso', u: 'kg' }, { k: 'f', n: '% grasa', u: '%' }, { k: 'fm', n: 'Masa grasa', u: 'kg' },
-    { k: 'ffm', n: 'Masa magra', u: 'kg' }, { k: 'mm', n: 'Músculo', u: 'kg' }, { k: 'wat', n: 'Agua', u: '%' },
-    { k: 'vis', n: 'Grasa visceral', u: '' }, { k: 'bmr', n: 'Metab. basal', u: 'kcal' }, { k: 'w', n: 'Cintura', u: 'cm' }
+    { k: 'ffm', n: 'Masa libre de grasa', u: 'kg' }, { k: 'wat', n: 'Agua corporal', u: '%' },
+    { k: 'wk', n: 'Masa de agua', u: 'kg' }, { k: 'w', n: 'Cintura', u: 'cm' }
   ];
   const nv = v => (v === null || v === undefined || isNaN(v)) ? null : v;
   function bval(b, k) {
@@ -335,6 +335,8 @@
       if (nv(b.ffm) !== null) return b.ffm;
       const fm = bval(b, 'fm'); return fm !== null ? b.kg - fm : null;
     }
+    if (k === 'wk') { if (nv(b.wk) !== null) return b.wk; return nv(b.wat) !== null ? b.kg * b.wat / 100 : null; }
+    if (k === 'wat') { if (nv(b.wat) !== null) return b.wat; return nv(b.wk) !== null ? b.wk / b.kg * 100 : null; }
     return nv(b[k]);
   }
   const bfmt = (v, u) => kgTxt(Math.round(v * 10) / 10) + (u ? ' ' + u : '');
@@ -360,7 +362,7 @@
   const bField = (id, label, v, ph) => `<label class="fl"><small class="muted">${label}</small><input class="t" id="${id}" inputmode="decimal" placeholder="${ph || ''}" value="${nv(v) !== null ? String(v).replace('.', ',') : ''}"></label>`;
 
   function bodyRow(b) {
-    const ex = [['f', '% grasa'], ['mm', 'músc.'], ['w', 'cintura']].map(([k, n]) => {
+    const ex = [['f', '% grasa'], ['fm', 'grasa'], ['w', 'cintura']].map(([k, n]) => {
       const v = bval(b, k); return v !== null ? `${bfmt(v, bUnit(k))} ${n}` : '';
     }).filter(Boolean).join(' · ');
     return `<button class="brow" data-act="openBody" data-ts="${b.ts}"><div class="row between"><span>${dShort(b.ts)} ${new Date(b.ts).getFullYear()}</span><b>${kgTxt(b.kg)} kg</b></div>${ex ? `<small class="muted">${ex}</small>` : ''}</button>`;
@@ -398,13 +400,11 @@
             ${bField('bf', '% grasa corporal', d.f)}
             ${bField('bfm', 'Masa grasa (kg)', d.fm)}
             ${bField('bffm', 'Masa libre de grasa (kg)', d.ffm)}
-            ${bField('bmm', 'Masa muscular (kg)', d.mm)}
             ${bField('bwat', 'Agua corporal (%)', d.wat)}
-            ${bField('bvis', 'Grasa visceral (nivel)', d.vis)}
-            ${bField('bbmr', 'Metabolismo basal (kcal)', d.bmr)}
+            ${bField('bwk', 'Masa de agua (kg)', d.wk)}
             ${bField('bw', 'Cintura (cm)', d.w)}
           </div>
-          <p class="muted" style="margin:8px 0 0"><small>Si pones el peso y el % de grasa, la masa grasa y la masa magra se calculan solas.</small></p>
+          <p class="muted" style="margin:8px 0 0"><small>Si pones el peso y el % de grasa, la masa grasa y la masa libre de grasa se calculan solas; con el % de agua, la masa de agua.</small></p>
         </details>
         <button class="btn accent full" style="margin-top:12px" data-act="saveBody">${bDraft ? 'Guardar cambios' : 'Guardar'}</button>
         ${bDraft ? '<button class="btn full" style="margin-top:8px" data-act="cancelBody">Cancelar edición</button>' : ''}
@@ -607,7 +607,7 @@
       const today = isoDay(Date.now());
       const day = dv && dv <= today ? dv : today;
       const e = { ts: day === today ? Date.now() : new Date(day + 'T12:00:00').getTime(), kg };
-      [['f', 'bf'], ['fm', 'bfm'], ['ffm', 'bffm'], ['mm', 'bmm'], ['wat', 'bwat'], ['vis', 'bvis'], ['bmr', 'bbmr'], ['w', 'bw']]
+      [['f', 'bf'], ['fm', 'bfm'], ['ffm', 'bffm'], ['wat', 'bwat'], ['wk', 'bwk'], ['w', 'bw']]
         .forEach(([k, id]) => { const v = g(id); if (!isNaN(v)) e[k] = v; });
       const hh = g('hcm'); if (!isNaN(hh) && hh > 100 && hh < 250) { profile.h = hh; save(K.p, profile); }
       body = body.filter(b => isoDay(b.ts) !== day);

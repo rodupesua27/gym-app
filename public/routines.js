@@ -1,7 +1,7 @@
 // Rutinas de entrenamiento. Este archivo es la fuente de verdad: Claude lo edita
 // cuando pides un cambio y la app lo recoge al abrirse.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-09b';
+window.ROUTINES_VERSION = '2026-11-09c';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -44,8 +44,8 @@ window.ROUTINES = [
       { name: 'Abducción de cadera (máquina)', sets: 2, reps: '10-12', rest: 75 },
       { name: 'Aducción de cadera (máquina)', sets: 2, reps: '10-12', rest: 75 },
       { name: 'Empuje de cadera (máquina)', sets: 4, reps: '8-11', rest: 120 },
-      { name: 'Pantorrilla sentado, puntas hacia fuera (máquina)', sets: 3, reps: '10-15', rest: 75 },
-      { name: 'Pantorrilla sentado, puntas hacia dentro (máquina)', sets: 3, reps: '9-15', rest: 75 }
+      { name: 'Pantorrilla en prensa, puntas hacia fuera', sets: 3, reps: '10-15', rest: 75 },
+      { name: 'Pantorrilla en prensa, puntas hacia dentro', sets: 3, reps: '9-15', rest: 75 }
     ]
   },
   {

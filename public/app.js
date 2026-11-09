@@ -238,7 +238,7 @@
         </div>`;
       }).join('');
       return `<section class="ex" data-e="${ei}">
-        <div class="exh"><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small></div>
+        <div class="exh"><button class="exth" data-act="exinfo" data-ex="${esc(ex.name)}">${thumb(ex.name, 'th')}</button><div><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small></div></div>
         <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
         ${rows}
         <div class="exf" data-e="${ei}">
@@ -256,12 +256,69 @@
       <button class="btn full danger" style="margin-top:10px" data-act="cancel">Cancelar entrenamiento</button>`;
   }
 
+  // ---------- ejercicios: miniaturas y detalle ----------
+  let openR = null;
+  const exInfo = n => (window.EXINFO || {})[n] || null;
+  const imgSrc = (i, k) => `/img/ex/${encodeURIComponent(i.img)}/${k}.jpg`;
+  const thumb = (n, cls) => {
+    const i = exInfo(n);
+    return i ? `<img class="${cls}" loading="lazy" alt="" src="${imgSrc(i, 0)}">`
+             : `<div class="${cls} ph">${ICON.registrar}</div>`;
+  };
+  function routineMuscles(r) {
+    const m = {};
+    r.exercises.forEach(e => {
+      const i = exInfo(e.name);
+      if (!i) return;
+      const w = e.sets - (e.warmup || 0);
+      i.m.forEach(x => { m[x] = (m[x] || 0) + w; });
+    });
+    return Object.entries(m).sort((a, b) => b[1] - a[1]);
+  }
+  const routineMin = r => Math.round(r.exercises.reduce((s, e) => s + e.sets * (45 + e.rest), 0) / 60 / 5) * 5;
+
+  function exSheet(name) {
+    const i = exInfo(name);
+    const le = lastEx(name);
+    let best = 0;
+    sessions.forEach(s => s.exercises.forEach(e => {
+      if (e.name === name) e.sets.forEach(x => { if (x.t === 'N' && x.kg > best) best = x.kg; });
+    }));
+    const last = le ? le.sets.filter(s => s.t === 'N').map(s => `${kgTxt(s.kg)}×${s.reps}`).join(' · ') : '';
+    return sheet(
+      `<h3>${esc(name)}</h3>
+       ${i ? `<div class="flip"><img src="${imgSrc(i, 0)}" alt=""><img src="${imgSrc(i, 1)}" alt=""></div>
+       <div class="mchips" style="margin-top:12px">${i.m.map(m => `<span class="mchip on">${esc(m)}</span>`).join('')}${i.s.map(m => `<span class="mchip">${esc(m)}</span>`).join('')}</div>` : ''}
+       <div class="exstats"><div><small>Mejor peso</small><b>${best ? kgTxt(best) + ' kg' : '–'}</b></div>
+       <div><small>Última vez</small><b>${esc(last || '–')}</b></div></div>`,
+      [{ label: 'Cerrar', cls: 'accent', v: true }]
+    );
+  }
+
   function viewRutinas() {
     return `<h1>Rutinas</h1>
-      <p class="muted">Para cambiar una rutina, dímelo en el chat con Claude y se actualiza aquí al reabrir la app. (Versión ${esc(window.ROUTINES_VERSION || '')})</p>
-      ${ROUTINES.map(r => `<details class="card"><summary><b>${esc(r.name)} · ${esc(r.short)}</b>
-        <span class="sub">${r.exercises.length} ejercicios · ${r.exercises.reduce((n, e) => n + e.sets, 0)} series</span></summary>
-        <ul>${r.exercises.map(e => `<li><span>${esc(e.name)}</span><span>${e.sets}${e.warmup ? ' (' + e.warmup + ' cal.)' : ''} × ${esc(e.reps)}</span></li>`).join('')}</ul></details>`).join('')}`;
+      <p class="muted"><small>Para cambiar una rutina, dímelo en el chat con Claude y se actualiza al reabrir la app. Versión ${esc(window.ROUTINES_VERSION || '')}</small></p>
+      ${ROUTINES.map(r => {
+        const open = openR === r.id;
+        const series = r.exercises.reduce((n, e) => n + e.sets, 0);
+        const mus = routineMuscles(r).slice(0, 4);
+        return `<section class="rcard">
+          <div class="rhead" data-act="toggleR" data-id="${r.id}">
+            <div class="badge">${esc(r.id.replace(/\D/g, ''))}</div>
+            <div class="rt"><b>${esc(r.short)}</b><small>${r.exercises.length} ejercicios · ${series} series · ~${routineMin(r)} min</small></div>
+            <span class="chev">${open ? '▾' : '▸'}</span>
+          </div>
+          <div class="mchips">${mus.map(([m, n]) => `<span class="mchip">${esc(m)} <b>${n}</b></span>`).join('')}</div>
+          ${open ? `<div class="elist">${r.exercises.map(e => {
+            const i = exInfo(e.name);
+            return `<button class="erow" data-act="exinfo" data-ex="${esc(e.name)}">${thumb(e.name, 'th')}
+              <div class="en"><b>${esc(e.name)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small></div>
+              <span class="es">${e.sets} × ${esc(e.reps)}${e.warmup ? `<small><br>${e.warmup} calent.</small>` : ''}</span></button>`;
+          }).join('')}</div>`
+          : `<div class="strip">${r.exercises.slice(0, 7).map(e => thumb(e.name, 'sth')).join('')}</div>`}
+          <button class="btn accent full" data-act="start" data-id="${r.id}">Empezar rutina</button>
+        </section>`;
+      }).join('')}`;
   }
 
   function chart() {
@@ -478,6 +535,8 @@
       body.sort((x, y) => x.ts - y.ts);
       save(K.b, body); render();
     }
+    else if (a === 'toggleR') { openR = openR === t.dataset.id ? null : t.dataset.id; render(); }
+    else if (a === 'exinfo') exSheet(t.dataset.ex);
     else if (a === 'dietPick') {
       const day = dayDiet(), sl = t.dataset.slot;
       if (day[sl] && day[sl].opt === t.dataset.opt) return;

@@ -156,3 +156,38 @@ details.card li span:last-child { color: var(--muted); white-space: nowrap; }
 .meal summary { cursor: pointer; padding: 4px 0; }
 .bar { height: 8px; border-radius: 99px; background: var(--surface2); margin-top: 8px; overflow: hidden; }
 .bar > div { height: 100%; background: var(--accent); border-radius: 99px; transition: width .3s; }
+
+/* rutinas y ejercicios */
+.sheet { max-height: 90vh; overflow: auto; }
+.rcard { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 16px; margin-bottom: 14px; }
+.rhead { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.badge { width: 46px; height: 46px; border-radius: 14px; background: var(--accent); color: #000; font-weight: 900; font-size: 23px; display: flex; align-items: center; justify-content: center; flex: none; }
+.rt b { font-size: 19px; display: block; letter-spacing: -.01em; }
+.rt small { display: block; }
+.chev { margin-left: auto; color: var(--muted); font-size: 18px; }
+.mchips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.mchip { background: var(--surface2); border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; font-size: 13px; color: var(--muted); }
+.mchip b { color: var(--text); margin-left: 2px; }
+.mchip.on { background: var(--accent-dim); border-color: transparent; color: var(--accent); font-weight: 700; }
+.strip { display: flex; margin: 0 0 14px; }
+.sth { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--surface); margin-left: -10px; background: var(--surface2); flex: none; }
+.strip .sth:first-child { margin-left: 0; }
+.elist { margin: 2px 0 14px; border-top: 1px solid var(--line); }
+.erow { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.erow .th { width: 58px; height: 58px; border-radius: 12px; object-fit: cover; flex: none; background: var(--surface2); }
+.erow .en { flex: 1; min-width: 0; }
+.erow .en b { display: block; font-size: 15px; font-weight: 600; line-height: 1.25; }
+.erow .es { color: var(--muted); font-size: 14px; white-space: nowrap; text-align: right; }
+.ph { display: flex; align-items: center; justify-content: center; background: var(--surface2); color: var(--muted); }
+.ph svg { width: 22px; height: 22px; stroke: currentColor; }
+.flip { position: relative; aspect-ratio: 3 / 2; background: #000; border-radius: 14px; overflow: hidden; margin-top: 4px; }
+.flip img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.flip img + img { animation: fl 1.8s infinite; }
+@keyframes fl { 0%, 40% { opacity: 0; } 50%, 90% { opacity: 1; } 100% { opacity: 0; } }
+.exstats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+.exstats div { background: var(--surface2); border-radius: 12px; padding: 10px 12px; }
+.exstats small { display: block; }
+.exstats b { font-size: 15px; }
+.exh { display: flex; gap: 12px; align-items: center; }
+.exth { flex: none; }
+.exth .th { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; display: block; }

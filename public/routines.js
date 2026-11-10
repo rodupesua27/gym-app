@@ -1,8 +1,8 @@
 // Rutinas de entrenamiento. Este archivo es la fuente de verdad: Claude lo edita
 // cuando pides un cambio y la app lo recoge al abrirse.
-// Orden = semana (el domingo es descanso). "cardio": bloques de cinta/comba que se muestran en la sesión.
+// Orden = semana de lunes a domingo. "cardio": bloques de cinta/comba que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-10n';
+window.ROUTINES_VERSION = '2026-11-10o';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -53,26 +53,25 @@ window.ROUTINES = [
   {
     id: 'c1',
     day: 'Jueves',
-    badge: 'C',
-    name: 'Cardio',
-    short: 'Comba, cinta zona 2 y abdomen',
+    badge: 'C1',
+    name: 'Cardio 1',
+    short: 'Cinta zona 2, comba y abdomen',
     cardio: {
-      title: 'Comba por intervalos + cinta zona 2',
+      title: 'Cinta zona 2 + comba por intervalos',
       min: 58,
       tip: 'Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez. Comba: salta lo que puedas y, si fallas, retomas y sigues.',
       blocks: [
-        { name: 'Comba · calentamiento', min: 5, desc: 'Movilidad y comba suave' },
-        { name: 'Comba · 12 rondas', min: 18, desc: '30 s de comba (o lo que aguantes) + 60 s andando' },
         { name: 'Cinta · calentamiento', min: 5, desc: '4 km/h · 3 % de inclinación' },
         { name: 'Cinta · parte principal', min: 25, desc: '5,5 km/h · 6 % de inclinación' },
-        { name: 'Cinta · vuelta a la calma', min: 5, desc: '4 km/h · 0 % de inclinación' }
+        { name: 'Cinta · vuelta a la calma', min: 5, desc: '4 km/h · 0 % de inclinación' },
+        { name: 'Comba · 12 rondas', min: 18, desc: '30 s de comba (o lo que aguantes) + 60 s andando' },
+        { name: 'Comba · vuelta a la calma', min: 5, desc: 'Andar y estirar' }
       ]
     },
     exercises: [
       { name: 'Abdominal corto con cable', sets: 3, reps: '12-15', rest: 60 },
       { name: 'Elevación de piernas tumbado', sets: 3, reps: '10-15', rest: 60 },
-      { name: 'Plancha', sets: 3, reps: '30-45 s', rest: 60 },
-      { name: 'Dead bug', sets: 3, reps: '10 por lado', rest: 60 }
+      { name: 'Plancha', sets: 3, reps: '30-45 s', rest: 60 }
     ]
   },
   {
@@ -103,6 +102,29 @@ window.ROUTINES = [
       { name: 'Curl de bíceps (mancuerna)', sets: 3, reps: '8-10', rest: 75 },
       { name: 'Curl de muñeca (polea alta)', sets: 3, reps: '8-15', rest: 60 }
     ]
+  },
+  {
+    id: 'c2',
+    day: 'Domingo',
+    badge: 'C2',
+    name: 'Cardio 2',
+    short: 'Cinta zona 2, comba y abdomen',
+    cardio: {
+      title: 'Cinta zona 2 + comba por intervalos',
+      min: 58,
+      tip: 'Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez. Comba: salta lo que puedas y, si fallas, retomas y sigues.',
+      blocks: [
+        { name: 'Cinta · calentamiento', min: 5, desc: '4 km/h · 3 % de inclinación' },
+        { name: 'Cinta · parte principal', min: 25, desc: '5,5 km/h · 6 % de inclinación' },
+        { name: 'Cinta · vuelta a la calma', min: 5, desc: '4 km/h · 0 % de inclinación' },
+        { name: 'Comba · 12 rondas', min: 18, desc: '30 s de comba (o lo que aguantes) + 60 s andando' },
+        { name: 'Comba · vuelta a la calma', min: 5, desc: 'Andar y estirar' }
+      ]
+    },
+    exercises: [
+      { name: 'Abdominal (máquina)', sets: 3, reps: '12-15', rest: 60 },
+      { name: 'Crunch inverso', sets: 3, reps: '12-15', rest: 60 },
+      { name: 'Dead bug', sets: 3, reps: '10 por lado', rest: 60 }
+    ]
   }
-
 ];

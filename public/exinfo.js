@@ -273,5 +273,19 @@ window.EXINFO = {
    "Abdominales"
   ],
   "s": []
+ },
+ "Abdominal (máquina)": {
+  "img": "Ab_Crunch_Machine",
+  "m": [
+   "Abdominales"
+  ],
+  "s": []
+ },
+ "Crunch inverso": {
+  "img": "Reverse_Crunch",
+  "m": [
+   "Abdominales"
+  ],
+  "s": []
  }
 };

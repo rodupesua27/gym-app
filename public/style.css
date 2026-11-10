@@ -206,3 +206,6 @@ input[type=date].t { min-width: 0; -webkit-appearance: none; appearance: none; }
 .pbar { position: absolute; left: 0; right: 0; bottom: -1px; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
 .pbar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .35s ease; border-radius: 2px; }
 .ecnt { font-size: 13px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; background: var(--surface2); border-radius: 99px; padding: 4px 10px; }
+
+/* sin zoom por doble toque */
+html, body, button, input, label, summary { touch-action: manipulation; }

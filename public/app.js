@@ -342,7 +342,6 @@
 
   function viewRutinas() {
     return `<h1>Rutinas</h1>
-      ${pushCard()}
       <p class="muted"><small>Para cambiar una rutina, dímelo en el chat con Claude y se actualiza al reabrir la app. Versión ${esc(window.ROUTINES_VERSION || '')}</small></p>
       ${ROUTINES.map(r => {
         const open = openR === r.id;
@@ -364,7 +363,8 @@
           : `<div class="strip">${r.exercises.slice(0, 7).map(e => thumb(e.name, 'sth')).join('')}</div>`}
           <button class="btn accent full" data-act="start" data-id="${r.id}">Empezar rutina</button>
         </section>`;
-      }).join('')}`;
+      }).join('')}
+      ${pushCard()}`;
   }
 
   const BM = [

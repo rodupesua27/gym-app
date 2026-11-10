@@ -203,6 +203,22 @@
       [{ label: 'Seguir', v: false }, { label: 'Terminar', cls: 'accent', v: true }]
     );
     if (!ok) return;
+    // Como en Hevy: si el entreno es muy largo, confirmar la duración y poder corregirla
+    let endMs = Date.now();
+    if (endMs - active.start >= 150 * 60000) {
+      const tot = Math.round((endMs - active.start) / 60000);
+      const r = await sheet(
+        `<h3>¿Seguro que ha durado ${Math.floor(tot / 60)} h ${tot % 60} min?</h3>
+         <p class="muted">Es un entrenamiento muy largo. Si te dejaste el cronómetro en marcha, corrige la duración.</p>
+         <div class="grid2"><label class="fl"><small class="muted">Horas</small><input id="dh" inputmode="numeric" value="${Math.floor(tot / 60)}"></label>
+         <label class="fl"><small class="muted">Minutos</small><input id="dm" inputmode="numeric" value="${tot % 60}"></label></div>`,
+        [{ label: 'Seguir entrenando', v: null },
+         { label: 'Guardar', cls: 'accent', v: o => ({ h: num(o.querySelector('#dh').value), m: num(o.querySelector('#dm').value) }) }]
+      );
+      if (!r) return;
+      const mins = (isNaN(r.h) ? 0 : r.h) * 60 + (isNaN(r.m) ? 0 : r.m);
+      if (mins >= 1 && mins <= tot) endMs = active.start + mins * 60000;
+    }
     pushCancel();
     const exs = active.exercises.map(e => ({
       name: e.name,
@@ -211,7 +227,7 @@
     const cardio = active.cardio && active.cardio.done ? { title: active.cardio.title, min: active.cardio.min } : null;
     if (!exs.length && !cardio) { active = null; persist(); render(); return; }
 
-    const end = Date.now();
+    const end = endMs;
     const prs = [];
     exs.forEach(e => {
       const best = Math.max(0, ...e.sets.filter(s => s.t === 'N').map(s => s.kg));

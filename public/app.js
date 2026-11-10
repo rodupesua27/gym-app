@@ -2,7 +2,7 @@
   'use strict';
 
   const ROUTINES = window.ROUTINES || [];
-  const K = { s: 'gym.sessions', a: 'gym.active', b: 'gym.body', d: 'gym.diet', p: 'gym.profile' };
+  const K = { s: 'gym.sessions', a: 'gym.active', b: 'gym.body', d: 'gym.diet', p: 'gym.profile', n: 'gym.push' };
 
   const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
@@ -12,6 +12,8 @@
   let body = load(K.b, []);
   let diet = load(K.d, {});
   let profile = load(K.p, { h: 178 });
+  let pushEndpoint = load(K.n, null);
+  const PUSH_KEY = 'BAwEpOB4wZkmNCi6MFGQ6c-h5a0pcmzeeR35j66aXUAv56GxPI9nsaxT_atsS0z0YiVkTBuR3XUm93APsTLfJHY';
   let bmetric = 'kg', bAll = false, bDraft = null;
   let tab = 'registrar';
   let openId = null;
@@ -138,8 +140,26 @@
     };
     persist(); tab = 'registrar'; render();
   }
+  // ---------- aviso de descanso (push) ----------
+  // Se programa 2 s más tarde: si la app está abierta, cancela antes de que llegue el aviso.
+  function pushPost(path, sec) {
+    if (!pushEndpoint || typeof fetch !== 'function') return;
+    try {
+      fetch(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: pushEndpoint, seconds: sec }) }).catch(() => {});
+    } catch (e) {}
+  }
+  const pushRest = sec => pushPost('/api/rest', Math.max(3, Math.round(sec) + 2));
+  const pushCancel = () => pushPost('/api/cancel', 3);
+  const b64ToBytes = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+  const pushState = () => {
+    if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) return 'unsupported';
+    if (Notification.permission === 'denied') return 'denied';
+    return pushEndpoint && Notification.permission === 'granted' ? 'on' : 'off';
+  };
+
   function startRest(sec) {
     active.rest = { end: Date.now() + sec * 1000, total: sec };
+    pushRest(sec);
   }
   function pendingSets() {
     return active.exercises.reduce((n, e) => n + e.sets.filter(s => !s.done).length, 0);
@@ -182,6 +202,7 @@
       [{ label: 'Seguir', v: false }, { label: 'Terminar', cls: 'accent', v: true }]
     );
     if (!ok) return;
+    pushCancel();
     const exs = active.exercises.map(e => ({
       name: e.name,
       sets: e.sets.filter(s => s.done).map(s => ({ t: s.t, kg: num(s.kg) || 0, reps: num(s.reps) }))
@@ -308,8 +329,20 @@
     );
   }
 
+  function pushCard() {
+    const st = pushState();
+    const txt = { on: 'Activado: te avisaré cuando acabe el descanso aunque tengas el móvil bloqueado.',
+      off: 'Recibe una notificación cuando acabe el descanso, sin tener que mirar la app.',
+      denied: 'Los avisos están bloqueados. Actívalos en Ajustes del iPhone → Notificaciones → esta app.',
+      unsupported: 'Abre la app desde el icono de la pantalla de inicio para poder activar los avisos.' }[st];
+    return `<section class="card"><b style="font-size:17px">Aviso de descanso</b><p class="muted" style="margin:6px 0 10px"><small>${txt}</small></p>
+      ${st === 'on' ? '<div class="row"><button class="btn small" data-act="pushTest">Probar (5 s)</button><button class="btn small danger" data-act="pushOff">Desactivar</button></div>'
+        : st === 'off' ? '<button class="btn accent full" data-act="pushOn">Activar avisos</button>' : ''}</section>`;
+  }
+
   function viewRutinas() {
     return `<h1>Rutinas</h1>
+      ${pushCard()}
       <p class="muted"><small>Para cambiar una rutina, dímelo en el chat con Claude y se actualiza al reabrir la app. Versión ${esc(window.ROUTINES_VERSION || '')}</small></p>
       ${ROUTINES.map(r => {
         const open = openR === r.id;
@@ -598,11 +631,31 @@
     else if (a === 'finish') finish();
     else if (a === 'cancel') {
       const ok = await sheet('<h3>Cancelar entrenamiento</h3><p class="muted">Se perderá todo lo que has anotado.</p>', [{ label: 'Seguir', v: false }, { label: 'Cancelar', cls: 'accent', v: true }]);
-      if (ok) { active = null; persist(); render(); }
+      if (ok) { pushCancel(); active = null; persist(); render(); }
     }
-    else if (a === 'restm') { active.rest.end = Math.max(Date.now() + 1000, active.rest.end - 15000); persist(); renderRest(); }
-    else if (a === 'restp') { active.rest.end += 15000; active.rest.total += 15; persist(); renderRest(); }
-    else if (a === 'restskip') { active.rest = null; persist(); renderRest(); }
+    else if (a === 'pushOn') {
+      try {
+        if (pushState() === 'unsupported') return render();
+        const perm = await Notification.requestPermission();
+        if (perm !== 'granted') return render();
+        const reg = await navigator.serviceWorker.ready;
+        const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToBytes(PUSH_KEY) });
+        pushEndpoint = sub.endpoint; save(K.n, pushEndpoint); render();
+      } catch (e) {
+        await sheet('<h3>No se pudieron activar</h3><p class="muted">Comprueba que abres la app desde el icono de la pantalla de inicio y que los avisos están permitidos.</p>', [{ label: 'Vale', cls: 'accent', v: true }]);
+      }
+    }
+    else if (a === 'pushOff') {
+      try { const reg = await navigator.serviceWorker.ready; const sub = await reg.pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) {}
+      pushCancel(); pushEndpoint = null; save(K.n, null); render();
+    }
+    else if (a === 'pushTest') {
+      pushPost('/api/rest', 5);
+      await sheet('<h3>Aviso en 5 segundos</h3><p class="muted">Bloquea el móvil o sal de la app y espera. Debería llegar "Descanso terminado".</p>', [{ label: 'Vale', cls: 'accent', v: true }]);
+    }
+    else if (a === 'restm') { active.rest.end = Math.max(Date.now() + 1000, active.rest.end - 15000); pushRest((active.rest.end - Date.now()) / 1000); persist(); renderRest(); }
+    else if (a === 'restp') { active.rest.end += 15000; active.rest.total += 15; pushRest((active.rest.end - Date.now()) / 1000); persist(); renderRest(); }
+    else if (a === 'restskip') { active.rest = null; pushCancel(); persist(); renderRest(); }
     else if (a === 'openSession') { const id = +t.dataset.id; openId = openId === id ? null : id; render(); }
     else if (a === 'delSession') {
       ev.stopPropagation();
@@ -671,7 +724,7 @@
     if (el) el.textContent = dur((Date.now() - active.start) / 1000);
     if (active.rest) {
       const left = (active.rest.end - Date.now()) / 1000;
-      if (left <= 0) { active.rest = null; persist(); beep(); renderRest(); }
+      if (left <= 0) { active.rest = null; pushCancel(); persist(); beep(); renderRest(); }
       else {
         const tx = document.getElementById('restTxt'); if (tx) tx.textContent = dur(left);
         const f = document.getElementById('restFill'); if (f) f.style.width = (100 * left / active.rest.total) + '%';

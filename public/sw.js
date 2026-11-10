@@ -1,5 +1,5 @@
 // Service worker: primero red (para que los cambios se vean al reabrir), con copia local sin conexión.
-var CACHE = 'gym-v2';
+var CACHE = 'gym-v3';
 
 self.addEventListener('install', function () { self.skipWaiting(); });
 
@@ -29,4 +29,21 @@ self.addEventListener('fetch', function (e) {
         return caches.match(r).then(function (m) { return m || caches.match('/index.html'); });
       })
   );
+});
+
+// Aviso de fin de descanso (push sin contenido: el texto es fijo)
+self.addEventListener('push', function (e) {
+  e.waitUntil(self.registration.showNotification('Descanso terminado', {
+    body: 'A por la siguiente serie 💪',
+    icon: '/icon-192.png',
+    tag: 'descanso',
+    renotify: true
+  }));
+});
+self.addEventListener('notificationclick', function (e) {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (cs) {
+    if (cs.length) return cs[0].focus();
+    return self.clients.openWindow('/');
+  }));
 });

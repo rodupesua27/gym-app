@@ -296,9 +296,9 @@
         <div class="asub"><span id="elapsed">${dur((Date.now() - active.start) / 1000)}</span> · <span id="vol">${thousands(volOf(active.exercises, true))}</span> kg · <span id="nsets">${done}</span>/${total} series · <span id="ppct">${total ? Math.round(done * 100 / total) : 0} %</span></div></div>
         <button class="btn accent" data-act="finish">Terminar</button>
         <div class="pbar"><i id="pbar" style="width:${total ? Math.round(done * 100 / total) : 0}%"></i></div></div>
-      ${active.cardio ? cardioCard(active.cardio, true) : ''}
       ${exs || '<p class="muted">Sesión libre: añade tu primer ejercicio.</p>'}
       <button class="btn full" data-act="addEx">+ Añadir ejercicio</button>
+      ${active.cardio ? '<div style="height:14px"></div>' + cardioCard(active.cardio, true) : ''}
       <button class="btn full danger" style="margin-top:10px" data-act="cancel">Cancelar entrenamiento</button>`;
   }
 
@@ -365,7 +365,6 @@
             <div class="rt"><b>${esc(r.short)}</b><small>${r.day ? esc(r.day) + ' · ' : ''}${r.exercises.length} ejercicios · ${series} series · ~${routineMin(r)} min</small></div>
             <span class="chev">${open ? '▾' : '▸'}</span>
           </div>
-          ${r.cardio ? cardioCard(r.cardio, false) : ''}
           <div class="mchips">${mus.map(([m, n]) => `<span class="mchip">${esc(m)} <b>${n}</b></span>`).join('')}</div>
           ${open ? `<div class="elist">${r.exercises.map(e => {
             const i = exInfo(e.name);
@@ -374,6 +373,7 @@
               <span class="es">${e.sets} × ${esc(e.reps)}${e.warmup ? `<small><br>${e.warmup} calent.</small>` : ''}</span></button>`;
           }).join('')}</div>`
           : `<div class="strip">${r.exercises.slice(0, 7).map(e => thumb(e.name, 'sth')).join('')}</div>`}
+          ${r.cardio ? cardioCard(r.cardio, false) : ''}
           <button class="btn accent full" data-act="start" data-id="${r.id}">Empezar rutina</button>
         </section>`;
       }).join('')}

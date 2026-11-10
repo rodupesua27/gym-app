@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta/comba que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-10o';
+window.ROUTINES_VERSION = '2026-11-10p';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -55,11 +55,11 @@ window.ROUTINES = [
     day: 'Jueves',
     badge: 'C1',
     name: 'Cardio 1',
-    short: 'Cinta zona 2, comba y abdomen',
+    short: 'Abdomen, cinta zona 2 y comba',
     cardio: {
       title: 'Cinta zona 2 + comba por intervalos',
       min: 58,
-      tip: 'Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez. Comba: salta lo que puedas y, si fallas, retomas y sigues.',
+      tip: 'Primero el abdomen y después el cardio. Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez. Comba: salta lo que puedas y, si fallas, retomas y sigues.',
       blocks: [
         { name: 'Cinta · calentamiento', min: 5, desc: '4 km/h · 3 % de inclinación' },
         { name: 'Cinta · parte principal', min: 25, desc: '5,5 km/h · 6 % de inclinación' },
@@ -108,11 +108,11 @@ window.ROUTINES = [
     day: 'Domingo',
     badge: 'C2',
     name: 'Cardio 2',
-    short: 'Cinta zona 2, comba y abdomen',
+    short: 'Abdomen, cinta zona 2 y comba',
     cardio: {
       title: 'Cinta zona 2 + comba por intervalos',
       min: 58,
-      tip: 'Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez. Comba: salta lo que puedas y, si fallas, retomas y sigues.',
+      tip: 'Primero el abdomen y después el cardio. Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez. Comba: salta lo que puedas y, si fallas, retomas y sigues.',
       blocks: [
         { name: 'Cinta · calentamiento', min: 5, desc: '4 km/h · 3 % de inclinación' },
         { name: 'Cinta · parte principal', min: 25, desc: '5,5 km/h · 6 % de inclinación' },

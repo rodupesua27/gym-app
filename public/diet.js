@@ -61,10 +61,10 @@ window.DIET = {
     },
     {
       id: 'n4', slot: 'cena', short: 'Pasta con bacon y nata', name: 'Pasta con bacon, nata para cocinar y queso',
-      kcal: 1090, p: 47, min: 12,
-      ingredients: ['≈85 g de pasta seca (1 vaso mediano)', '125 g de bacon en tiras (1 bote entero)', '125 ml de nata para cocinar', '60 g de queso rallado'],
+      kcal: 940, p: 41, min: 12,
+      ingredients: ['≈85 g de pasta seca (1 vaso mediano)', '125 g de bacon en tiras (1 bote entero)', '80 ml de nata para cocinar', '40 g de queso rallado'],
       steps: 'Pasta en el microondas (tiempo del paquete +2 min). Bacon en la sartén 5-6 min, sin aceite. Añade la nata y caliéntala 2 min, echa el queso y remueve hasta que se funda. Mezcla con la pasta.',
-      note: 'Muy calórica: mejor en un día de entreno duro, y ese día quita el aceite de otras comidas.'
+      note: 'Calórica: mejor en un día de entreno duro, y ese día quita el aceite de otras comidas.'
     }
   ]
 };

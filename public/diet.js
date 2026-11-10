@@ -10,8 +10,8 @@ window.DIET = {
   options: [
     {
       id: 'd1', slot: 'desayuno', short: 'Bocadillo', name: 'Bocadillo de pavo y huevos',
-      kcal: 816, p: 34, min: 10,
-      ingredients: ['150 g de pan', '2 lonchas de pavo', 'Mantequilla', '2 huevos', '1 plátano', 'Café'],
+      kcal: 796, p: 31, min: 10,
+      ingredients: ['150 g de pan', '2 lonchas de pavo (25 g)', 'Mantequilla', '2 huevos', '1 plátano', 'Café'],
       steps: 'Huevos a la plancha en la sartén (3-4 min). Monta el bocadillo con mantequilla y pavo. Plátano y café aparte.'
     },
     {
@@ -48,8 +48,8 @@ window.DIET = {
     },
     {
       id: 'n2', slot: 'cena', short: 'Bocadillo y tortilla', name: 'Bocadillo de pavo, queso y guacamole, y tortilla de 3 huevos',
-      kcal: 765, p: 43, min: 8,
-      ingredients: ['100 g de pan', '2 lonchas de pavo', '30 g de queso', 'Guacamole: ½ aguacate, zumo de ½ limón, sal y pimienta', '3 huevos'],
+      kcal: 745, p: 40, min: 8,
+      ingredients: ['100 g de pan', '2 lonchas de pavo (25 g)', '30 g de queso', 'Guacamole: ½ aguacate, zumo de ½ limón, sal y pimienta', '3 huevos'],
       steps: 'Guacamole: machaca el aguacate con el limón, sal y pimienta (3 min). Tortilla de 3 huevos en la sartén, 4 min. Bocadillo con pavo, queso y guacamole.'
     },
     {

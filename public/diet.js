@@ -10,14 +10,14 @@ window.DIET = {
   options: [
     {
       id: 'd1', slot: 'desayuno', short: 'Bocadillo', name: 'Bocadillo de pavo y huevos',
-      kcal: 796, p: 31, min: 10,
-      ingredients: ['150 g de pan', '2 lonchas de pavo (25 g)', 'Mantequilla', '2 huevos', '1 plátano', 'Café'],
+      kcal: 770, p: 30, min: 10,
+      ingredients: ['140 g de pan', '2 lonchas de pavo (25 g)', 'Mantequilla', '2 huevos', '1 plátano', 'Café'],
       steps: 'Huevos a la plancha en la sartén (3-4 min). Monta el bocadillo con mantequilla y pavo. Plátano y café aparte.'
     },
     {
       id: 'd2', slot: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur con proteína y plátano',
-      kcal: 855, p: 24, min: 3,
-      ingredients: ['150 g de pan', 'Mantequilla', 'Mermelada de fresa', '1 yogur de fresa', '5 g de proteína (chocolate)', '1 plátano', 'Café'],
+      kcal: 828, p: 23, min: 3,
+      ingredients: ['140 g de pan', 'Mantequilla', 'Mermelada de fresa', '1 yogur de fresa', '5 g de proteína (chocolate)', '1 plátano', 'Café'],
       steps: 'Sin cocinar. Para el día sin hambre o sin tiempo.',
       note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
     },
@@ -48,8 +48,8 @@ window.DIET = {
     },
     {
       id: 'n2', slot: 'cena', short: 'Bocadillo y tortilla', name: 'Bocadillo de pavo, queso y guacamole, y tortilla de 3 huevos',
-      kcal: 745, p: 40, min: 8,
-      ingredients: ['100 g de pan', '2 lonchas de pavo (25 g)', '30 g de queso', 'Guacamole: ½ aguacate, zumo de ½ limón, sal y pimienta', '3 huevos'],
+      kcal: 851, p: 44, min: 8,
+      ingredients: ['140 g de pan', '2 lonchas de pavo (25 g)', '30 g de queso', 'Guacamole: ½ aguacate, zumo de ½ limón, sal y pimienta', '3 huevos'],
       steps: 'Guacamole: machaca el aguacate con el limón, sal y pimienta (3 min). Tortilla de 3 huevos en la sartén, 4 min. Bocadillo con pavo, queso y guacamole.'
     },
     {

@@ -336,7 +336,7 @@
       denied: 'Los avisos están bloqueados. Actívalos en Ajustes del iPhone → Notificaciones → esta app.',
       unsupported: 'Abre la app desde el icono de la pantalla de inicio para poder activar los avisos.' }[st];
     return `<section class="card"><b style="font-size:17px">Aviso de descanso</b><p class="muted" style="margin:6px 0 10px"><small>${txt}</small></p>
-      ${st === 'on' ? '<div class="row"><button class="btn small" data-act="pushTest">Probar (5 s)</button><button class="btn small danger" data-act="pushOff">Desactivar</button></div>'
+      ${st === 'on' ? '<button class="btn small danger" data-act="pushOff">Desactivar</button>'
         : st === 'off' ? '<button class="btn accent full" data-act="pushOn">Activar avisos</button>' : ''}</section>`;
   }
 
@@ -648,10 +648,6 @@
     else if (a === 'pushOff') {
       try { const reg = await navigator.serviceWorker.ready; const sub = await reg.pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) {}
       pushCancel(); pushEndpoint = null; save(K.n, null); render();
-    }
-    else if (a === 'pushTest') {
-      pushPost('/api/rest', 5);
-      await sheet('<h3>Aviso en 5 segundos</h3><p class="muted">Bloquea el móvil o sal de la app y espera. Debería llegar "Descanso terminado".</p>', [{ label: 'Vale', cls: 'accent', v: true }]);
     }
     else if (a === 'restm') { active.rest.end = Math.max(Date.now() + 1000, active.rest.end - 15000); pushRest((active.rest.end - Date.now()) / 1000); persist(); renderRest(); }
     else if (a === 'restp') { active.rest.end += 15000; active.rest.total += 15; pushRest((active.rest.end - Date.now()) / 1000); persist(); renderRest(); }

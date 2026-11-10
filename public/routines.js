@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta/comba que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-10q';
+window.ROUTINES_VERSION = '2026-11-10r';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -53,9 +53,9 @@ window.ROUTINES = [
   {
     id: 'c1',
     day: 'Jueves',
-    badge: 'C1',
-    name: 'Cardio 1',
-    short: 'Abdomen, cinta zona 2 y comba',
+    badge: '4',
+    name: 'Día 4',
+    short: 'Cardio 1 · abdomen, cinta y comba',
     cardio: {
       title: 'Cinta zona 2 + comba por intervalos',
       min: 58,
@@ -77,7 +77,8 @@ window.ROUTINES = [
   {
     id: 'd4',
     day: 'Viernes',
-    name: 'Día 4',
+    badge: '5',
+    name: 'Día 5',
     short: 'Pecho, hombro y tríceps',
     exercises: [
       { name: 'Press de banca inclinado (mancuerna)', sets: 5, warmup: 2, reps: '8-12', rest: 120 },
@@ -91,7 +92,8 @@ window.ROUTINES = [
   {
     id: 'd5',
     day: 'Sábado',
-    name: 'Día 5',
+    badge: '6',
+    name: 'Día 6',
     short: 'Espalda y brazos',
     exercises: [
       { name: 'Jalón al pecho agarre invertido (cable)', sets: 6, warmup: 2, reps: '8-12', rest: 120 },
@@ -106,9 +108,9 @@ window.ROUTINES = [
   {
     id: 'c2',
     day: 'Domingo',
-    badge: 'C2',
-    name: 'Cardio 2',
-    short: 'Abdomen, cinta zona 2 y comba',
+    badge: '7',
+    name: 'Día 7',
+    short: 'Cardio 2 · abdomen, cinta y comba',
     cardio: {
       title: 'Cinta zona 2 + comba por intervalos',
       min: 58,

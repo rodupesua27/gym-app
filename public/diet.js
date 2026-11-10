@@ -58,6 +58,13 @@ window.DIET = {
       ingredients: ['200 g de arroz cocido', '2 latas de atún', '2 huevos', 'Tomate frito'],
       steps: 'Arroz en el microondas. Huevos fritos en la sartén. Mezcla con el atún y el tomate frito.',
       note: 'Con atún máximo 1-2 comidas por semana (2-4 latas).'
+    },
+    {
+      id: 'n4', slot: 'cena', short: 'Pasta con bacon y nata', name: 'Pasta con bacon, nata para cocinar y queso',
+      kcal: 1030, p: 35, min: 12,
+      ingredients: ['100 g de pasta seca', '50 g de bacon en tiras', '100 ml de nata para cocinar', '60 g de queso rallado'],
+      steps: 'Pasta en el microondas (tiempo del paquete +2 min). Bacon en la sartén 5-6 min, sin aceite. Añade la nata y caliéntala 2 min, echa el queso y remueve hasta que se funda. Mezcla con la pasta.',
+      note: 'Muy calórica: mejor en un día de entreno duro, y ese día quita el aceite de otras comidas.'
     }
   ]
 };

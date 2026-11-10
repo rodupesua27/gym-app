@@ -259,5 +259,33 @@ window.EXINFO = {
    "Antebrazos"
   ],
   "s": []
+ },
+ "Elevación de piernas tumbado": {
+  "img": "Flat_Bench_Lying_Leg_Raise",
+  "m": [
+   "Abdominales"
+  ],
+  "s": []
+ },
+ "Plancha": {
+  "img": "Plank",
+  "m": [
+   "Abdominales"
+  ],
+  "s": []
+ },
+ "Crunch inverso": {
+  "img": "Reverse_Crunch",
+  "m": [
+   "Abdominales"
+  ],
+  "s": []
+ },
+ "Dead bug": {
+  "img": "Dead_Bug",
+  "m": [
+   "Abdominales"
+  ],
+  "s": []
  }
 };

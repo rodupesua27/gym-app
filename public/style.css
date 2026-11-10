@@ -209,3 +209,14 @@ input[type=date].t { min-width: 0; -webkit-appearance: none; appearance: none; }
 
 /* sin zoom por doble toque */
 html, body, button, input, label, summary { touch-action: manipulation; }
+
+/* cardio */
+.ccard { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 14px; margin-bottom: 14px; }
+.ccard.done { border-color: var(--accent); background: var(--accent-dim); }
+.rcard .ccard { background: var(--surface2); margin: 10px 0; }
+.cblocks { margin-top: 8px; }
+.cb { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+.cb:first-child { border-top: 0; }
+.cb span { display: block; font-weight: 600; }
+.cb small { display: block; color: var(--muted); font-weight: 400; margin-top: 2px; }
+.cb > b { font-variant-numeric: tabular-nums; color: var(--accent); white-space: nowrap; }

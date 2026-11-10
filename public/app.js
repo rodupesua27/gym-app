@@ -136,6 +136,7 @@
       id: Date.now(), routineId: r ? r.id : null,
       name: r ? `${r.name} · ${r.short}` : 'Sesión libre',
       start: Date.now(), rest: null,
+      cardio: r && r.cardio ? { title: r.cardio.title, min: r.cardio.min, tip: r.cardio.tip, blocks: r.cardio.blocks, done: false } : null,
       exercises: r ? r.exercises.map(e => mkEx(e.name, e.sets, e.warmup || 0, e.reps, e.rest)) : []
     };
     persist(); tab = 'registrar'; render();
@@ -198,7 +199,7 @@
   async function finish() {
     const pending = pendingSets();
     const ok = await sheet(
-      `<h3>Terminar entrenamiento</h3><p class="muted">${pending ? pending + ' series sin completar no se guardarán.' : '¿Guardar el entrenamiento?'}</p>`,
+      `<h3>Terminar entrenamiento</h3><p class="muted">${pending ? pending + ' series sin completar no se guardarán.' : '¿Guardar el entrenamiento?'}${active.cardio && !active.cardio.done ? ' El cardio no está marcado como hecho.' : ''}</p>`,
       [{ label: 'Seguir', v: false }, { label: 'Terminar', cls: 'accent', v: true }]
     );
     if (!ok) return;
@@ -207,7 +208,8 @@
       name: e.name,
       sets: e.sets.filter(s => s.done).map(s => ({ t: s.t, kg: num(s.kg) || 0, reps: num(s.reps) }))
     })).filter(e => e.sets.length);
-    if (!exs.length) { active = null; persist(); render(); return; }
+    const cardio = active.cardio && active.cardio.done ? { title: active.cardio.title, min: active.cardio.min } : null;
+    if (!exs.length && !cardio) { active = null; persist(); render(); return; }
 
     const end = Date.now();
     const prs = [];
@@ -219,12 +221,12 @@
       }));
       if (had && best > hist) prs.push(`${e.name} · ${kgTxt(best)} kg`);
     });
-    const ses = { id: active.id, routineId: active.routineId, name: active.name, start: active.start, end, exercises: exs };
+    const ses = { id: active.id, routineId: active.routineId, name: active.name, start: active.start, end, exercises: exs, cardio };
     sessions.push(ses); save(K.s, sessions);
     active = null; persist(); tab = 'registrar'; render();
     const nsets = exs.reduce((n, e) => n + e.sets.length, 0);
     await sheet(
-      `<h3>¡Entrenamiento guardado!</h3><p>${dur((end - ses.start) / 1000)} · ${thousands(volOf(exs, false))} kg · ${nsets} series</p>` +
+      `<h3>¡Entrenamiento guardado!</h3><p>${dur((end - ses.start) / 1000)} · ${cardio ? 'Cardio ✓ · ' : ''}${thousands(volOf(exs, false))} kg · ${nsets} series</p>` +
       (prs.length ? `<p><b>Récords nuevos</b><br>${prs.map(esc).join('<br>')}</p>` : ''),
       [{ label: 'Genial', cls: 'accent', v: true }]
     );
@@ -243,12 +245,21 @@
     return `<h1>Registrar</h1>
       <h2 style="margin-top:0">Elige una rutina</h2>
       ${ROUTINES.map(r => `<button class="card" data-act="start" data-id="${r.id}"><b>${esc(r.name)} · ${esc(r.short)}</b>
-        <span class="sub">${r.exercises.slice(0, 4).map(e => esc(e.name.replace(/ \(.*\)/, ''))).join(' · ')}…</span></button>`).join('')}
+        <span class="sub">${r.day ? esc(r.day) + ' · ' : ''}${r.exercises.slice(0, 4).map(e => esc(e.name.replace(/ \(.*\)/, ''))).join(' · ')}…</span></button>`).join('')}
       <button class="card dashed" data-act="start" data-id="free">+ Sesión libre</button>
       <h2>Esta semana <span style="float:right;text-transform:none;letter-spacing:0">${cnt} entrenos</span></h2>
       <div class="week">${days.map((d, i) => `<div class="day ${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === isoDay(Date.now()) ? 'today' : ''}">${L[i]}<b>${d.getDate()}</b></div>`).join('')}</div>
       <h2>Últimas sesiones</h2>
-      ${recent.length ? recent.map(s => `<div class="sess"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${thousands(volOf(s.exercises, false))} kg</span></div></div>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
+      ${recent.length ? recent.map(s => `<div class="sess"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></div>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
+  }
+
+  const sessPill = s => { const v = volOf(s.exercises, false); return s.cardio ? (v > 0 ? 'Cardio · ' + thousands(v) + ' kg' : 'Cardio') : thousands(v) + ' kg'; };
+
+  function cardioCard(c, live) {
+    return `<section class="ccard ${live && c.done ? 'done' : ''}"><div class="row between"><b>${esc(c.title)}</b><span class="pill">${c.min} min</span></div>
+      <div class="cblocks">${c.blocks.map(b => `<div class="cb"><span>${esc(b.name)}<small>${esc(b.desc)}</small></span><b>${b.min} min</b></div>`).join('')}</div>
+      ${c.tip ? `<p class="muted" style="margin:10px 0 0"><small>${esc(c.tip)}</small></p>` : ''}
+      ${live ? `<button class="btn ${c.done ? '' : 'accent'} full" style="margin-top:12px" data-act="cardioDone">${c.done ? '✓ Cardio hecho (toca para desmarcar)' : 'Marcar cardio como hecho'}</button>` : ''}</section>`;
   }
 
   function viewActive() {
@@ -285,6 +296,7 @@
         <div class="asub"><span id="elapsed">${dur((Date.now() - active.start) / 1000)}</span> · <span id="vol">${thousands(volOf(active.exercises, true))}</span> kg · <span id="nsets">${done}</span>/${total} series · <span id="ppct">${total ? Math.round(done * 100 / total) : 0} %</span></div></div>
         <button class="btn accent" data-act="finish">Terminar</button>
         <div class="pbar"><i id="pbar" style="width:${total ? Math.round(done * 100 / total) : 0}%"></i></div></div>
+      ${active.cardio ? cardioCard(active.cardio, true) : ''}
       ${exs || '<p class="muted">Sesión libre: añade tu primer ejercicio.</p>'}
       <button class="btn full" data-act="addEx">+ Añadir ejercicio</button>
       <button class="btn full danger" style="margin-top:10px" data-act="cancel">Cancelar entrenamiento</button>`;
@@ -309,7 +321,7 @@
     });
     return Object.entries(m).sort((a, b) => b[1] - a[1]);
   }
-  const routineMin = r => Math.round(r.exercises.reduce((s, e) => s + e.sets * (45 + e.rest), 0) / 60 / 5) * 5;
+  const routineMin = r => Math.round((r.exercises.reduce((s, e) => s + e.sets * (45 + e.rest), 0) / 60 + (r.cardio ? r.cardio.min : 0)) / 5) * 5;
 
   function exSheet(name) {
     const i = exInfo(name);
@@ -349,10 +361,11 @@
         const mus = routineMuscles(r).slice(0, 4);
         return `<section class="rcard">
           <div class="rhead" data-act="toggleR" data-id="${r.id}">
-            <div class="badge">${esc(r.id.replace(/\D/g, ''))}</div>
-            <div class="rt"><b>${esc(r.short)}</b><small>${r.exercises.length} ejercicios · ${series} series · ~${routineMin(r)} min</small></div>
+            <div class="badge">${esc(r.badge || r.id.replace(/\D/g, ''))}</div>
+            <div class="rt"><b>${esc(r.short)}</b><small>${r.day ? esc(r.day) + ' · ' : ''}${r.exercises.length} ejercicios · ${series} series · ~${routineMin(r)} min</small></div>
             <span class="chev">${open ? '▾' : '▸'}</span>
           </div>
+          ${r.cardio ? cardioCard(r.cardio, false) : ''}
           <div class="mchips">${mus.map(([m, n]) => `<span class="mchip">${esc(m)} <b>${n}</b></span>`).join('')}</div>
           ${open ? `<div class="elist">${r.exercises.map(e => {
             const i = exInfo(e.name);
@@ -463,8 +476,8 @@
       ${body.length > 8 ? `<button class="btn full" style="margin-top:8px" data-act="bAll">${bAll ? 'Ver menos' : 'Ver todos (' + body.length + ')'}</button>` : ''}
       <h2>Historial</h2>
       ${sessions.length ? sessions.slice().reverse().map(s => `<button class="sess" data-act="openSession" data-id="${s.id}">
-        <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${thousands(volOf(s.exercises, false))} kg</span></div>
-        ${openId === s.id ? `<div class="detail">${s.exercises.map(e => `<div><b>${esc(e.name)}</b><br><span class="muted">${e.sets.map(x => (x.t === 'W' ? 'C ' : '') + kgTxt(x.kg) + '×' + x.reps).join(' · ')}</span></div>`).join('')}
+        <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div>
+        ${openId === s.id ? `<div class="detail">${s.cardio ? `<div><b>Cardio · ${esc(s.cardio.title)}</b><br><span class="muted">${s.cardio.min} min</span></div>` : ''}${s.exercises.map(e => `<div><b>${esc(e.name)}</b><br><span class="muted">${e.sets.map(x => (x.t === 'W' ? 'C ' : '') + kgTxt(x.kg) + '×' + x.reps).join(' · ')}</span></div>`).join('')}
         <span class="btn small danger" data-act="delSession" data-id="${s.id}">Borrar sesión</span></div>` : ''}</button>`).join('') : '<p class="muted">Aquí aparecerán tus entrenamientos.</p>'}
       <h2>Copia de seguridad</h2>
       <p class="muted"><small>Tus datos viven en este móvil. Exporta una copia de vez en cuando.</small></p>
@@ -649,6 +662,7 @@
       try { const reg = await navigator.serviceWorker.ready; const sub = await reg.pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) {}
       pushCancel(); pushEndpoint = null; save(K.n, null); render();
     }
+    else if (a === 'cardioDone') { active.cardio.done = !active.cardio.done; persist(); render(); }
     else if (a === 'restm') { active.rest.end = Math.max(Date.now() + 1000, active.rest.end - 15000); pushRest((active.rest.end - Date.now()) / 1000); persist(); renderRest(); }
     else if (a === 'restp') { active.rest.end += 15000; active.rest.total += 15; pushRest((active.rest.end - Date.now()) / 1000); persist(); renderRest(); }
     else if (a === 'restskip') { active.rest = null; pushCancel(); persist(); renderRest(); }

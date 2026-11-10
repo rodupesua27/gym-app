@@ -15,11 +15,11 @@ window.DIET = {
       steps: 'Huevos a la plancha en la sartén (3-4 min). Monta el bocadillo con mantequilla y pavo. Plátano y café aparte.'
     },
     {
-      id: 'd2', slot: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur y plátano',
-      kcal: 835, p: 20, min: 3,
-      ingredients: ['150 g de pan', 'Mantequilla', 'Mermelada de fresa', '1 yogur de fresa', '1 plátano', 'Café'],
-      steps: 'Sin cocinar. Para el día sin hambre o sin tiempo.',
-      note: 'Baja en proteína: compénsalo en la comida y la cena.'
+      id: 'd2', slot: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur con proteína y plátano',
+      kcal: 855, p: 24, min: 3,
+      ingredients: ['150 g de pan', 'Mantequilla', 'Mermelada de fresa', '1 yogur de fresa', '5 g de proteína HSN Evobasic de chocolate (≈ 4 g de proteína)', '1 plátano', 'Café'],
+      steps: 'Sin cocinar. Para el día sin hambre o sin tiempo. Mezcla los 5 g de proteína con una cucharada de yogur hasta que no queden grumos y añade el resto.',
+      note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
     },
     {
       id: 'c1', slot: 'comida', short: 'Arroz y pollo', name: 'Arroz con pollo y aguacate',

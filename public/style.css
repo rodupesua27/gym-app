@@ -201,3 +201,8 @@ details > summary { cursor: pointer; font-weight: 600; padding: 8px 0; list-styl
 details > summary::-webkit-details-marker { display: none; }
 .brow { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line); padding: 10px 2px; color: inherit; font: inherit; }
 input[type=date].t { min-width: 0; -webkit-appearance: none; appearance: none; }
+
+/* barra de progreso del entreno */
+.pbar { position: absolute; left: 0; right: 0; bottom: -1px; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.pbar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .35s ease; border-radius: 2px; }
+.ecnt { font-size: 13px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; background: var(--surface2); border-radius: 99px; padding: 4px 10px; }

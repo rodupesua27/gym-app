@@ -149,7 +149,17 @@
     const v = document.getElementById('vol');
     const n = document.getElementById('nsets');
     if (v) v.textContent = thousands(volOf(active.exercises, true));
-    if (n) n.textContent = active.exercises.reduce((c, e) => c + e.sets.filter(s => s.done).length, 0);
+    const tot = active.exercises.reduce((c, e) => c + e.sets.length, 0);
+    const dn = active.exercises.reduce((c, e) => c + e.sets.filter(s => s.done).length, 0);
+    if (n) n.textContent = dn;
+    const pct = tot ? Math.round(dn * 100 / tot) : 0;
+    const bar = document.getElementById('pbar'), pt = document.getElementById('ppct');
+    if (bar) bar.style.width = pct + '%';
+    if (pt) pt.textContent = pct + ' %';
+    active.exercises.forEach((e, i) => {
+      const c = document.getElementById('ec' + i);
+      if (c) c.textContent = e.sets.filter(s => s.done).length + '/' + e.sets.length;
+    });
   }
 
   async function addExercise() {
@@ -240,7 +250,7 @@
         </div>`;
       }).join('');
       return `<section class="ex" data-e="${ei}">
-        <div class="exh"><button class="exth" data-act="exinfo" data-ex="${esc(ex.name)}">${thumb(ex.name, 'th')}</button><div><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small></div></div>
+        <div class="exh"><button class="exth" data-act="exinfo" data-ex="${esc(ex.name)}">${thumb(ex.name, 'th')}</button><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small></div><span class="ecnt" id="ec${ei}">${ex.sets.filter(s => s.done).length}/${ex.sets.length}</span></div>
         <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
         ${rows}
         <div class="exf" data-e="${ei}">
@@ -251,8 +261,9 @@
       </section>`;
     }).join('');
     return `<div class="ahead"><div><div class="atitle">${esc(active.name)}</div>
-        <div class="asub"><span id="elapsed">${dur((Date.now() - active.start) / 1000)}</span> · <span id="vol">${thousands(volOf(active.exercises, true))}</span> kg · <span id="nsets">${done}</span>/${total} series</div></div>
-        <button class="btn accent" data-act="finish">Terminar</button></div>
+        <div class="asub"><span id="elapsed">${dur((Date.now() - active.start) / 1000)}</span> · <span id="vol">${thousands(volOf(active.exercises, true))}</span> kg · <span id="nsets">${done}</span>/${total} series · <span id="ppct">${total ? Math.round(done * 100 / total) : 0} %</span></div></div>
+        <button class="btn accent" data-act="finish">Terminar</button>
+        <div class="pbar"><i id="pbar" style="width:${total ? Math.round(done * 100 / total) : 0}%"></i></div></div>
       ${exs || '<p class="muted">Sesión libre: añade tu primer ejercicio.</p>'}
       <button class="btn full" data-act="addEx">+ Añadir ejercicio</button>
       <button class="btn full danger" style="margin-top:10px" data-act="cancel">Cancelar entrenamiento</button>`;

@@ -38,9 +38,11 @@ export class RestTimer {
     if (path === '/cancel') {
       await this.state.storage.deleteAlarm();
       await this.state.storage.delete('endpoint');
+      await this.state.storage.delete('left');
       return new Response('ok');
     }
     await this.state.storage.put('endpoint', body.endpoint);
+    await this.state.storage.put('left', 1); // avisos extra tras el primero
     await this.state.storage.setAlarm(Date.now() + body.seconds * 1000);
     return new Response('ok');
   }
@@ -48,7 +50,14 @@ export class RestTimer {
   async alarm() {
     const endpoint = await this.state.storage.get('endpoint');
     if (!endpoint) return;
-    await this.state.storage.delete('endpoint');
+    const left = (await this.state.storage.get('left')) || 0;
+    if (left > 0) {
+      await this.state.storage.put('left', left - 1);
+      await this.state.storage.setAlarm(Date.now() + 4000); // segundo aviso 4 s después
+    } else {
+      await this.state.storage.delete('endpoint');
+      await this.state.storage.delete('left');
+    }
     try {
       await fetch(endpoint, {
         method: 'POST',

@@ -1,5 +1,5 @@
 // Service worker: primero red (para que los cambios se vean al reabrir), con copia local sin conexión.
-var CACHE = 'gym-v3';
+var CACHE = 'gym-v4';
 
 self.addEventListener('install', function () { self.skipWaiting(); });
 
@@ -33,7 +33,7 @@ self.addEventListener('fetch', function (e) {
 
 // Aviso de fin de descanso (push sin contenido: el texto es fijo)
 self.addEventListener('push', function (e) {
-  e.waitUntil(self.registration.showNotification('Descanso terminado', {
+  e.waitUntil(self.registration.showNotification('DESCANSO TERMINADO', {
     body: 'A por la siguiente serie 💪',
     icon: '/icon-192.png',
     tag: 'descanso',

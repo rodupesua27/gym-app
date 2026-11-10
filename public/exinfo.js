@@ -215,13 +215,6 @@ window.EXINFO = {
   ],
   "s": []
  },
- "Abdominal (máquina)": {
-  "img": "Ab_Crunch_Machine",
-  "m": [
-   "Abdominales"
-  ],
-  "s": []
- },
  "Jalón al pecho agarre invertido (cable)": {
   "img": "Underhand_Cable_Pulldowns",
   "m": [
@@ -269,13 +262,6 @@ window.EXINFO = {
  },
  "Plancha": {
   "img": "Plank",
-  "m": [
-   "Abdominales"
-  ],
-  "s": []
- },
- "Crunch inverso": {
-  "img": "Reverse_Crunch",
   "m": [
    "Abdominales"
   ],

@@ -36,8 +36,8 @@ window.DIET = {
     },
     {
       id: 'c3', slot: 'comida', short: 'Wrap de pollo', name: 'Wrap de pollo con queso y aguacate',
-      kcal: 850, p: 60, min: 12,
-      ingredients: ['2 tortillas de trigo grandes', '150 g de pechuga de pollo', '30 g de queso', '½ aguacate'],
+      kcal: 950, p: 60, min: 12,
+      ingredients: ['2 tortillas de trigo grandes', '150 g de pechuga de pollo', '30 g de queso', '½ aguacate', '1 cucharada de mayonesa (≈15 g)'],
       steps: 'Pollo en tiras finas en la sartén, 6-8 min. Calienta las tortillas 20 s en el microondas, rellena y enrolla.'
     },
     {

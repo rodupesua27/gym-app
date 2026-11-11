@@ -76,7 +76,7 @@ window.EXINFO = {
   ]
  },
  "Remo sentado (máquina)": {
-  "img": "Seated_Cable_Rows",
+  "img": "Leverage_Iso_Row",
   "m": [
    "Espalda media"
   ],
@@ -286,6 +286,41 @@ window.EXINFO = {
   "m": [
    "Abdominales"
   ],
+  "s": []
+ },
+ "Rotación externa en polea": {
+  "img": "External_Rotation_with_Cable",
+  "m": ["Hombros"],
+  "s": []
+ },
+ "Face pull en polea": {
+  "img": "Face_Pull",
+  "m": ["Hombros"],
+  "s": ["Espalda alta"]
+ },
+ "Elevación lateral sentado en polea": {
+  "img": "Cable_Seated_Lateral_Raise",
+  "m": ["Hombros"],
+  "s": []
+ },
+ "Elevación lateral y frontal con mancuerna": {
+  "img": "Side_Laterals_to_Front_Raise",
+  "m": ["Hombros"],
+  "s": []
+ },
+ "Pájaro en polea (deltoides posterior)": {
+  "img": "Cable_Rear_Delt_Fly",
+  "m": ["Hombros"],
+  "s": ["Espalda alta"]
+ },
+ "Patada de tríceps con mancuerna": {
+  "img": "Tricep_Dumbbell_Kickback",
+  "m": ["Tríceps"],
+  "s": []
+ },
+ "Remo en máquina (iso)": {
+  "img": "Leverage_Iso_Row",
+  "m": ["Espalda media"],
   "s": []
  }
 };

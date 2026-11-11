@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta/comba que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-11d';
+window.ROUTINES_VERSION = '2026-11-11e';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -10,13 +10,13 @@ window.ROUTINES = [
     name: 'Día 1',
     short: 'Pecho, hombro y tríceps',
     exercises: [
-      { name: 'Press de banca inclinado (mancuerna)', sets: 5, warmup: 2, reps: '7-12', rest: 120 },
+      { name: 'Press de banca inclinado (mancuerna)', alt: ["Aperturas en polea de abajo arriba"], sets: 5, warmup: 2, reps: '7-12', rest: 120 },
       { name: 'Mariposa (Pec Deck)', sets: 3, reps: '5-15', rest: 90 },
       { name: 'Cables cruzados (de arriba abajo)', sets: 4, reps: '8-15', rest: 90 },
-      { name: 'Elevación frontal con barra (cable)', sets: 3, reps: '10', rest: 90 },
-      { name: 'Elevación lateral (cable)', sets: 3, reps: '8-12', rest: 90 },
+      { name: 'Elevación frontal con barra (cable)', alt: ["Elevación lateral y frontal con mancuerna", "Rotación externa en polea"], sets: 3, reps: '10', rest: 90 },
+      { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Pájaro en polea (deltoides posterior)"], sets: 3, reps: '8-12', rest: 90 },
       { name: 'Jalón de tríceps con barra V (polea)', sets: 3, reps: '7-16', rest: 90 },
-      { name: 'Extensión de tríceps por encima de la cabeza (cable)', sets: 3, reps: '10-12', rest: 90 }
+      { name: 'Extensión de tríceps por encima de la cabeza (cable)', alt: ["Patada de tríceps con mancuerna"], sets: 3, reps: '10-12', rest: 90 }
     ]
   },
   {
@@ -26,7 +26,7 @@ window.ROUTINES = [
     short: 'Espalda y bíceps',
     exercises: [
       { name: 'Jalón al pecho (cable)', sets: 5, warmup: 2, reps: '8-12', rest: 120 },
-      { name: 'Remo sentado (máquina)', sets: 3, reps: '11-14', rest: 120 },
+      { name: 'Remo sentado (máquina)', alt: ["Face pull en polea"], sets: 3, reps: '11-14', rest: 120 },
       { name: 'Jalón al pecho a un brazo', sets: 3, reps: '9-14', rest: 90 },
       { name: 'Encogimiento de hombros (mancuerna)', sets: 3, reps: '12', rest: 90 },
       { name: 'Curl predicador (máquina)', sets: 3, reps: '6-14', rest: 90 },
@@ -81,12 +81,12 @@ window.ROUTINES = [
     name: 'Día 5',
     short: 'Pecho, hombro y tríceps',
     exercises: [
-      { name: 'Press de banca inclinado (mancuerna)', sets: 5, warmup: 2, reps: '8-12', rest: 120 },
+      { name: 'Press de banca inclinado (mancuerna)', alt: ["Aperturas en polea de abajo arriba"], sets: 5, warmup: 2, reps: '8-12', rest: 120 },
       { name: 'Aperturas en polea de abajo arriba', sets: 3, reps: '10-15', rest: 90 },
-      { name: 'Aperturas inversas en polea', sets: 4, reps: '12-20', rest: 75 },
-      { name: 'Elevación lateral (cable)', sets: 4, reps: '10-15', rest: 75 },
+      { name: 'Aperturas inversas en polea', alt: ["Pájaro en polea (deltoides posterior)"], sets: 4, reps: '12-20', rest: 75 },
+      { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Pájaro en polea (deltoides posterior)"], sets: 4, reps: '10-15', rest: 75 },
       { name: 'Jalón de tríceps con cuerda', sets: 3, reps: '10-15', rest: 75 },
-      { name: 'Extensión de tríceps por encima de la cabeza (cable)', sets: 3, reps: '10-12', rest: 90 }
+      { name: 'Extensión de tríceps por encima de la cabeza (cable)', alt: ["Patada de tríceps con mancuerna"], sets: 3, reps: '10-12', rest: 90 }
     ]
   },
   {
@@ -97,7 +97,7 @@ window.ROUTINES = [
     short: 'Espalda y brazos',
     exercises: [
       { name: 'Jalón al pecho agarre invertido (cable)', sets: 6, warmup: 2, reps: '8-12', rest: 120 },
-      { name: 'Remo inclinado (barra)', sets: 4, reps: '9-11', rest: 120 },
+      { name: 'Remo inclinado (barra)', alt: ["Face pull en polea"], sets: 4, reps: '9-11', rest: 120 },
       { name: 'Encogimiento de hombros (mancuerna)', sets: 3, reps: '10-12', rest: 90 },
       { name: 'Curl martillo (mancuerna)', sets: 3, reps: '8-12', rest: 75 },
       { name: 'Curl de bíceps inclinado (mancuerna)', sets: 3, reps: '8-12', rest: 75 },

@@ -2,6 +2,8 @@
   'use strict';
 
   const ROUTINES = window.ROUTINES || [];
+  const ALT = {};
+  ROUTINES.forEach(r => r.exercises.forEach(e => { if (e.alt) ALT[e.name] = e.alt; }));
   const K = { s: 'gym.sessions', a: 'gym.active', b: 'gym.body', d: 'gym.diet', p: 'gym.profile', n: 'gym.push' };
 
   const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
@@ -298,7 +300,7 @@
         </div>`;
       }).join('');
       return `<section class="ex" data-e="${ei}">
-        <div class="exh"><button class="exth" data-act="exinfo" data-ex="${esc(ex.name)}">${thumb(ex.name, 'th')}</button><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small></div><span class="ecnt" id="ec${ei}">${ex.sets.filter(s => s.done).length}/${ex.sets.length}</span></div>
+        <div class="exh"><button class="exth" data-act="exinfo" data-ex="${esc(ex.name)}">${thumb(ex.name, 'th')}</button><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small>${ALT[ex.orig || ex.name] ? ` <button class="btn small" data-act="swapEx" data-e="${ei}">Cambiar</button>` : ''}</div><span class="ecnt" id="ec${ei}">${ex.sets.filter(s => s.done).length}/${ex.sets.length}</span></div>
         <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
         ${rows}
         <div class="exf" data-e="${ei}">
@@ -657,6 +659,12 @@
     }
     else if (a === 'addSet') { active.exercises[ei].sets.push({ t: 'N', kg: '', reps: '', done: false }); persist(); render(); }
     else if (a === 'delSet') { const ss = active.exercises[ei].sets; if (ss.length > 1) ss.pop(); persist(); render(); }
+    else if (a === 'swapEx') {
+      const ex = active.exercises[ei], base = ex.orig || ex.name, list = ALT[base] || [];
+      const pick = await sheet(`<h3>Cambiar ejercicio</h3><p class="muted">Sustituto de ${esc(base)} (la sesión guarda el que elijas)</p>`,
+        [...list.map(n => ({ label: n, cls: 'accent', v: n })), { label: 'Volver al original', v: base }, { label: 'Cancelar', v: false }]);
+      if (pick) { ex.name = pick; if (pick === base) delete ex.orig; else ex.orig = base; persist(); render(); }
+    }
     else if (a === 'delEx') {
       const ok = await sheet(`<h3>Quitar ejercicio</h3><p class="muted">${esc(active.exercises[ei].name)}</p>`, [{ label: 'No', v: false }, { label: 'Quitar', cls: 'accent', v: true }]);
       if (ok) { active.exercises.splice(ei, 1); persist(); render(); }

@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta/comba que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-11k';
+window.ROUTINES_VERSION = '2026-11-11l';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -45,7 +45,7 @@ window.ROUTINES = [
       { name: 'Curl de pierna acostado (máquina)', sets: 5, reps: '8-12', rest: 90 },
       { name: 'Abducción de cadera (máquina)', sets: 2, reps: '10-12', rest: 75 },
       { name: 'Aducción de cadera (máquina)', sets: 2, reps: '10-12', rest: 75 },
-      { name: 'Empuje de cadera (máquina)', sets: 4, reps: '8-11', rest: 120 },
+      { name: 'Empuje de cadera (máquina)', sets: 2, reps: '8-11', rest: 120 },
       { name: 'Pantorrilla en prensa, puntas hacia fuera', sets: 3, reps: '10-15', rest: 75 },
       { name: 'Pantorrilla en prensa, puntas hacia dentro', sets: 3, reps: '9-15', rest: 75 }
     ]

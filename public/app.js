@@ -185,25 +185,30 @@
     });
   }
 
-  function swapPage(base, cur, list) {
+  function swapPage(base, cur, list, plan) {
     return new Promise(resolve => {
       const o = document.createElement('div');
       o.className = 'fpage';
       const row = (n, tag) => {
         const i = exInfo(n);
-        return `<button class="erow swr ${n === cur ? 'sel' : ''}" data-n="${esc(n)}">${thumb(n, 'th')}
-          <div class="en"><b>${esc(n)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small></div>
+        return `<button class="swr ${n === cur ? 'sel' : ''}" data-n="${esc(n)}">${thumb(n, 'th')}
+          <div class="en"><b>${esc(n)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small>
+          <span class="plan">${esc(plan)}</span></div>
           <span class="es">${n === cur ? '✓ Actual' : tag}</span></button>`;
       };
       o.innerHTML = `<div class="fhead"><button class="btn small" data-close="1">‹ Volver</button><b>Cambiar ejercicio</b></div>
         <p class="muted" style="margin:6px 4px 12px"><small>Elige un sustituto. La sesión guarda el que elijas.</small></p>
         <h2>Original</h2>${row(base, 'Elegir')}
         <h2>Alternativas</h2>${list.map(n => row(n, 'Elegir')).join('')}`;
+      const prevOv = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      const done = v => { document.body.style.overflow = prevOv; document.body.removeChild(o); resolve(v); };
+      o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
       o.addEventListener('click', ev => {
         const b = ev.target.closest('button');
         if (!b) return;
-        if (b.dataset.close) { document.body.removeChild(o); resolve(null); }
-        else if (b.dataset.n) { document.body.removeChild(o); resolve(b.dataset.n); }
+        if (b.dataset.close) done(null);
+        else if (b.dataset.n) done(b.dataset.n);
       });
       document.body.appendChild(o);
     });
@@ -332,7 +337,7 @@
           <button class="btn small" data-act="delSet">− Serie</button>
           <button class="btn small danger" data-act="delEx">Quitar</button>
         </div>
-        ${ALT[ex.orig || ex.name] ? `<button class="btn full" style="margin-top:8px" data-act="swapEx" data-e="${ei}">⇄ Cambiar ejercicio</button>` : ''}
+        ${ALT[ex.orig || ex.name] ? `<button class="btn full" style="margin-top:8px" data-act="swapEx" data-e="${ei}">Cambiar ejercicio</button>` : ''}
       </section>`;
     }).join('');
     return `<div class="ahead"><div><div class="atitle">${esc(active.name)}</div>
@@ -686,7 +691,7 @@
     else if (a === 'delSet') { const ss = active.exercises[ei].sets; if (ss.length > 1) ss.pop(); persist(); render(); }
     else if (a === 'swapEx') {
       const ex = active.exercises[ei], base = ex.orig || ex.name, list = ALT[base] || [];
-      const pick = await swapPage(base, ex.name, list);
+      const pick = await swapPage(base, ex.name, list, `${ex.sets.length} series × ${ex.reps || '–'} reps`);
       if (pick) { ex.name = pick; if (pick === base) delete ex.orig; else ex.orig = base; persist(); render(); }
     }
     else if (a === 'delEx') {

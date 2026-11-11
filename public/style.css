@@ -226,3 +226,13 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .fpage .fhead b { font-size: 18px; }
 .fpage .erow .th { width: 84px; height: 64px; }
 .fpage .erow.sel { opacity: .75; }
+
+.fpage { overscroll-behavior: contain; }
+.fpage .swr { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px; margin-bottom: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+.fpage .swr .th { width: 112px; height: 88px; border-radius: 12px; object-fit: cover; flex: none; background: var(--surface2); }
+.fpage .swr .en { flex: 1; min-width: 0; }
+.fpage .swr .en b { display: block; font-size: 16px; font-weight: 600; line-height: 1.25; }
+.fpage .swr .en small { display: block; margin-top: 2px; }
+.fpage .swr .plan { display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--accent, #b4f23a); }
+.fpage .swr .es { color: var(--muted); font-size: 14px; align-self: flex-start; white-space: nowrap; }
+.fpage .swr.sel { opacity: .75; }

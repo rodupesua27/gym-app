@@ -514,7 +514,7 @@
   }
   function dietTotals(day) {
     const D = window.DIET || { slots: [], options: [] };
-    let eaten = 0, prot = 0, plan = 0;
+    let eaten = 0, prot = 0, plan = 0, planP = 0;
     D.slots.forEach(s => {
       const c = day[s.id];
       if (!c) return;
@@ -522,9 +522,10 @@
       if (!o) return;
       const k = o.kcal + (c.oil || 0) * OIL_KCAL;
       plan += k;
+      planP += o.p;
       if (c.done) { eaten += k; prot += o.p; }
     });
-    return { eaten, prot, plan };
+    return { eaten, prot, plan, planP };
   }
   function mealCard(slot, o, c) {
     const k = o.kcal + (c.oil || 0) * OIL_KCAL;
@@ -563,7 +564,7 @@
       <div class="card" style="cursor:default">
         <div class="row between"><b style="margin:0">${thousands(tot.eaten)} <small>/ ${thousands(T.kcal)} kcal</small></b><small>plan del día: ${thousands(tot.plan)}</small></div>
         <div class="bar"><div style="width:${pct}%"></div></div>
-        <div class="row between" style="margin-top:10px"><span>${Math.round(tot.prot)} <small>/ ${T.protein} g proteína</small></span></div>
+        <div class="row between" style="margin-top:10px"><span>${Math.round(tot.prot)} <small>/ ${T.protein} g proteína</small></span><small>plan del día: ${Math.round(tot.planP)} g</small></div>
         <div class="bar"><div style="width:${ppct}%"></div></div>
       </div>
       ${meals}

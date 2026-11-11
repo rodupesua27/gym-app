@@ -191,18 +191,17 @@
       o.className = 'fpage';
       const row = (n, tag) => {
         const i = exInfo(n);
-        return `<button class="swr ${n === cur ? 'sel' : ''}" data-n="${esc(n)}">${thumb(n, 'th')}
-          <div class="en"><b>${esc(n)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small>
+        return `<button class="swr ${n === cur ? 'sel' : ''}" data-n="${esc(n)}">
+          <div class="swt"><div class="en"><b>${esc(n)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small>
           <span class="plan">${esc(plan)}</span></div>
-          <span class="es">${n === cur ? '✓ Actual' : tag}</span></button>`;
+          <span class="es">${n === cur ? '✓ Actual' : tag}</span></div>
+          ${i && i.img ? `<div class="swi"><img loading="lazy" alt="" src="${imgSrc(i, 0)}"><img loading="lazy" alt="" src="${imgSrc(i, 1)}"></div>` : ''}</button>`;
       };
       o.innerHTML = `<div class="fhead"><button class="btn small" data-close="1">‹ Volver</button><b>Cambiar ejercicio</b></div>
         <p class="muted" style="margin:6px 4px 12px"><small>Elige un sustituto. La sesión guarda el que elijas.</small></p>
         <h2>Original</h2>${row(base, 'Elegir')}
         <h2>Alternativas</h2>${list.map(n => row(n, 'Elegir')).join('')}`;
-      const prevOv = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      const done = v => { document.body.style.overflow = prevOv; document.body.removeChild(o); resolve(v); };
+      const done = v => { document.body.removeChild(o); resolve(v); };
       o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
       o.addEventListener('click', ev => {
         const b = ev.target.closest('button');

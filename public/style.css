@@ -236,3 +236,9 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .fpage .swr .plan { display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--accent, #b4f23a); }
 .fpage .swr .es { color: var(--muted); font-size: 14px; align-self: flex-start; white-space: nowrap; }
 .fpage .swr.sel { opacity: .75; }
+
+.fpage .swr { display: block; }
+.fpage .swr .swt { display: flex; align-items: flex-start; gap: 10px; }
+.fpage .swr .swi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.fpage .swr .swi img { width: 100%; aspect-ratio: 3 / 2; object-fit: contain; background: #000; border-radius: 10px; display: block; }
+.flip img { object-fit: contain; }

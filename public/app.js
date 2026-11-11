@@ -158,8 +158,8 @@
     return pushEndpoint && Notification.permission === 'granted' ? 'on' : 'off';
   };
 
-  function startRest(sec) {
-    active.rest = { end: Date.now() + sec * 1000, total: sec };
+  function startRest(sec, key) {
+    active.rest = { end: Date.now() + sec * 1000, total: sec, key };
     pushRest(sec);
   }
   function pendingSets() {
@@ -641,14 +641,18 @@
     else if (a === 'toggleType') { const s = active.exercises[ei].sets[si]; s.t = s.t === 'W' ? 'N' : 'W'; persist(); render(); }
     else if (a === 'check') {
       const ex = active.exercises[ei], s = ex.sets[si];
-      if (s.done) { s.done = false; persist(); render(); return; }
+      if (s.done) {
+        s.done = false;
+        if (active.rest && active.rest.key === ei + '-' + si) { active.rest = null; pushCancel(); }
+        persist(); render(); return;
+      }
       const p = prevOf(ex, si);
       if (s.kg === '' && p) s.kg = String(p.kg);
       if (s.reps === '' && p) s.reps = String(p.reps);
       if (isNaN(num(s.reps))) { t.classList.add('err'); setTimeout(() => t.classList.remove('err'), 400); return; }
       if (s.kg === '') s.kg = '0';
       s.done = true;
-      startRest(s.t === 'W' ? Math.min(ex.rest, 60) : ex.rest);
+      startRest(s.t === 'W' ? Math.min(ex.rest, 60) : ex.rest, ei + '-' + si);
       ensureAudio(); persist(); render();
     }
     else if (a === 'addSet') { active.exercises[ei].sets.push({ t: 'N', kg: '', reps: '', done: false }); persist(); render(); }

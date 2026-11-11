@@ -185,6 +185,30 @@
     });
   }
 
+  function swapPage(base, cur, list) {
+    return new Promise(resolve => {
+      const o = document.createElement('div');
+      o.className = 'fpage';
+      const row = (n, tag) => {
+        const i = exInfo(n);
+        return `<button class="erow swr ${n === cur ? 'sel' : ''}" data-n="${esc(n)}">${thumb(n, 'th')}
+          <div class="en"><b>${esc(n)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small></div>
+          <span class="es">${n === cur ? '✓ Actual' : tag}</span></button>`;
+      };
+      o.innerHTML = `<div class="fhead"><button class="btn small" data-close="1">‹ Volver</button><b>Cambiar ejercicio</b></div>
+        <p class="muted" style="margin:6px 4px 12px"><small>Elige un sustituto. La sesión guarda el que elijas.</small></p>
+        <h2>Original</h2>${row(base, 'Elegir')}
+        <h2>Alternativas</h2>${list.map(n => row(n, 'Elegir')).join('')}`;
+      o.addEventListener('click', ev => {
+        const b = ev.target.closest('button');
+        if (!b) return;
+        if (b.dataset.close) { document.body.removeChild(o); resolve(null); }
+        else if (b.dataset.n) { document.body.removeChild(o); resolve(b.dataset.n); }
+      });
+      document.body.appendChild(o);
+    });
+  }
+
   async function addExercise() {
     const names = [...new Set([
       ...ROUTINES.flatMap(r => r.exercises.map(e => e.name)),
@@ -300,7 +324,7 @@
         </div>`;
       }).join('');
       return `<section class="ex" data-e="${ei}">
-        <div class="exh"><button class="exth" data-act="exinfo" data-ex="${esc(ex.name)}">${thumb(ex.name, 'th')}</button><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small>${ALT[ex.orig || ex.name] ? ` <button class="btn small" data-act="swapEx" data-e="${ei}">Cambiar</button>` : ''}</div><span class="ecnt" id="ec${ei}">${ex.sets.filter(s => s.done).length}/${ex.sets.length}</span></div>
+        <div class="exh"><button class="exth" data-act="exinfo" data-ex="${esc(ex.name)}">${thumb(ex.name, 'th')}</button><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small></div><span class="ecnt" id="ec${ei}">${ex.sets.filter(s => s.done).length}/${ex.sets.length}</span></div>
         <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
         ${rows}
         <div class="exf" data-e="${ei}">
@@ -308,6 +332,7 @@
           <button class="btn small" data-act="delSet">− Serie</button>
           <button class="btn small danger" data-act="delEx">Quitar</button>
         </div>
+        ${ALT[ex.orig || ex.name] ? `<button class="btn full" style="margin-top:8px" data-act="swapEx" data-e="${ei}">⇄ Cambiar ejercicio</button>` : ''}
       </section>`;
     }).join('');
     return `<div class="ahead"><div><div class="atitle">${esc(active.name)}</div>
@@ -661,8 +686,7 @@
     else if (a === 'delSet') { const ss = active.exercises[ei].sets; if (ss.length > 1) ss.pop(); persist(); render(); }
     else if (a === 'swapEx') {
       const ex = active.exercises[ei], base = ex.orig || ex.name, list = ALT[base] || [];
-      const pick = await sheet(`<h3>Cambiar ejercicio</h3><p class="muted">Sustituto de ${esc(base)} (la sesión guarda el que elijas)</p>`,
-        [...list.map(n => ({ label: n, cls: 'accent', v: n })), { label: 'Volver al original', v: base }, { label: 'Cancelar', v: false }]);
+      const pick = await swapPage(base, ex.name, list);
       if (pick) { ex.name = pick; if (pick === base) delete ex.orig; else ex.orig = base; persist(); render(); }
     }
     else if (a === 'delEx') {

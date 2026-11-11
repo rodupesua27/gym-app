@@ -29,15 +29,15 @@ window.DIET = {
     {
       id: 'c1', slot: 'comida', short: 'Arroz y pollo', name: 'Arroz con pollo y aguacate',
       min: 15,
-      ingredients: ['60 g de arroz seco (≈150 g cocido)', '160 g de pechuga de pollo Lidl', '½ aguacate', 'Lechuga (opcional)', '1 cucharada de aceite de oliva'],
-      kc: [208, 165, 160, 0, 120], pr: [4, 38, 2, 0, 0],
+      ingredients: ['60 g de arroz seco (≈150 g cocido)', '160 g de pechuga de pollo Lidl', '½ aguacate', 'Verdura o ensalada (150 g)', '1 cucharada de aceite de oliva'],
+      kc: [208, 165, 160, 30, 120], pr: [4, 38, 2, 2, 0],
       steps: 'Pollo en tiras finas en la sartén con aceite, 6-8 min: así queda jugoso y no seco. Arroz en el microondas (bolsa lista o 1 parte de arroz por 2 de agua, 10-12 min).'
     },
     {
       id: 'c2', slot: 'comida', short: 'Pasta y atún', name: 'Pasta con atún y tomate frito',
       min: 12,
-      ingredients: ['100 g de pasta seca', '2 latas de atún Nixe al natural (80 g escurrido c/u)', '100 g de tomate frito Hacendado', '1 cucharada de aceite de oliva'],
-      kc: [349, 178, 81, 120], pr: [12, 42, 1, 0],
+      ingredients: ['100 g de pasta seca', '2 latas de atún Nixe al natural (80 g escurrido c/u)', '100 g de tomate frito Hacendado', 'Verdura o ensalada (150 g)', '1 cucharada de aceite de oliva'],
+      kc: [349, 178, 81, 30, 120], pr: [12, 42, 1, 2, 0],
       steps: 'Pasta en el microondas: bol grande, agua cubriéndola y el tiempo del paquete +2 min. Escurre y mezcla con el atún y el tomate frito.',
       note: 'Con atún máximo 1-2 comidas por semana (2-4 latas).'
     },
@@ -51,8 +51,8 @@ window.DIET = {
     {
       id: 'n1', slot: 'cena', short: 'Pasta y ternera', name: 'Pasta con ternera, tomate frito y queso',
       min: 15,
-      ingredients: ['120 g de pasta seca', '150 g de ternera picada', '100 g de tomate frito Hacendado', '30 g de queso Gouda Milbona', 'Orégano'],
-      kc: [419, 270, 81, 113, 0], pr: [14, 30, 1, 7, 0],
+      ingredients: ['120 g de pasta seca', '150 g de ternera picada', '100 g de tomate frito Hacendado', '30 g de queso Gouda Milbona', 'Verdura o ensalada (150 g)', 'Orégano'],
+      kc: [419, 270, 81, 113, 30, 0], pr: [14, 30, 1, 7, 2, 0],
       steps: 'Pasta en el microondas (tiempo del paquete +2 min). Ternera picada en la sartén 6-8 min, añade el tomate frito. Mezcla y cubre con queso.'
     },
     {
@@ -65,8 +65,8 @@ window.DIET = {
     {
       id: 'n3', slot: 'cena', short: 'Arroz y atún', name: 'Arroz con atún y huevos',
       min: 12,
-      ingredients: ['67 g de arroz seco (≈200 g cocido)', '2 latas de atún Nixe al natural (80 g escurrido c/u)', '2 huevos M', 'Tomate frito Hacendado (100 g)'],
-      kc: [232, 178, 158, 81], pr: [5, 42, 14, 1],
+      ingredients: ['67 g de arroz seco (≈200 g cocido)', '2 latas de atún Nixe al natural (80 g escurrido c/u)', '2 huevos M', 'Tomate frito Hacendado (100 g)', 'Verdura o ensalada (150 g)'],
+      kc: [232, 178, 158, 81, 30], pr: [5, 42, 14, 1, 2],
       steps: 'Arroz en el microondas. Huevos fritos en la sartén. Mezcla con el atún y el tomate frito.',
       note: 'Con atún máximo 1-2 comidas por semana (2-4 latas).'
     },

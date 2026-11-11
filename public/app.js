@@ -544,6 +544,13 @@
     while (ks.length > 60) delete diet[ks.shift()];
     save(K.d, diet);
   }
+  function optVals(o, c) {
+    const skip = c.skip || [];
+    if (!o.kc) return { k: o.kcal + (c.oil || 0) * OIL_KCAL, p: o.p };
+    let k = 0, p = 0;
+    o.kc.forEach((v, i) => { if (!skip.includes(i)) { k += v; p += o.pr[i]; } });
+    return { k: k + (c.oil || 0) * OIL_KCAL, p };
+  }
   function dietTotals(day) {
     const D = window.DIET || { slots: [], options: [] };
     let eaten = 0, prot = 0, plan = 0, planP = 0;
@@ -552,20 +559,20 @@
       if (!c) return;
       const o = D.options.find(x => x.id === c.opt);
       if (!o) return;
-      const k = o.kcal + (c.oil || 0) * OIL_KCAL;
-      plan += k;
-      planP += o.p;
-      if (c.done) { eaten += k; prot += o.p; }
+      const v = optVals(o, c);
+      plan += v.k;
+      planP += v.p;
+      if (c.done) { eaten += v.k; prot += v.p; }
     });
     return { eaten, prot, plan, planP };
   }
   function mealCard(slot, o, c) {
-    const k = o.kcal + (c.oil || 0) * OIL_KCAL;
+    const v = optVals(o, c);
     return `<div class="meal ${c.done ? 'done' : ''}">
-      <div class="row between"><b>${esc(o.name)}</b><span class="pill">${thousands(k)} kcal</span></div>
-      <small>${o.p} g proteína · ${o.min} min${c.oil ? ' · +' + c.oil + ' cda aceite' : ''}</small>
+      <div class="row between"><b>${esc(o.name)}</b><span class="pill">${thousands(v.k)} kcal</span></div>
+      <small>${v.p} g proteína · ${o.min} min${c.oil ? ' · +' + c.oil + ' cda aceite' : ''}</small>
       <ul class="ings">${o.ingredients.map((i, n) => { const off = (c.skip || []).includes(n); return `<li><button class="ing ${off ? 'off' : ''}" data-act="dietIng" data-slot="${slot}" data-i="${n}"><span class="ck2">${off ? '' : '✓'}</span><span>${esc(i)}</span></button></li>`; }).join('')}</ul>
-      ${(c.skip || []).length ? `<p class="muted"><small>Sin: ${(c.skip || []).map(n => esc(o.ingredients[n].replace(/\s*\(.*\)$/, ''))).join(', ')}. Las kcal son las del plan completo.</small></p>` : ''}
+      ${(c.skip || []).length ? `<p class="muted"><small>Sin: ${(c.skip || []).map(n => esc(o.ingredients[n].replace(/\s*\(.*\)$/, ''))).join(', ')}. Kcal y proteína ya descontadas.</small></p>` : ''}
       <details><summary class="muted">Cómo se hace</summary><p>${esc(o.steps)}</p></details>
       ${o.note ? `<p class="muted"><small>${esc(o.note)}</small></p>` : ''}
       <div class="row">

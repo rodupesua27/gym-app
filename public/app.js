@@ -185,7 +185,7 @@
     });
   }
 
-  function swapPage(base, cur, list, plan) {
+  function swapPage(base, cur, list, planOf) {
     return new Promise(resolve => {
       const o = document.createElement('div');
       o.className = 'fpage';
@@ -193,7 +193,7 @@
         const i = exInfo(n);
         return `<button class="swr ${n === cur ? 'sel' : ''}" data-n="${esc(n)}">
           <div class="swt"><div class="en"><b>${esc(n)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small>
-          <span class="plan">${esc(plan)}</span></div>
+          <span class="plan">${esc(planOf(n))}</span></div>
           <span class="es">${n === cur ? '✓ Actual' : tag}</span></div>
           ${i && i.img ? `<div class="swi"><img loading="lazy" alt="" src="${imgSrc(i, 0)}"><img loading="lazy" alt="" src="${imgSrc(i, 1)}"></div>` : ''}</button>`;
       };
@@ -690,8 +690,21 @@
     else if (a === 'delSet') { const ss = active.exercises[ei].sets; if (ss.length > 1) ss.pop(); persist(); render(); }
     else if (a === 'swapEx') {
       const ex = active.exercises[ei], base = ex.orig || ex.name, list = ALT[base] || [];
-      const pick = await swapPage(base, ex.name, list, `${ex.sets.length} series × ${ex.reps || '–'} reps`);
-      if (pick) { ex.name = pick; if (pick === base) delete ex.orig; else ex.orig = base; persist(); render(); }
+      const op = ex.origPlan || { n: ex.sets.length, w: ex.sets.filter(x => x.t === 'W').length, reps: ex.reps, rest: ex.rest };
+      const AP = window.ALT_PLAN || {};
+      const txt = n => n === base ? `${op.n - op.w} series × ${op.reps || '–'} reps${op.w ? ' + ' + op.w + ' calent.' : ''}` : (AP[n] ? `${AP[n].sets} series × ${AP[n].reps} reps` : '');
+      const pick = await swapPage(base, ex.name, list, txt);
+      if (pick && pick !== ex.name) {
+        if (!ex.origPlan) ex.origPlan = op;
+        const np = pick === base ? { n: op.n, w: op.w, reps: op.reps, rest: op.rest } : (AP[pick] ? { n: AP[pick].sets, w: 0, reps: AP[pick].reps, rest: AP[pick].rest } : null);
+        ex.name = pick;
+        if (pick === base) { delete ex.orig; delete ex.origPlan; } else ex.orig = base;
+        if (np) {
+          ex.reps = np.reps; ex.rest = np.rest;
+          if (!ex.sets.some(x => x.done)) ex.sets = mkEx(pick, np.n, np.w, np.reps, np.rest).sets;
+        }
+        persist(); render();
+      }
     }
     else if (a === 'delEx') {
       const ok = await sheet(`<h3>Quitar ejercicio</h3><p class="muted">${esc(active.exercises[ei].name)}</p>`, [{ label: 'No', v: false }, { label: 'Quitar', cls: 'accent', v: true }]);

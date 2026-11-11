@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta/comba que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-11i';
+window.ROUTINES_VERSION = '2026-11-11j';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -130,3 +130,14 @@ window.ROUTINES = [
     ]
   }
 ];
+
+// Series y repeticiones propias de cada ejercicio alternativo (hipertrofia, hombro delicado).
+window.ALT_PLAN = {
+  'Aperturas en polea de abajo arriba': { sets: 3, reps: '10-15', rest: 75 },
+  'Elevación lateral y frontal con mancuerna': { sets: 3, reps: '12-15', rest: 60 },
+  'Rotación externa en polea': { sets: 2, reps: '15-20', rest: 45 },
+  'Elevación lateral sentado en polea': { sets: 3, reps: '10-15', rest: 75 },
+  'Pájaro en polea (deltoides posterior)': { sets: 3, reps: '12-20', rest: 60 },
+  'Patada de tríceps con mancuerna': { sets: 3, reps: '12-15', rest: 60 },
+  'Face pull en polea': { sets: 3, reps: '12-20', rest: 60 }
+};

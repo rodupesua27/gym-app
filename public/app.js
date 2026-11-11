@@ -62,6 +62,7 @@
     }
     return null;
   }
+  const lowReps = r => { const m = String(r || '').match(/\d+/); return m ? m[0] : ''; };
   function prevOf(ex, si) {
     const le = lastEx(ex.name);
     if (!le) return null;
@@ -318,7 +319,7 @@
         const p = prevOf(ex, si);
         const label = s.t === 'W' ? 'C' : idx + 1;
         const phKg = p ? kgTxt(p.kg) : '';
-        const phReps = p ? p.reps : (ex.reps || '');
+        const phReps = p ? p.reps : lowReps(ex.reps);
         return `<div class="set ${s.done ? 'done' : ''}" data-e="${ei}" data-s="${si}">
           <button class="tp ${s.t === 'W' ? 'w' : ''}" data-act="toggleType" title="Calentamiento / normal">${label}</button>
           <div class="pv">${p ? kgTxt(p.kg) + ' × ' + p.reps : '–'}</div>
@@ -679,7 +680,7 @@
       }
       const p = prevOf(ex, si);
       if (s.kg === '' && p) s.kg = String(p.kg);
-      if (s.reps === '' && p) s.reps = String(p.reps);
+      if (s.reps === '') s.reps = p ? String(p.reps) : lowReps(ex.reps);
       if (isNaN(num(s.reps))) { t.classList.add('err'); setTimeout(() => t.classList.remove('err'), 400); return; }
       if (s.kg === '') s.kg = '0';
       s.done = true;

@@ -564,7 +564,8 @@
     return `<div class="meal ${c.done ? 'done' : ''}">
       <div class="row between"><b>${esc(o.name)}</b><span class="pill">${thousands(k)} kcal</span></div>
       <small>${o.p} g proteína · ${o.min} min${c.oil ? ' · +' + c.oil + ' cda aceite' : ''}</small>
-      <ul>${o.ingredients.map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+      <ul class="ings">${o.ingredients.map((i, n) => { const off = (c.skip || []).includes(n); return `<li><button class="ing ${off ? 'off' : ''}" data-act="dietIng" data-slot="${slot}" data-i="${n}"><span class="ck2">${off ? '' : '✓'}</span><span>${esc(i)}</span></button></li>`; }).join('')}</ul>
+      ${(c.skip || []).length ? `<p class="muted"><small>Sin: ${(c.skip || []).map(n => esc(o.ingredients[n].replace(/\s*\(.*\)$/, ''))).join(', ')}. Las kcal son las del plan completo.</small></p>` : ''}
       <details><summary class="muted">Cómo se hace</summary><p>${esc(o.steps)}</p></details>
       ${o.note ? `<p class="muted"><small>${esc(o.note)}</small></p>` : ''}
       <div class="row">
@@ -600,6 +601,7 @@
         <div class="bar"><div style="width:${ppct}%"></div></div>
       </div>
       ${meals}
+      <p class="muted" style="margin-top:16px"><small>Suplementos: creatina todos los días (sin kcal). La proteína del yogur ya va contada en el desayuno de yogur.</small></p>
       <p class="muted" style="margin-top:20px"><small>Cifras aproximadas. Si en 3 semanas el peso no sube, sumamos aceite o mantequilla. Para cambiar el menú, dímelo en el chat.</small></p>`;
   }
 
@@ -778,12 +780,21 @@
     else if (a === 'dietPick') {
       const day = dayDiet(), sl = t.dataset.slot;
       if (day[sl] && day[sl].opt === t.dataset.opt) return;
-      day[sl] = { opt: t.dataset.opt, done: false, oil: 0 };
+      day[sl] = { opt: t.dataset.opt, done: false, oil: 0, skip: [] };
       saveDiet(); render();
     }
     else if (a === 'dietDone') {
       const c = dayDiet()[t.dataset.slot];
       if (c) { c.done = !c.done; saveDiet(); render(); }
+    }
+    else if (a === 'dietIng') {
+      const c = dayDiet()[t.dataset.slot];
+      if (c) {
+        const n = +t.dataset.i;
+        c.skip = c.skip || [];
+        c.skip = c.skip.includes(n) ? c.skip.filter(x => x !== n) : [...c.skip, n];
+        saveDiet(); render();
+      }
     }
     else if (a === 'dietOil') {
       const c = dayDiet()[t.dataset.slot];

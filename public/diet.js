@@ -10,14 +10,14 @@ window.DIET = {
   options: [
     {
       id: 'd1', slot: 'desayuno', short: 'Bocadillo', name: 'Bocadillo de pavo y huevos',
-      kcal: 770, p: 30, min: 10,
-      ingredients: ['140 g de pan', '2 lonchas de pavo (25 g)', 'Mantequilla', '2 huevos', '1 plátano', 'Café'],
+      kcal: 847, p: 34, min: 10,
+      ingredients: ['140 g de pan', '2 lonchas de pavo (25 g)', 'Mantequilla', '2 huevos', '1 plátano', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
       steps: 'Huevos a la plancha en la sartén (3-4 min). Monta el bocadillo con mantequilla y pavo. Plátano y café aparte.'
     },
     {
       id: 'd2', slot: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur con proteína y plátano',
-      kcal: 828, p: 23, min: 3,
-      ingredients: ['140 g de pan', 'Mantequilla', 'Mermelada de fresa', '1 yogur de fresa', '5 g de proteína (chocolate)', '1 plátano', 'Café'],
+      kcal: 905, p: 27, min: 3,
+      ingredients: ['140 g de pan', 'Mantequilla', 'Mermelada de fresa', '1 yogur de fresa', '5 g de proteína (chocolate)', '1 plátano', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
       steps: 'Sin cocinar. Para el día sin hambre o sin tiempo.',
       note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
     },
@@ -36,8 +36,8 @@ window.DIET = {
     },
     {
       id: 'c3', slot: 'comida', short: 'Wrap de pollo', name: 'Wrap de pollo con queso y aguacate',
-      kcal: 950, p: 60, min: 12,
-      ingredients: ['2 tortillas de trigo grandes', '150 g de pechuga de pollo', '30 g de queso', '½ aguacate', '1 cucharada de mayonesa (≈15 g)'],
+      kcal: 1050, p: 60, min: 12,
+      ingredients: ['2 tortillas de trigo grandes', '150 g de pechuga de pollo', '30 g de queso', '½ aguacate', '1 cucharada de mayonesa por tortilla (2 en total, ≈30 g)'],
       steps: 'Pollo en tiras finas en la sartén, 6-8 min. Calienta las tortillas 20 s en el microondas, rellena y enrolla.'
     },
     {

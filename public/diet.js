@@ -2,7 +2,7 @@
 // Todo se hace con sartén y microondas, cocinando cada día.
 // kc / pr: kcal y proteína de cada ingrediente (misma posición que "ingredients").
 // Datos de etiqueta del usuario: Lidl (pan, pollo, yogur y queso Milbona, nata, huevos M), Real Valle (pavo), Tastino (tortillas), Nixe (atún), Hacendado (tomate frito), mayonesa (613 kcal/100 g).
-// Estimaciones: mantequilla (sin datos), ternera picada, aguacate, yogur de 150 g (el envase no se sabe), plátano de Canarias (Ministerio), azúcar del café, peso de cada huevo M (55 g).
+// Estimaciones: mantequilla (sin datos), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, peso de cada huevo M (55 g).
 window.DIET_TARGET = { kcal: 2900, protein: 120 };
 window.DIET = {
   slots: [
@@ -21,8 +21,8 @@ window.DIET = {
     {
       id: 'd2', slot: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur con proteína y plátano',
       min: 3,
-      ingredients: ['140 g de pan Lidl (bocadillo)', 'Mantequilla (10 g)', 'Mermelada de fresa (20 g)', '1 yogur Milbona griego fresa (150 g)', '5 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
-      kc: [379, 72, 10, 182, 20, 99, 75], pr: [11, 0, 0, 4, 4, 1, 4],
+      ingredients: ['140 g de pan Lidl (bocadillo)', 'Mantequilla (10 g)', 'Mermelada de fresa (20 g)', '1 yogur Milbona griego fresa (125 g)', '5 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
+      kc: [379, 72, 10, 151, 20, 99, 75], pr: [11, 0, 0, 3, 4, 1, 4],
       steps: 'Sin cocinar. Para el día sin hambre o sin tiempo.',
       note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
     },

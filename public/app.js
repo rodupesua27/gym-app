@@ -307,14 +307,14 @@
   // La puntuación global es la media de esos ejercicios. Gimnasio: intermedio = Platino 1. General: umbrales ×0,75.
   const REF = {
     'Press de banca inclinado (mancuerna)': .5, 'Curl de bíceps (mancuerna)': .25, 'Curl de bíceps inclinado (mancuerna)': .2,
-    'Curl martillo (mancuerna)': .25, 'Jalón al pecho (cable)': .9, 'Jalón al pecho agarre invertido (cable)': .9,
-    'Jalón al pecho a un brazo': .5, 'Remo sentado (máquina)': .9, 'Remo inclinado (barra)': .8, 'Press de piernas': 2.5,
-    'Extensión de pierna': .9, 'Curl de pierna acostado (máquina)': .6, 'Empuje de cadera (máquina)': 1.5,
-    'Mariposa (Pec Deck)': .6, 'Jalón de tríceps con cuerda': .5, 'Jalón de tríceps con barra V (polea)': .55,
+    'Curl martillo (mancuerna)': .25, 'Jalón al pecho (cable)': 1, 'Jalón al pecho agarre invertido (cable)': 1,
+    'Jalón al pecho a un brazo': .5, 'Remo sentado (máquina)': .9, 'Remo inclinado (barra)': .8, 'Press de piernas': 2.8,
+    'Extensión de pierna': 1.25, 'Curl de pierna acostado (máquina)': .8, 'Empuje de cadera (máquina)': 1.5,
+    'Mariposa (Pec Deck)': 1, 'Jalón de tríceps con cuerda': .5, 'Jalón de tríceps con barra V (polea)': .55,
     'Extensión de tríceps por encima de la cabeza (cable)': .4, 'Elevación lateral (cable)': .1,
     'Pájaro en polea (deltoides posterior)': .2, 'Curl predicador (máquina)': .4, 'Encogimiento de hombros (mancuerna)': .5,
     'Aperturas en polea de abajo arriba': .2, 'Cables cruzados (de arriba abajo)': .3, 'Elevación frontal con barra (cable)': .25,
-    'Abducción de cadera (máquina)': 1, 'Aducción de cadera (máquina)': 1
+    'Abducción de cadera (máquina)': 1.3, 'Aducción de cadera (máquina)': 1.3
   };
   const TIERS = ['Hierro', 'Bronce', 'Plata', 'Oro', 'Platino', 'Diamante', 'Ascendente', 'Inmortal'];
   const TCOL = ['#8a8f98', '#b07a4a', '#b9c2cc', '#e2b43c', '#4fc3c7', '#8f7cf0', '#3fbf7f', '#e5484d', '#ffd86b'];

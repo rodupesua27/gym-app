@@ -3,7 +3,7 @@
 // kc / pr: kcal y proteína de cada ingrediente (misma posición que "ingredients").
 // Datos de etiqueta del usuario: Lidl (pan, pollo, yogur y queso Milbona, nata, huevos M), Real Valle (pavo), Tastino (tortillas), Nixe (atún), Hacendado (tomate frito), mayonesa (613 kcal/100 g).
 // Estimaciones: mantequilla (sin datos), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, peso de cada huevo M (55 g).
-window.DIET_TARGET = { kcal: 2900, protein: 120 };
+window.DIET_TARGET = { kcal: 2700, protein: 120 };
 window.DIET = {
   slots: [
     { id: 'desayuno', name: 'Desayuno' },

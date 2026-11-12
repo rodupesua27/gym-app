@@ -603,7 +603,7 @@
   }
   function viewDieta() {
     const D = window.DIET;
-    const T = window.DIET_TARGET || { kcal: 2900, protein: 120 };
+    const T = window.DIET_TARGET || { kcal: 2700, protein: 120 };
     if (!D) return '<h1>Dieta</h1><p class="muted">No hay datos de dieta.</p>';
     const day = dayDiet();
     const tot = dietTotals(day);

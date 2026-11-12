@@ -639,7 +639,7 @@
   }
 
   function render() {
-    $tabs.innerHTML = ['rutinas', 'registro', 'progreso', 'dieta'].map(t =>
+    $tabs.innerHTML = ['registro', 'rutinas', 'progreso', 'dieta'].map(t =>
       `<button class="${tab === t ? 'on' : ''}" data-act="tab" data-t="${t}">${ICON[t]}<span>${t[0].toUpperCase() + t.slice(1)}</span></button>`).join('');
     let html = '';
     if (active && tab !== 'registro') {

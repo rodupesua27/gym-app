@@ -300,3 +300,7 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .rkbar i { display: block; height: 100%; }
 .rk { text-align: center; }
 .bdg { width: 64px; height: 72px; display: block; margin: 0 auto 6px; }
+.rank { padding-top: 20px; padding-bottom: 24px; }
+.rk-t { display: block; font-size: 17px; margin-bottom: 2px; }
+.rk2 { margin-top: 22px; }
+.rk b { margin: 8px 0 10px; }

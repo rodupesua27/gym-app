@@ -340,9 +340,8 @@
     const m = sc.reduce((x, y) => x + y, 0) / sc.length;
     const g = tierOf(5 * m), a = tierOf(5 * m / 0.75);
     const half = (t, lbl) => `<div class="rk">${badge(t)}<small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;
-    return `<section class="card rank" style="cursor:default"><small class="muted">Rango de fuerza · estimado con ${sc.length} ejercicios</small>
-      <div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div>
-      <small class="muted" style="display:block;margin-top:10px">Aproximado: las referencias de máquinas y poleas son estimaciones.</small></section>`;
+    return `<section class="card rank" style="cursor:default"><b class="rk-t">Rango de fuerza aproximado</b><small class="muted">Comparado con gente de tu mismo peso</small>
+      <div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div></section>`;
   }
 
   function viewRegistro() {

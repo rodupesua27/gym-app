@@ -334,6 +334,8 @@ window.EXINFO = {
   "s": ["Glúteos"]
  },
  "Push-up plus (serrato)": {
+  "img": "Push-up_plus",
+  "ext": "svg",
   "m": ["Serrato"],
   "s": ["Pecho", "Hombros"]
  }

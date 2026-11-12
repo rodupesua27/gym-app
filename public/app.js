@@ -369,7 +369,7 @@
   // ---------- ejercicios: miniaturas y detalle ----------
   let openR = null;
   const exInfo = n => (window.EXINFO || {})[n] || null;
-  const imgSrc = (i, k) => `/img/ex/${encodeURIComponent(i.img)}/${k}.jpg`;
+  const imgSrc = (i, k) => `/img/ex/${encodeURIComponent(i.img)}/${k}.${i.ext || 'jpg'}`;
   const thumb = (n, cls) => {
     const i = exInfo(n);
     return i && i.img ? `<img class="${cls}" loading="lazy" alt="" src="${imgSrc(i, 0)}">`

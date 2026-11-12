@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" role="img" aria-label="Push-up plus: posición con empuje extra">
+  <rect width="480" height="320" fill="#141414"/>
+  <line x1="40" y1="282" x2="440" y2="282" stroke="#333" stroke-width="4"/>
+  <!-- mismo cuerpo, hombros empujados hacia arriba -->
+  <line x1="150" y1="118" x2="150" y2="240" stroke="#eee" stroke-width="7" stroke-linecap="round"/>
+  <line x1="150" y1="118" x2="360" y2="148" stroke="#eee" stroke-width="8" stroke-linecap="round"/>
+  <line x1="360" y1="148" x2="430" y2="262" stroke="#eee" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="122" cy="96" r="20" fill="#eee"/>
+  <line x1="150" y1="118" x2="110" y2="250" stroke="#eee" stroke-width="7" stroke-linecap="round"/>
+  <line x1="110" y1="250" x2="140" y2="250" stroke="#eee" stroke-width="7" stroke-linecap="round"/>
+  <!-- espalda alta separada del suelo: el serrato se activa aquí -->
+  <ellipse cx="215" cy="138" rx="30" ry="22" fill="#b6f23b" fill-opacity=".55" stroke="#b6f23b" stroke-width="2"/>
+  <path d="M 150 118 Q 190 98 230 124" fill="none" stroke="#b6f23b" stroke-width="3" stroke-dasharray="6 6"/>
+  <text x="240" y="40" fill="#b6f23b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">Plus</text>
+  <text x="240" y="66" fill="#999" font-family="system-ui,sans-serif" font-size="16">Empuja el suelo, separa las escápulas</text>
+</svg>

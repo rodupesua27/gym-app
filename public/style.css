@@ -267,3 +267,13 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .wk .cal { grid-template-columns: repeat(7, 1fr); justify-items: center; gap: 7px; }
 .wk .cal i { width: 20px; height: 20px; aspect-ratio: auto; border-radius: 50%; }
 .wk .cal i.today { outline: none; box-shadow: 0 0 0 2px #fff, inset 0 0 0 2px var(--accent); }
+
+.wk .week { gap: 10px; }
+.wk .wd { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.wk .wd small { color: var(--muted); font-size: 12px; }
+.wk .dot { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+.wk .dot b { font-size: 14px; color: var(--text); }
+.wk .dot.on { background: var(--accent); border-color: var(--accent); }
+.wk .dot.on b { color: #000; }
+.wk .dot.today { box-shadow: 0 0 0 2px #fff, inset 0 0 0 0 transparent; border-color: #fff; }
+.wk .dot.today.on { box-shadow: 0 0 0 2px #fff; }

@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta/comba que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-12q';
+window.ROUTINES_VERSION = '2026-11-12r';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -69,7 +69,7 @@ window.ROUTINES = [
       ]
     },
     exercises: [
-      { name: 'Abdominal corto con cable', sets: 3, reps: '12-15', rest: 60 },
+      { name: 'Abdominal corto con cable', sets: 5, warmup: 2, reps: '12-15', rest: 60 },
       { name: 'Elevación de piernas tumbado', sets: 3, reps: '10-15', rest: 60 },
       { name: 'Plancha', sets: 3, reps: '30-45 s', rest: 60 }
     ]
@@ -124,7 +124,7 @@ window.ROUTINES = [
       ]
     },
     exercises: [
-      { name: 'Abdominal (máquina)', sets: 3, reps: '12-15', rest: 60 },
+      { name: 'Abdominal (máquina)', sets: 5, warmup: 2, reps: '12-15', rest: 60 },
       { name: 'Crunch inverso', sets: 3, reps: '12-15', rest: 60 },
       { name: 'Dead bug', sets: 3, reps: '10 por lado', rest: 60 }
     ]

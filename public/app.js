@@ -304,11 +304,11 @@
   // ---------- vistas ----------
   // Rango: press inclinado con mancuerna. Ratio = 1RM estimado (Epley) de UNA mancuerna / peso corporal.
   // Escala gimnasio: anclada a Principiante 0,20 / Novato 0,30 / Intermedio 0,50 / Avanzado 0,70 / Élite 0,80
-  // (ratios de barra de arvo.guru × 0,4 por mancuerna), 0,10 por rango, 3 subniveles. Escala general: ESTIMACIÓN propia (×0,5).
+  // (ratios de barra de arvo.guru × 0,4 por mancuerna), 0,10 por rango, 3 subniveles. Escala general: ESTIMACIÓN propia (umbrales ×0,75).
   const TIERS = ['Hierro', 'Bronce', 'Plata', 'Oro', 'Platino', 'Diamante', 'Ascendente', 'Inmortal'];
   const TCOL = ['#8a8f98', '#b07a4a', '#b9c2cc', '#e2b43c', '#4fc3c7', '#8f7cf0', '#3fbf7f', '#e5484d', '#ffd86b'];
   function tierOf(ratio, f) {
-    const u = ratio / (0.10 * f);
+    const u = ratio / (0.10 * f) + 1e-9;
     if (u >= 9) return { i: 8, name: 'Radiante', pct: 1 };
     const v = u < 2 ? u / 2 : u - 1;
     const i = Math.floor(v), sub = Math.min(2, Math.floor((v - i) * 3));
@@ -318,7 +318,7 @@
     const r = recordsOf('Press de banca inclinado (mancuerna)');
     const bw = body.length ? +body[body.length - 1].kg || 67.9 : 67.9;
     if (!r.rm) return '<section class="card rank" style="cursor:default"><small class="muted">Rango · Press inclinado (mancuerna)</small><p class="muted" style="margin:8px 0 0">Registra series de este ejercicio para ver tu rango.</p></section>';
-    const ratio = r.rm / bw, a = tierOf(ratio, 0.5), g = tierOf(ratio, 1);
+    const ratio = r.rm / bw, a = tierOf(ratio, 0.75), g = tierOf(ratio, 1);
     const half = (t, lbl) => `<div class="rk"><small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;
     return `<section class="card rank" style="cursor:default"><small class="muted">Rango · Press inclinado (mancuerna) · 1RM por mano ${kgTxt(Math.round(r.rm * 10) / 10)} kg</small>
       <div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div></section>`;

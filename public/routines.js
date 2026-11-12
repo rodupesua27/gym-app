@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta o carrera que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-12u';
+window.ROUTINES_VERSION = '2026-11-12v';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -110,11 +110,11 @@ window.ROUTINES = [
     name: 'Día 7',
     short: 'Cardio 2 · abdomen y comba',
     cardio: {
-      title: 'Comba por intervalos',
+      title: 'Comba hasta que no puedas',
       min: 23,
-      tip: 'Primero el abdomen y después la comba. Salta lo que puedas y, si fallas, retoma y sigue. Si las piernas no aguantan, pasa a andar en vez de parar.',
+      tip: 'Primero el abdomen y después la comba. Salta hasta que no puedas, descansa 10 s y repite hasta llegar al tiempo del bloque. Si fallas mucho, no pasa nada: cuenta lo que aguantes.',
       blocks: [
-        { name: 'Comba · 12 rondas', min: 18, desc: '30 s de comba (o lo que aguantes) + 60 s andando' },
+        { name: 'Comba · hasta que no puedas', min: 18, desc: 'Saltar hasta que no puedas + 10 s de descanso, y repetir' },
         { name: 'Comba · vuelta a la calma', min: 5, desc: 'Andar y estirar' }
       ]
     },

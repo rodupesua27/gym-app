@@ -307,3 +307,6 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .sdet .cols, .sdet .set { grid-template-columns: 38px 1fr 1fr; }
 .fpage { overflow-x: hidden; }
 .fpage .sdet { margin-bottom: 12px; }
+.fpage.sp { padding-top: 0; }
+.fpage.sp .ahead { margin-top: 0; }
+.fpage.sp .set input { opacity: 1; -webkit-text-fill-color: var(--text); }

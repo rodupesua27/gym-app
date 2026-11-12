@@ -221,13 +221,28 @@
     o.className = 'fpage';
     const min = Math.round((s.end - s.start) / 60000);
     const date = new Date(s.start).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-    o.innerHTML = `<div class="fhead"><button class="btn small" data-close="1">‹ Volver</button><b>${esc(s.name)}</b></div>
-      <p class="muted" style="margin:6px 4px 14px"><small>${esc(date)} · ${min} min · ${sessPill(s)}</small></p>
+    const prevS = s.id && sessions.filter(x => x.start < s.start).sort((x, y) => y.start - x.start);
+    const prevSet = (e, si) => {
+      const pe = prevS.map(x => x.exercises.find(y => y.name === e.name)).find(Boolean);
+      if (!pe) return null;
+      const t = e.sets[si].t; let k = 0;
+      for (let i = 0; i < si; i++) if (e.sets[i].t === t) k++;
+      return pe.sets.filter(y => y.t === t)[k] || null;
+    };
+    const nsets = s.exercises.reduce((n, e) => n + e.sets.length, 0);
+    o.className = 'fpage sp';
+    o.innerHTML = `<div class="ahead"><div><div class="atitle">${esc(s.name)}</div>
+        <div class="asub">${esc(date)} · ${min} min · ${thousands(volOf(s.exercises, false))} kg · ${nsets} series</div></div>
+        <button class="btn accent" data-close="1">‹ Volver</button></div>
       ${s.cardio ? `<section class="ccard"><div class="row between"><b>${esc(s.cardio.title)}</b><span class="pill">${s.cardio.min} min</span></div></section>` : ''}
-      ${s.exercises.map(e => { const cnt = { W: 0, N: 0 }; return `<section class="ex sdet">
-        <div class="exh"><span class="exth">${thumb(e.name, 'th')}</span><div style="flex:1;min-width:0"><b>${esc(e.name)}</b><small>${e.sets.filter(x => x.t !== 'W').length} series</small></div></div>
-        <div class="cols"><span>Serie</span><span>Kg</span><span>Reps</span></div>
-        ${e.sets.map(x => `<div class="set done"><span class="tp ${x.t === 'W' ? 'w' : ''}" style="display:flex;align-items:center;justify-content:center">${x.t === 'W' ? 'C' : ++cnt.N}</span><div class="pv" style="color:var(--text);font-size:16px;font-weight:600">${kgTxt(x.kg)}</div><div class="pv" style="color:var(--text);font-size:16px;font-weight:600">${x.reps}</div></div>`).join('')}</section>`; }).join('')}
+      ${s.exercises.map(ex => { const cnt = { W: 0, N: 0 }; return `<section class="ex">
+        <div class="exh"><span class="exth">${thumb(ex.name, 'th')}</span><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b>${ex.reps ? `<small>${ex.reps} reps · descanso ${dur(ex.rest)}</small>` : ''}</div><span class="ecnt">${ex.sets.filter(x => x.done !== false).length}/${ex.sets.length}</span></div>
+        <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
+        ${ex.sets.map((x, si) => { const idx = cnt[x.t]++; const p = prevSet(ex, si); return `<div class="set done">
+          <span class="tp ${x.t === 'W' ? 'w' : ''}" style="display:flex;align-items:center;justify-content:center">${x.t === 'W' ? 'C' : idx + 1}</span>
+          <div class="pv">${p ? kgTxt(p.kg) + ' × ' + p.reps : '–'}</div>
+          <input value="${esc(x.kg)}" disabled aria-label="kg"><input value="${esc(x.reps)}" disabled aria-label="repeticiones">
+          <span class="ck" style="display:flex;align-items:center;justify-content:center">${ICON.check}</span></div>`; }).join('')}</section>`; }).join('')}
       <div style="margin-top:56px;padding-top:24px;border-top:1px solid var(--line)"><button class="btn danger full" data-del="1">Borrar sesión</button></div>`;
     o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
     o.addEventListener('click', async ev => {

@@ -21,16 +21,16 @@ window.DIET = {
     {
       id: 'd2', slot: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur con proteína y plátano',
       min: 3,
-      ingredients: ['140 g de pan Lidl (bocadillo)', 'Mantequilla (20 g)', 'Mermelada de fresa (20 g)', '1 yogur Milbona griego fresa (125 g)', '5 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
-      kc: [379, 144, 10, 151, 20, 99, 75], pr: [11, 0, 0, 3, 4, 1, 4],
+      ingredients: ['140 g de pan Lidl (bocadillo)', 'Mantequilla (30 g)', 'Mermelada de fresa (20 g)', '1 yogur Milbona griego fresa (125 g)', '5 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
+      kc: [379, 216, 10, 151, 20, 99, 75], pr: [11, 0, 0, 3, 4, 1, 4],
       steps: 'Sin cocinar. Para el día sin hambre o sin tiempo.',
       note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
     },
     {
       id: 'c1', slot: 'comida', short: 'Arroz, pollo y huevos', name: 'Arroz con pollo, huevos y medio aguacate',
       min: 15,
-      ingredients: ['60 g de arroz seco (≈150 g cocido)', '160 g de pechuga de pollo Lidl', '2 huevos M', '½ aguacate', '1 cucharada de aceite de oliva'],
-      kc: [208, 165, 158, 160, 120], pr: [4, 38, 14, 2, 0],
+      ingredients: ['80 g de arroz seco (≈200 g cocido)', '200 g de pechuga de pollo Lidl', '2 huevos M', '½ aguacate', '1 cucharada de aceite de oliva'],
+      kc: [277, 206, 158, 160, 120], pr: [6, 48, 14, 2, 0],
       steps: 'Pollo en tiras finas en la sartén con aceite, 6-8 min: así queda jugoso y no seco. Huevos revueltos o a la plancha en la misma sartén, 3 min. Arroz en el microondas (bolsa lista o 1 parte de arroz por 2 de agua, 10-12 min).'
     },
     {
@@ -49,11 +49,11 @@ window.DIET = {
       steps: 'Pollo en tiras finas en la sartén, 6-8 min. Calienta las tortillas 20 s en el microondas, rellena y enrolla.'
     },
     {
-      id: 'n1', slot: 'cena', short: 'Pasta y ternera', name: 'Pasta con ternera, tomate frito y queso',
+      id: 'n1', slot: 'cena', short: 'Pasta y ternera', name: 'Pasta con filete de ternera, tomate frito y queso',
       min: 15,
-      ingredients: ['120 g de pasta seca', '150 g de ternera picada', '100 g de tomate frito Hacendado', '30 g de queso Gouda Milbona', 'Orégano'],
-      kc: [419, 270, 81, 113, 0], pr: [14, 30, 1, 7, 0],
-      steps: 'Pasta en el microondas (tiempo del paquete +2 min). Ternera picada en la sartén 6-8 min, añade el tomate frito. Mezcla y cubre con queso.'
+      ingredients: ['120 g de pasta seca', '200 g de filete de ternera (de carnicería, en tiras)', '100 g de tomate frito Hacendado', '30 g de queso Gouda Milbona', 'Orégano'],
+      kc: [419, 260, 81, 113, 0], pr: [14, 42, 1, 7, 0],
+      steps: 'Pasta en el microondas (tiempo del paquete +2 min). Filete cortado en tiras finas, a la sartén 3-4 min a fuego fuerte (sin aceite, que ya tiene grasa). Añade el tomate frito 2 min. Mezcla con la pasta y cubre con queso.'
     },
     {
       id: 'n2', slot: 'cena', short: 'Bocadillo y tortilla', name: 'Bocadillo de pavo, queso y guacamole, y tortilla de 3 huevos',
@@ -73,8 +73,8 @@ window.DIET = {
     {
       id: 'n4', slot: 'cena', short: 'Pasta con bacon y nata', name: 'Pasta con bacon, nata para cocinar y queso',
       min: 12,
-      ingredients: ['85 g de pasta seca (1 vaso mediano)', '125 g de bacon en tiras (1 bote entero)', '80 ml de nata para cocinar', '40 g de queso Gouda Milbona rallado'],
-      kc: [297, 361, 131, 150], pr: [10, 19, 2, 10],
+      ingredients: ['100 g de pasta seca (antes 85 g)', '125 g de bacon en tiras (1 bote entero)', '80 ml de nata para cocinar', '40 g de queso Gouda Milbona rallado'],
+      kc: [349, 361, 131, 150], pr: [12, 19, 2, 10],
       steps: 'Pasta en el microondas (tiempo del paquete +2 min). Bacon en la sartén 5-6 min, sin aceite. Añade la nata y caliéntala 2 min, echa el queso y remueve hasta que se funda. Mezcla con la pasta.',
       note: 'Calórica: mejor en un día de entreno duro, y ese día quita el aceite de otras comidas.'
     }

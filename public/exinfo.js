@@ -253,8 +253,8 @@ window.EXINFO = {
   ],
   "s": []
  },
- "Elevación de piernas tumbado": {
-  "img": "Flat_Bench_Lying_Leg_Raise",
+ "Elevación de piernas en máquina (silla romana)": {
+  "img": "Hanging_Leg_Raise",
   "m": [
    "Abdominales"
   ],

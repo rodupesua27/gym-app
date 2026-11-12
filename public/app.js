@@ -214,6 +214,32 @@
     });
   }
 
+  function sessionPage(id) {
+    const s = sessions.find(x => x.id === id);
+    if (!s) return;
+    const o = document.createElement('div');
+    o.className = 'fpage';
+    const min = Math.round((s.end - s.start) / 60000);
+    const date = new Date(s.start).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+    o.innerHTML = `<div class="fhead"><button class="btn small" data-close="1">‹ Volver</button><b>${esc(s.name)}</b></div>
+      <p class="muted" style="margin:6px 4px 14px"><small>${esc(date)} · ${min} min · ${sessPill(s)}</small></p>
+      ${s.cardio ? `<section class="ccard"><div class="row between"><b>${esc(s.cardio.title)}</b><span class="pill">${s.cardio.min} min</span></div></section>` : ''}
+      ${s.exercises.map(e => `<section class="card" style="cursor:default"><div class="exh">${thumb(e.name, 'th')}<div style="flex:1;min-width:0"><b>${esc(e.name)}</b></div></div>
+        ${e.sets.map((x, i) => `<div class="row between" style="padding:6px 2px;border-top:1px solid var(--line)"><span class="muted">${x.t === 'W' ? 'Calentamiento' : 'Serie ' + (e.sets.slice(0, i + 1).filter(y => y.t !== 'W').length)}</span><b>${kgTxt(x.kg)} kg × ${x.reps}</b></div>`).join('')}</section>`).join('')}
+      <div style="margin-top:56px;padding-top:24px;border-top:1px solid var(--line)"><button class="btn danger full" data-del="1">Borrar sesión</button></div>`;
+    o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
+    o.addEventListener('click', async ev => {
+      const b = ev.target.closest('button');
+      if (!b) return;
+      if (b.dataset.close) document.body.removeChild(o);
+      else if (b.dataset.del) {
+        const ok = await sheet('<h3>Borrar sesión</h3><p class="muted">No se puede deshacer.</p>', [{ label: 'No', v: false }, { label: 'Borrar', cls: 'accent', v: true }]);
+        if (ok) { sessions = sessions.filter(x => x.id !== id); save(K.s, sessions); document.body.removeChild(o); render(); }
+      }
+    });
+    document.body.appendChild(o);
+  }
+
   async function addExercise() {
     const names = [...new Set([
       ...ROUTINES.flatMap(r => r.exercises.map(e => e.name)),
@@ -378,7 +404,7 @@
       </section>
       ${rankCard()}
       <h2>Últimas sesiones</h2>
-      ${recent.length ? recent.map(s => `<div class="sess"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></div>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
+      ${recent.length ? recent.map(s => `<button class="sess" data-act="openSession" data-id="${s.id}"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></button>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
   }
 
   const sessPill = s => { const v = volOf(s.exercises, false); return s.cardio ? (v > 0 ? 'Cardio · ' + thousands(v) + ' kg' : 'Cardio') : thousands(v) + ' kg'; };
@@ -605,9 +631,7 @@
       ${body.length > 8 ? `<button class="btn full" style="margin-top:8px" data-act="bAll">${bAll ? 'Ver menos' : 'Ver todos (' + body.length + ')'}</button>` : ''}
       <h2>Historial</h2>
       ${sessions.length ? sessions.slice().reverse().map(s => `<button class="sess" data-act="openSession" data-id="${s.id}">
-        <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div>
-        ${openId === s.id ? `<div class="detail">${s.cardio ? `<div><b>Cardio · ${esc(s.cardio.title)}</b><br><span class="muted">${s.cardio.min} min</span></div>` : ''}${s.exercises.map(e => `<div><b>${esc(e.name)}</b><br><span class="muted">${e.sets.map(x => (x.t === 'W' ? 'C ' : '') + kgTxt(x.kg) + '×' + x.reps).join(' · ')}</span></div>`).join('')}
-        <span class="btn small danger" data-act="delSession" data-id="${s.id}">Borrar sesión</span></div>` : ''}</button>`).join('') : '<p class="muted">Aquí aparecerán tus entrenamientos.</p>'}
+        <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></button>`).join('') : '<p class="muted">Aquí aparecerán tus entrenamientos.</p>'}
       <h2>Copia de seguridad</h2>
       <p class="muted"><small>Tus datos viven en este móvil. Exporta una copia de vez en cuando.</small></p>
       <div class="row"><button class="btn" data-act="export">Exportar</button><label class="btn" for="imp">Importar</label><input type="file" id="imp" accept="application/json" hidden></div>`;
@@ -839,7 +863,7 @@
     else if (a === 'restm') { active.rest.end = Math.max(Date.now() + 1000, active.rest.end - 15000); pushRest((active.rest.end - Date.now()) / 1000); persist(); renderRest(); }
     else if (a === 'restp') { active.rest.end += 15000; active.rest.total += 15; pushRest((active.rest.end - Date.now()) / 1000); persist(); renderRest(); }
     else if (a === 'restskip') { active.rest = null; pushCancel(); persist(); renderRest(); }
-    else if (a === 'openSession') { const id = +t.dataset.id; openId = openId === id ? null : id; render(); }
+    else if (a === 'openSession') sessionPage(+t.dataset.id);
     else if (a === 'delSession') {
       ev.stopPropagation();
       const id = +t.dataset.id;

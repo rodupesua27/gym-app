@@ -241,6 +241,13 @@
     }));
     return r;
   }
+  function showRecord(name, lines) {
+    const d = document.createElement('div');
+    d.className = 'recbanner';
+    d.innerHTML = `<b>🏆 Récord · ${esc(name)}</b><small>${lines.map(esc).join(' · ')}</small>`;
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 3500);
+  }
   async function finish() {
     const pending = pendingSets();
     const ok = await sheet(
@@ -279,10 +286,8 @@
       if (!h.n) return;
       const sets = e.sets.filter(s => s.t === 'N');
       const kg = Math.max(0, ...sets.map(s => s.kg));
-      const rm = Math.max(0, ...sets.map(s => epley(s.kg, s.reps)));
       const vol = Math.max(0, ...sets.map(s => s.kg * s.reps));
       if (kg > h.kg) prs.push(`${e.name} · peso ${kgTxt(kg)} kg`);
-      if (rm > h.rm) prs.push(`${e.name} · 1RM estimado ${kgTxt(Math.round(rm * 10) / 10)} kg`);
       if (vol > h.vol) prs.push(`${e.name} · mejor serie ${thousands(vol)} kg de volumen`);
     });
     const ses = { id: active.id, routineId: active.routineId, name: active.name, start: active.start, end, exercises: exs, cardio };
@@ -416,7 +421,6 @@
        ${i ? `<div class="mchips" style="margin-top:12px">${i.m.map(m => `<span class="mchip on">${esc(m)}</span>`).join('')}${i.s.map(m => `<span class="mchip">${esc(m)}</span>`).join('')}</div>` : ''}
        <div class="exstats"><div><small>Mejor peso</small><b>${best ? kgTxt(best) + ' kg' : '–'}</b></div>
        <div><small>Última vez</small><b>${esc(last || '–')}</b></div>
-       <div><small>1RM estimado</small><b>${rec.rm ? kgTxt(Math.round(rec.rm * 10) / 10) + ' kg' : '–'}</b></div>
        <div><small>Mejor serie</small><b>${rec.vol ? thousands(rec.vol) + ' kg' : '–'}</b></div></div>`,
       [{ label: 'Cerrar', cls: 'accent', v: true }]
     );
@@ -727,6 +731,18 @@
       if (isNaN(num(s.reps))) { t.classList.add('err'); setTimeout(() => t.classList.remove('err'), 400); return; }
       if (s.kg === '') s.kg = '0';
       s.done = true;
+      if (s.t === 'N') {
+        const h = recordsOf(ex.name);
+        const others = active.exercises.filter(x => x.name === ex.name).flatMap(x => x.sets).filter(x => x !== s && x.done && x.t === 'N');
+        const hKg = Math.max(h.kg, ...others.map(x => num(x.kg) || 0));
+        const hVol = Math.max(h.vol, ...others.map(x => (num(x.kg) || 0) * (num(x.reps) || 0)));
+        const kg = num(s.kg) || 0, vol = kg * (num(s.reps) || 0);
+        const had = h.n > 0 || others.length > 0;
+        const lines = [];
+        if (had && kg > hKg) lines.push(`Peso máximo ${kgTxt(kg)} kg`);
+        if (had && vol > hVol) lines.push(`Mejor serie ${thousands(vol)} kg`);
+        if (lines.length) showRecord(ex.name, lines);
+      }
       startRest(s.t === 'W' ? Math.min(ex.rest, 60) : ex.rest, ei + '-' + si);
       ensureAudio(); persist(); render();
     }

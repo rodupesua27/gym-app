@@ -288,3 +288,7 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .wk .cal { gap: 16px 12px; margin-top: 26px; }
 .wk .cal i { width: 22px; height: 22px; }
 .wk .cal i.today { box-shadow: none; border: 1.5px solid #fff; box-sizing: border-box; background: var(--accent); background-clip: content-box; padding: 3px; }
+
+.recbanner { position: fixed; top: calc(12px + env(safe-area-inset-top)); left: 12px; right: 12px; z-index: 120; background: var(--accent); color: #000; border-radius: 14px; padding: 12px 14px; box-shadow: 0 8px 24px rgba(0,0,0,.5); pointer-events: none; }
+.recbanner b { display: block; font-size: 15px; }
+.recbanner small { display: block; font-size: 14px; margin-top: 2px; color: #000; }

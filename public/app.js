@@ -10,6 +10,8 @@
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 
   let sessions = load(K.s, []);
+  // Nombres antiguos de las sesiones de cardio.
+  sessions.forEach(s => { s.name = String(s.name).replace('Cardio 1 · abdomen y cinta', 'Abdomen y cinta').replace('Cardio 2 · abdomen y comba', 'Abdomen y comba'); });
   let active = load(K.a, null);
   let body = load(K.b, []);
   let diet = load(K.d, {});

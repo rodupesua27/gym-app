@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta o carrera que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-13h';
+window.ROUTINES_VERSION = '2026-11-13i';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -56,7 +56,7 @@ window.ROUTINES = [
     day: 'Jueves',
     badge: '4',
     name: 'Día 4',
-    short: 'Cardio 1 · abdomen y cinta',
+    short: 'Abdomen y cinta',
     cardio: {
       title: 'Cinta zona 2',
       min: 35,
@@ -110,7 +110,7 @@ window.ROUTINES = [
     day: 'Domingo',
     badge: '7',
     name: 'Día 7',
-    short: 'Cardio 2 · abdomen y comba',
+    short: 'Abdomen y comba',
     cardio: {
       title: 'Comba hasta que no puedas',
       min: 23,

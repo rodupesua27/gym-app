@@ -288,8 +288,7 @@
     const days = [...Array(7)].map((_, i) => new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i));
     const set = new Set(sessions.map(s => isoDay(s.start)));
     const weekIso = days.map(isoDay);
-    const weekSess = sessions.filter(s => weekIso.includes(isoDay(s.start)));
-    const weekKg = weekSess.reduce((n, s) => n + volOf(s.exercises, false), 0);
+    const last = sessions.length ? sessions.reduce((m, x) => (x.start > m.start ? x : m)) : null;
     const L = 'LMXJVSD';
     const recent = sessions.slice(-3).reverse();
     // Racha: días seguidos con entreno, contando desde hoy (o desde ayer si hoy aún no).
@@ -308,14 +307,11 @@
     const cal = [...Array(28)].map((_, i) => new Date(calStart.getFullYear(), calStart.getMonth(), calStart.getDate() + i));
     return `<h1>Registrar</h1>
       <section class="card wk" style="cursor:default">
-        <div class="wk-top"><div><b>${weekSess.length}</b> <small class="muted">sesiones</small> · <b>${thousands(weekKg)}</b> <small class="muted">kg</small></div>
-          <small class="muted">${days.filter((d, i) => set.has(weekIso[i])).length}/7 días</small></div>
-        <div class="week" style="margin-top:12px">${days.map((d, i) => `<div class="day ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}">${L[i]}<b>${d.getDate()}</b></div>`).join('')}</div>
-        <button class="btn accent full" style="margin-top:14px" data-act="goRutinas">+ Empezar entrenamiento</button>
-      </section>
-      <section class="card racha" style="cursor:default">
-        <div class="racha-n"><div><b>${cur}</b><small class="muted">días seguidos</small></div><div><b>${best}</b><small class="muted">mejor racha</small></div></div>
+        <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b> <small class="muted">días seguidos · mejor ${best}</small></div>
+          <div style="text-align:right"><small class="muted">Último entreno</small><br><b>${last ? dShort(last.start) : '–'}</b></div></div>
+        <div class="week" style="margin-top:14px">${days.map((d, i) => `<div class="day ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}">${L[i]}<b>${d.getDate()}</b></div>`).join('')}</div>
         <div class="cal">${cal.map(d => `<i class="${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
+        <button class="btn accent full" style="margin-top:14px" data-act="goRutinas">+ Empezar entrenamiento</button>
       </section>
       <h2 id="rutinas">Rutinas</h2>
       ${ROUTINES.map(r => `<button class="card" data-act="start" data-id="${r.id}"><b>${esc(r.name)} · ${esc(r.short)}</b>

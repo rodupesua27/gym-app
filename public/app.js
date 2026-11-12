@@ -224,8 +224,10 @@
     o.innerHTML = `<div class="fhead"><button class="btn small" data-close="1">‹ Volver</button><b>${esc(s.name)}</b></div>
       <p class="muted" style="margin:6px 4px 14px"><small>${esc(date)} · ${min} min · ${sessPill(s)}</small></p>
       ${s.cardio ? `<section class="ccard"><div class="row between"><b>${esc(s.cardio.title)}</b><span class="pill">${s.cardio.min} min</span></div></section>` : ''}
-      ${s.exercises.map(e => `<section class="card" style="cursor:default"><div class="exh">${thumb(e.name, 'th')}<div style="flex:1;min-width:0"><b>${esc(e.name)}</b></div></div>
-        ${e.sets.map((x, i) => `<div class="row between" style="padding:6px 2px;border-top:1px solid var(--line)"><span class="muted">${x.t === 'W' ? 'Calentamiento' : 'Serie ' + (e.sets.slice(0, i + 1).filter(y => y.t !== 'W').length)}</span><b>${kgTxt(x.kg)} kg × ${x.reps}</b></div>`).join('')}</section>`).join('')}
+      ${s.exercises.map(e => { const cnt = { W: 0, N: 0 }; return `<section class="ex sdet">
+        <div class="exh"><span class="exth">${thumb(e.name, 'th')}</span><div style="flex:1;min-width:0"><b>${esc(e.name)}</b><small>${e.sets.filter(x => x.t !== 'W').length} series</small></div></div>
+        <div class="cols"><span>Serie</span><span>Kg</span><span>Reps</span></div>
+        ${e.sets.map(x => `<div class="set done"><span class="tp ${x.t === 'W' ? 'w' : ''}" style="display:flex;align-items:center;justify-content:center">${x.t === 'W' ? 'C' : ++cnt.N}</span><div class="pv" style="color:var(--text);font-size:16px;font-weight:600">${kgTxt(x.kg)}</div><div class="pv" style="color:var(--text);font-size:16px;font-weight:600">${x.reps}</div></div>`).join('')}</section>`; }).join('')}
       <div style="margin-top:56px;padding-top:24px;border-top:1px solid var(--line)"><button class="btn danger full" data-del="1">Borrar sesión</button></div>`;
     o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
     o.addEventListener('click', async ev => {

@@ -304,3 +304,6 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .rk-t { display: block; font-size: 17px; margin-bottom: 2px; }
 .rk2 { margin-top: 22px; }
 .rk b { margin: 8px 0 10px; }
+.sdet .cols, .sdet .set { grid-template-columns: 38px 1fr 1fr; }
+.fpage { overflow-x: hidden; }
+.fpage .sdet { margin-bottom: 12px; }

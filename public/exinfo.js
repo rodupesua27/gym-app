@@ -322,5 +322,19 @@ window.EXINFO = {
   "img": "Leverage_Iso_Row",
   "m": ["Espalda media"],
   "s": []
+ },
+ "Flexión lateral en polea (oblicuos)": {
+  "img": "One-Arm_High-Pulley_Cable_Side_Bends",
+  "m": ["Abdominales"],
+  "s": []
+ },
+ "Hiperextensión lumbar": {
+  "img": "Hyperextensions_Back_Extensions",
+  "m": ["Lumbares"],
+  "s": ["Glúteos"]
+ },
+ "Push-up plus (serrato)": {
+  "m": ["Serrato"],
+  "s": ["Pecho", "Hombros"]
  }
 };

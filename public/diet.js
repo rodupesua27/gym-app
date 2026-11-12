@@ -21,17 +21,17 @@ window.DIET = {
     {
       id: 'd2', slot: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur con proteína y plátano',
       min: 3,
-      ingredients: ['140 g de pan Lidl (bocadillo)', 'Mantequilla (10 g)', 'Mermelada de fresa (20 g)', '1 yogur Milbona griego fresa (125 g)', '5 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
-      kc: [379, 72, 10, 151, 20, 99, 75], pr: [11, 0, 0, 3, 4, 1, 4],
+      ingredients: ['140 g de pan Lidl (bocadillo)', 'Mantequilla (20 g)', 'Mermelada de fresa (20 g)', '1 yogur Milbona griego fresa (125 g)', '5 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
+      kc: [379, 144, 10, 151, 20, 99, 75], pr: [11, 0, 0, 3, 4, 1, 4],
       steps: 'Sin cocinar. Para el día sin hambre o sin tiempo.',
       note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
     },
     {
-      id: 'c1', slot: 'comida', short: 'Arroz y pollo', name: 'Arroz con pollo y aguacate',
+      id: 'c1', slot: 'comida', short: 'Arroz, pollo y huevos', name: 'Arroz con pollo, huevos y medio aguacate',
       min: 15,
-      ingredients: ['60 g de arroz seco (≈150 g cocido)', '160 g de pechuga de pollo Lidl', '½ aguacate', 'Lechuga (opcional)', '1 cucharada de aceite de oliva'],
-      kc: [208, 165, 160, 0, 120], pr: [4, 38, 2, 0, 0],
-      steps: 'Pollo en tiras finas en la sartén con aceite, 6-8 min: así queda jugoso y no seco. Arroz en el microondas (bolsa lista o 1 parte de arroz por 2 de agua, 10-12 min).'
+      ingredients: ['60 g de arroz seco (≈150 g cocido)', '160 g de pechuga de pollo Lidl', '2 huevos M', '½ aguacate', '1 cucharada de aceite de oliva'],
+      kc: [208, 165, 158, 160, 120], pr: [4, 38, 14, 2, 0],
+      steps: 'Pollo en tiras finas en la sartén con aceite, 6-8 min: así queda jugoso y no seco. Huevos revueltos o a la plancha en la misma sartén, 3 min. Arroz en el microondas (bolsa lista o 1 parte de arroz por 2 de agua, 10-12 min).'
     },
     {
       id: 'c2', slot: 'comida', short: 'Pasta y atún', name: 'Pasta con atún y tomate frito',

@@ -298,3 +298,5 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .rk b { display: block; font-size: 22px; font-weight: 700; margin: 2px 0 6px; }
 .rkbar { height: 5px; border-radius: 3px; background: rgba(128,128,128,.25); overflow: hidden; }
 .rkbar i { display: block; height: 100%; }
+.rk { text-align: center; }
+.bdg { width: 64px; height: 72px; display: block; margin: 0 auto 6px; }

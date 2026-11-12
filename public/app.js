@@ -302,26 +302,47 @@
   }
 
   // ---------- vistas ----------
-  // Rango: press inclinado con mancuerna. Ratio = 1RM estimado (Epley) de UNA mancuerna / peso corporal.
-  // Escala gimnasio: anclada a Principiante 0,20 / Novato 0,30 / Intermedio 0,50 / Avanzado 0,70 / Élite 0,80
-  // (ratios de barra de arvo.guru × 0,4 por mancuerna), 0,10 por rango, 3 subniveles. Escala general: ESTIMACIÓN propia (umbrales ×0,75).
+  // Rango global ESTIMADO. Por ejercicio: ratio = 1RM estimado (Epley) / peso corporal, dividido entre un valor de
+  // referencia "intermedio" aproximado (REF, estimación propia: las máquinas y poleas no tienen tabla fiable).
+  // La puntuación global es la media de esos ejercicios. Gimnasio: intermedio = Platino 1. General: umbrales ×0,75.
+  const REF = {
+    'Press de banca inclinado (mancuerna)': .5, 'Curl de bíceps (mancuerna)': .25, 'Curl de bíceps inclinado (mancuerna)': .2,
+    'Curl martillo (mancuerna)': .25, 'Jalón al pecho (cable)': .9, 'Jalón al pecho agarre invertido (cable)': .9,
+    'Jalón al pecho a un brazo': .5, 'Remo sentado (máquina)': .9, 'Remo inclinado (barra)': .8, 'Press de piernas': 2.5,
+    'Extensión de pierna': .9, 'Curl de pierna acostado (máquina)': .6, 'Empuje de cadera (máquina)': 1.5,
+    'Mariposa (Pec Deck)': .6, 'Jalón de tríceps con cuerda': .5, 'Jalón de tríceps con barra V (polea)': .55,
+    'Extensión de tríceps por encima de la cabeza (cable)': .4, 'Elevación lateral (cable)': .1,
+    'Pájaro en polea (deltoides posterior)': .2, 'Curl predicador (máquina)': .4, 'Encogimiento de hombros (mancuerna)': .5,
+    'Aperturas en polea de abajo arriba': .2, 'Cables cruzados (de arriba abajo)': .3, 'Elevación frontal con barra (cable)': .25,
+    'Abducción de cadera (máquina)': 1, 'Aducción de cadera (máquina)': 1
+  };
   const TIERS = ['Hierro', 'Bronce', 'Plata', 'Oro', 'Platino', 'Diamante', 'Ascendente', 'Inmortal'];
   const TCOL = ['#8a8f98', '#b07a4a', '#b9c2cc', '#e2b43c', '#4fc3c7', '#8f7cf0', '#3fbf7f', '#e5484d', '#ffd86b'];
-  function tierOf(ratio, f) {
-    const u = ratio / (0.10 * f) + 1e-9;
-    if (u >= 9) return { i: 8, name: 'Radiante', pct: 1 };
-    const v = u < 2 ? u / 2 : u - 1;
-    const i = Math.floor(v), sub = Math.min(2, Math.floor((v - i) * 3));
-    return { i, name: TIERS[i] + ' ' + (sub + 1), pct: (v - i) * 3 - sub };
+  function tierOf(u) {
+    if (u >= 9) return { i: 8, name: 'Radiante', sub: 3, pct: 1 };
+    u = Math.max(0, u) + 1e-9;
+    const v = u < 2 ? u / 2 : u - 1, i = Math.floor(v), sub = Math.min(2, Math.floor((v - i) * 3));
+    return { i, name: TIERS[i] + ' ' + (sub + 1), sub: sub + 1, pct: (v - i) * 3 - sub };
+  }
+  // Insignia propia (escudo con galones); no copia ningún icono existente.
+  function badge(t) {
+    const c = TCOL[t.i];
+    const mark = t.i === 8
+      ? `<path d="M32 22l4 9 10 1-7.5 6.5 2.3 9.7L32 43l-8.8 5.2 2.3-9.7L18 32l10-1z" fill="${c}"/>`
+      : [...Array(t.sub)].map((_, k) => `<path d="M21 ${44 - k * 8}l11 -7 11 7" fill="none" stroke="${c}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
+    return `<svg class="bdg" viewBox="0 0 64 72"><path d="M32 4l24 8v22c0 15-10 26-24 34C18 60 8 49 8 34V12z" fill="#14161a" stroke="${c}" stroke-width="3"/><path d="M32 10l18 6v18c0 11-7 20-18 26-11-6-18-15-18-26V16z" fill="${c}" opacity=".12"/>${mark}</svg>`;
   }
   function rankCard() {
-    const r = recordsOf('Press de banca inclinado (mancuerna)');
     const bw = body.length ? +body[body.length - 1].kg || 67.9 : 67.9;
-    if (!r.rm) return '<section class="card rank" style="cursor:default"><small class="muted">Rango · Press inclinado (mancuerna)</small><p class="muted" style="margin:8px 0 0">Registra series de este ejercicio para ver tu rango.</p></section>';
-    const ratio = r.rm / bw, a = tierOf(ratio, 0.75), g = tierOf(ratio, 1);
-    const half = (t, lbl) => `<div class="rk"><small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;
-    return `<section class="card rank" style="cursor:default"><small class="muted">Rango · Press inclinado (mancuerna) · 1RM por mano ${kgTxt(Math.round(r.rm * 10) / 10)} kg</small>
-      <div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div></section>`;
+    const sc = [];
+    Object.keys(REF).forEach(n => { const r = recordsOf(n); if (r.rm) sc.push(r.rm / bw / REF[n]); });
+    if (sc.length < 3) return '<section class="card rank" style="cursor:default"><small class="muted">Rango de fuerza (estimado)</small><p class="muted" style="margin:8px 0 0">Registra series con peso en al menos 3 ejercicios para ver tu rango.</p></section>';
+    const m = sc.reduce((x, y) => x + y, 0) / sc.length;
+    const g = tierOf(5 * m), a = tierOf(5 * m / 0.75);
+    const half = (t, lbl) => `<div class="rk">${badge(t)}<small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;
+    return `<section class="card rank" style="cursor:default"><small class="muted">Rango de fuerza · estimado con ${sc.length} ejercicios</small>
+      <div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div>
+      <small class="muted" style="display:block;margin-top:10px">Aproximado: las referencias de máquinas y poleas son estimaciones.</small></section>`;
   }
 
   function viewRegistro() {

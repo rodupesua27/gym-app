@@ -36,8 +36,8 @@ window.DIET = {
     {
       id: 'c2', slot: 'comida', short: 'Pasta y atún', name: 'Pasta con atún y tomate frito',
       min: 12,
-      ingredients: ['100 g de pasta seca', '2 latas de atún Nixe al natural (80 g escurrido c/u)', '100 g de tomate frito Hacendado', '1 cucharada de aceite de oliva'],
-      kc: [349, 178, 81, 120], pr: [12, 42, 1, 0],
+      ingredients: ['100 g de pasta seca', '2 latas de atún Nixe al natural (80 g escurrido c/u)', '100 g de tomate frito Hacendado', '2 cucharadas de mayonesa (30 g)', '1 cucharada de aceite de oliva'],
+      kc: [349, 178, 81, 184, 120], pr: [12, 42, 1, 0, 0],
       steps: 'Pasta en el microondas: bol grande, agua cubriéndola y el tiempo del paquete +2 min. Escurre y mezcla con el atún y el tomate frito.',
       note: 'Con atún máximo 1-2 comidas por semana (2-4 latas).'
     },

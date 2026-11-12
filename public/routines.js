@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta o carrera que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-12x';
+window.ROUTINES_VERSION = '2026-11-12y';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -15,6 +15,7 @@ window.ROUTINES = [
       { name: 'Cables cruzados (de arriba abajo)', sets: 4, reps: '8-15', rest: 90 },
       { name: 'Elevación frontal con barra (cable)', alt: ["Elevación lateral y frontal con mancuerna", "Rotación externa en polea"], sets: 3, reps: '10', rest: 90 },
       { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Pájaro en polea (deltoides posterior)"], sets: 3, reps: '8-12', rest: 90 },
+      { name: 'Pájaro en polea (deltoides posterior)', sets: 3, reps: '12-20', rest: 60 },
       { name: 'Jalón de tríceps con barra V (polea)', sets: 3, reps: '7-16', rest: 90 },
       { name: 'Extensión de tríceps por encima de la cabeza (cable)', alt: ["Patada de tríceps con mancuerna"], sets: 3, reps: '10-12', rest: 90 }
     ]

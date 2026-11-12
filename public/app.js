@@ -227,6 +227,20 @@
     if (v) { active.exercises.push(mkEx(v, 3, 0, '', 90)); persist(); render(); }
   }
 
+  // Récords como en Hevy: peso máximo, 1RM estimado (Epley) y mejor serie (kg × reps).
+  const epley = (kg, reps) => (reps > 0 ? kg * (1 + reps / 30) : 0);
+  function recordsOf(name) {
+    const r = { n: 0, kg: 0, rm: 0, vol: 0 };
+    sessions.forEach(ss => ss.exercises.forEach(x => {
+      if (x.name !== name) return;
+      x.sets.forEach(s => {
+        if (s.t !== 'N') return;
+        const kg = +s.kg || 0, reps = +s.reps || 0;
+        r.n++; r.kg = Math.max(r.kg, kg); r.rm = Math.max(r.rm, epley(kg, reps)); r.vol = Math.max(r.vol, kg * reps);
+      });
+    }));
+    return r;
+  }
   async function finish() {
     const pending = pendingSets();
     const ok = await sheet(
@@ -261,12 +275,15 @@
     const end = endMs;
     const prs = [];
     exs.forEach(e => {
-      const best = Math.max(0, ...e.sets.filter(s => s.t === 'N').map(s => s.kg));
-      let hist = 0, had = false;
-      sessions.forEach(ss => ss.exercises.forEach(x => {
-        if (x.name === e.name) x.sets.forEach(s => { if (s.t === 'N') { had = true; hist = Math.max(hist, s.kg); } });
-      }));
-      if (had && best > hist) prs.push(`${e.name} · ${kgTxt(best)} kg`);
+      const h = recordsOf(e.name);
+      if (!h.n) return;
+      const sets = e.sets.filter(s => s.t === 'N');
+      const kg = Math.max(0, ...sets.map(s => s.kg));
+      const rm = Math.max(0, ...sets.map(s => epley(s.kg, s.reps)));
+      const vol = Math.max(0, ...sets.map(s => s.kg * s.reps));
+      if (kg > h.kg) prs.push(`${e.name} · peso ${kgTxt(kg)} kg`);
+      if (rm > h.rm) prs.push(`${e.name} · 1RM estimado ${kgTxt(Math.round(rm * 10) / 10)} kg`);
+      if (vol > h.vol) prs.push(`${e.name} · mejor serie ${thousands(vol)} kg de volumen`);
     });
     const ses = { id: active.id, routineId: active.routineId, name: active.name, start: active.start, end, exercises: exs, cardio };
     sessions.push(ses); save(K.s, sessions);
@@ -390,17 +407,17 @@
   function exSheet(name) {
     const i = exInfo(name);
     const le = lastEx(name);
-    let best = 0;
-    sessions.forEach(s => s.exercises.forEach(e => {
-      if (e.name === name) e.sets.forEach(x => { if (x.t === 'N' && x.kg > best) best = x.kg; });
-    }));
+    const rec = recordsOf(name);
+    const best = rec.kg;
     const last = le ? le.sets.filter(s => s.t === 'N').map(s => `${kgTxt(s.kg)}×${s.reps}`).join(' · ') : '';
     return sheet(
       `<h3>${esc(name)}</h3>
        ${i && i.img ? `<div class="flip"><img src="${imgSrc(i, 0)}" alt=""><img src="${imgSrc(i, 1)}" alt=""></div>` : ''}
        ${i ? `<div class="mchips" style="margin-top:12px">${i.m.map(m => `<span class="mchip on">${esc(m)}</span>`).join('')}${i.s.map(m => `<span class="mchip">${esc(m)}</span>`).join('')}</div>` : ''}
        <div class="exstats"><div><small>Mejor peso</small><b>${best ? kgTxt(best) + ' kg' : '–'}</b></div>
-       <div><small>Última vez</small><b>${esc(last || '–')}</b></div></div>`,
+       <div><small>Última vez</small><b>${esc(last || '–')}</b></div>
+       <div><small>1RM estimado</small><b>${rec.rm ? kgTxt(Math.round(rec.rm * 10) / 10) + ' kg' : '–'}</b></div>
+       <div><small>Mejor serie</small><b>${rec.vol ? thousands(rec.vol) + ' kg' : '–'}</b></div></div>`,
       [{ label: 'Cerrar', cls: 'accent', v: true }]
     );
   }

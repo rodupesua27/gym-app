@@ -283,19 +283,44 @@
   function viewRegistrar() {
     if (active) return viewActive();
     const now = new Date();
+    const todayIso = isoDay(now);
     const mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
     const days = [...Array(7)].map((_, i) => new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i));
     const set = new Set(sessions.map(s => isoDay(s.start)));
-    const cnt = days.filter(d => set.has(isoDay(d))).length;
+    const weekIso = days.map(isoDay);
+    const weekSess = sessions.filter(s => weekIso.includes(isoDay(s.start)));
+    const weekKg = weekSess.reduce((n, s) => n + volOf(s.exercises, false), 0);
     const L = 'LMXJVSD';
     const recent = sessions.slice(-3).reverse();
+    // Racha: días seguidos con entreno, contando desde hoy (o desde ayer si hoy aún no).
+    const dayMs = 86400000;
+    const streakFrom = (ts) => { let n = 0; while (set.has(isoDay(ts - n * dayMs))) n++; return n; };
+    const cur = streakFrom(now.getTime()) || streakFrom(now.getTime() - dayMs);
+    const ds = [...set].sort();
+    let best = 0, run = 0, prev = null;
+    ds.forEach(k => {
+      const t = new Date(k + 'T12:00:00').getTime();
+      run = prev !== null && t - prev <= dayMs * 1.5 ? run + 1 : 1;
+      prev = t; best = Math.max(best, run);
+    });
+    // Calendario: últimas 4 semanas (de lunes a domingo), con hoy resaltado.
+    const calStart = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() - 21);
+    const cal = [...Array(28)].map((_, i) => new Date(calStart.getFullYear(), calStart.getMonth(), calStart.getDate() + i));
     return `<h1>Registrar</h1>
-      <h2 style="margin-top:0">Elige una rutina</h2>
+      <section class="card wk" style="cursor:default">
+        <div class="wk-top"><div><b>${weekSess.length}</b> <small class="muted">sesiones</small> · <b>${thousands(weekKg)}</b> <small class="muted">kg</small></div>
+          <small class="muted">${days.filter((d, i) => set.has(weekIso[i])).length}/7 días</small></div>
+        <div class="week" style="margin-top:12px">${days.map((d, i) => `<div class="day ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}">${L[i]}<b>${d.getDate()}</b></div>`).join('')}</div>
+        <button class="btn accent full" style="margin-top:14px" data-act="goRutinas">+ Empezar entrenamiento</button>
+      </section>
+      <section class="card racha" style="cursor:default">
+        <div class="racha-n"><div><b>${cur}</b><small class="muted">días seguidos</small></div><div><b>${best}</b><small class="muted">mejor racha</small></div></div>
+        <div class="cal">${cal.map(d => `<i class="${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
+      </section>
+      <h2 id="rutinas">Rutinas</h2>
       ${ROUTINES.map(r => `<button class="card" data-act="start" data-id="${r.id}"><b>${esc(r.name)} · ${esc(r.short)}</b>
         <span class="sub">${r.day ? esc(r.day) + ' · ' : ''}${r.exercises.slice(0, 4).map(e => esc(e.name.replace(/ \(.*\)/, ''))).join(' · ')}…</span></button>`).join('')}
       <button class="card dashed" data-act="start" data-id="free">+ Sesión libre</button>
-      <h2>Esta semana <span style="float:right;text-transform:none;letter-spacing:0">${cnt} entrenos</span></h2>
-      <div class="week">${days.map((d, i) => `<div class="day ${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === isoDay(Date.now()) ? 'today' : ''}">${L[i]}<b>${d.getDate()}</b></div>`).join('')}</div>
       <h2>Últimas sesiones</h2>
       ${recent.length ? recent.map(s => `<div class="sess"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></div>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
   }
@@ -721,6 +746,7 @@
       if (ok) { active.exercises.splice(ei, 1); persist(); render(); }
     }
     else if (a === 'addEx') addExercise();
+    else if (a === 'goRutinas') document.getElementById('rutinas')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     else if (a === 'finish') finish();
     else if (a === 'cancel') {
       const ok = await sheet('<h3>Cancelar entrenamiento</h3><p class="muted">Se perderá todo lo que has anotado.</p>', [{ label: 'Seguir', v: false }, { label: 'Cancelar', cls: 'accent', v: true }]);

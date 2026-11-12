@@ -249,3 +249,14 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .ing .ck2 { flex: none; width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid var(--accent); color: #000; background: var(--accent); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
 .ing.off { color: var(--muted); text-decoration: line-through; }
 .ing.off .ck2 { background: none; border-color: var(--line); }
+
+.wk-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 17px; }
+.wk-top b { font-size: 26px; font-weight: 700; }
+.racha { margin-top: 12px; }
+.racha-n { display: flex; gap: 28px; }
+.racha-n b { display: block; font-size: 30px; font-weight: 700; color: var(--accent); }
+.racha-n small { display: block; }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 14px; }
+.cal i { display: block; aspect-ratio: 1; border-radius: 6px; background: var(--surface2); }
+.cal i.on { background: var(--accent); }
+.cal i.today { outline: 1.5px solid var(--text); outline-offset: 1px; }

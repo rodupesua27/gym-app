@@ -307,7 +307,7 @@
     const cal = [...Array(28)].map((_, i) => new Date(calStart.getFullYear(), calStart.getMonth(), calStart.getDate() + i));
     return `<h1>Registrar</h1>
       <section class="card wk" style="cursor:default">
-        <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b> <small class="muted">días seguidos · mejor ${best}</small></div>
+        <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b></div>
           <div style="text-align:right"><small class="muted">Último entreno</small><br><b>${last ? dShort(last.start) : '–'}</b></div></div>
         <div class="week" style="margin-top:14px">${days.map((d, i) => `<div class="day ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}">${L[i]}<b>${d.getDate()}</b></div>`).join('')}</div>
         <div class="cal">${cal.map(d => `<i class="${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>

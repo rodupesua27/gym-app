@@ -277,3 +277,9 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .wk .dot.on b { color: #000; }
 .wk .dot.today { box-shadow: 0 0 0 2px #fff, inset 0 0 0 0 transparent; border-color: #fff; }
 .wk .dot.today.on { box-shadow: 0 0 0 2px #fff; }
+
+.wk .dot { border: 0; background: var(--surface2); width: 40px; height: 40px; }
+.wk .dot.on { background: var(--accent); }
+.wk .dot.today { border: 1.5px solid var(--accent); box-shadow: 0 0 0 3px var(--surface), 0 0 0 4.5px #fff; }
+.wk .dot.today.on { box-shadow: 0 0 0 3px var(--surface), 0 0 0 4.5px #fff; }
+.wk .week { gap: 12px; }

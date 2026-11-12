@@ -311,7 +311,6 @@
           <div style="text-align:right"><small class="muted">Último entreno</small><br><b>${last ? dShort(last.start) : '–'}</b></div></div>
         <div class="week" style="margin-top:14px">${days.map((d, i) => `<div class="wd"><small>${L[i]}</small><span class="dot ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}"><b>${d.getDate()}</b></span></div>`).join('')}</div>
         <div class="cal">${cal.map(d => `<i class="${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
-        <button class="btn accent full" style="margin-top:14px" data-act="goRutinas">+ Empezar entrenamiento</button>
       </section>
       <h2 id="rutinas">Rutinas</h2>
       ${ROUTINES.map(r => `<button class="card" data-act="start" data-id="${r.id}"><b>${esc(r.name)} · ${esc(r.short)}</b>

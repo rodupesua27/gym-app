@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta o carrera que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-12t';
+window.ROUTINES_VERSION = '2026-11-12u';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -55,15 +55,15 @@ window.ROUTINES = [
     day: 'Jueves',
     badge: '4',
     name: 'Día 4',
-    short: 'Cardio 1 · abdomen y carrera',
+    short: 'Cardio 1 · abdomen y cinta',
     cardio: {
-      title: 'Carrera suave zona 2',
+      title: 'Cinta zona 2',
       min: 35,
-      tip: 'Primero el abdomen y después la carrera. Ritmo en el que puedas hablar en frases completas. Si no puedes, camina; no hace falta correr rápido.',
+      tip: 'Primero el abdomen y después la cinta. Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez.',
       blocks: [
-        { name: 'Calentamiento andando', min: 5, desc: 'Ritmo tranquilo' },
-        { name: 'Carrera suave', min: 25, desc: 'Zona 2: puedes hablar en frases completas' },
-        { name: 'Vuelta a la calma', min: 5, desc: 'Andar y estirar' }
+        { name: 'Cinta · calentamiento', min: 5, desc: '4 km/h · 3 % de inclinación' },
+        { name: 'Cinta · parte principal', min: 25, desc: '5,5 km/h · 6 % de inclinación' },
+        { name: 'Cinta · vuelta a la calma', min: 5, desc: '4 km/h · 0 % de inclinación' }
       ]
     },
     exercises: [
@@ -108,15 +108,14 @@ window.ROUTINES = [
     day: 'Domingo',
     badge: '7',
     name: 'Día 7',
-    short: 'Cardio 2 · abdomen y cinta',
+    short: 'Cardio 2 · abdomen y comba',
     cardio: {
-      title: 'Cinta zona 2',
-      min: 35,
-      tip: 'Primero el abdomen y después la cinta. Ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez.',
+      title: 'Comba por intervalos',
+      min: 23,
+      tip: 'Primero el abdomen y después la comba. Salta lo que puedas y, si fallas, retoma y sigue. Si las piernas no aguantan, pasa a andar en vez de parar.',
       blocks: [
-        { name: 'Cinta · calentamiento', min: 5, desc: '4 km/h · 3 % de inclinación' },
-        { name: 'Cinta · parte principal', min: 25, desc: '5,5 km/h · 6 % de inclinación' },
-        { name: 'Cinta · vuelta a la calma', min: 5, desc: '4 km/h · 0 % de inclinación' }
+        { name: 'Comba · 12 rondas', min: 18, desc: '30 s de comba (o lo que aguantes) + 60 s andando' },
+        { name: 'Comba · vuelta a la calma', min: 5, desc: 'Andar y estirar' }
       ]
     },
     exercises: [

@@ -17,7 +17,7 @@
   let pushEndpoint = load(K.n, null);
   const PUSH_KEY = 'BAwEpOB4wZkmNCi6MFGQ6c-h5a0pcmzeeR35j66aXUAv56GxPI9nsaxT_atsS0z0YiVkTBuR3XUm93APsTLfJHY';
   let bmetric = 'kg', bAll = false, bDraft = null;
-  let tab = 'registrar';
+  let tab = 'registro';
   let openId = null;
 
   const $view = document.getElementById('view');
@@ -47,7 +47,7 @@
   };
 
   const ICON = {
-    registrar: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>',
+    registro: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>',
     rutinas: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>',
     progreso: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
     dieta: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v6a3 3 0 0 0 6 0V3M8 3v18M17 3c-2.2 1.6-3 4.2-3 8h3v10"/></svg>',
@@ -142,7 +142,7 @@
       cardio: r && r.cardio ? { title: r.cardio.title, min: r.cardio.min, tip: r.cardio.tip, blocks: r.cardio.blocks, done: false } : null,
       exercises: r ? r.exercises.map(e => mkEx(e.name, e.sets, e.warmup || 0, e.reps, e.rest)) : []
     };
-    persist(); tab = 'registrar'; render();
+    persist(); tab = 'registro'; render();
   }
   // ---------- aviso de descanso (push) ----------
   // Se programa 2 s más tarde: si la app está abierta, cancela antes de que llegue el aviso.
@@ -270,7 +270,7 @@
     });
     const ses = { id: active.id, routineId: active.routineId, name: active.name, start: active.start, end, exercises: exs, cardio };
     sessions.push(ses); save(K.s, sessions);
-    active = null; persist(); tab = 'registrar'; render();
+    active = null; persist(); tab = 'registro'; render();
     const nsets = exs.reduce((n, e) => n + e.sets.length, 0);
     await sheet(
       `<h3>¡Entrenamiento guardado!</h3><p>${dur((end - ses.start) / 1000)} · ${cardio ? 'Cardio ✓ · ' : ''}${thousands(volOf(exs, false))} kg · ${nsets} series</p>` +
@@ -280,7 +280,7 @@
   }
 
   // ---------- vistas ----------
-  function viewRegistrar() {
+  function viewRegistro() {
     if (active) return viewActive();
     const now = new Date();
     const todayIso = isoDay(now);
@@ -305,17 +305,13 @@
     // Calendario: últimas 4 semanas (de lunes a domingo), con hoy resaltado.
     const calStart = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() - 21);
     const cal = [...Array(28)].map((_, i) => new Date(calStart.getFullYear(), calStart.getMonth(), calStart.getDate() + i));
-    return `<h1>Registrar</h1>
+    return `<h1>Registro</h1>
       <section class="card wk" style="cursor:default">
         <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b></div>
           <div style="text-align:right"><small class="muted">Último entreno</small><br><b>${last ? dShort(last.start) : '–'}</b></div></div>
         <div class="week" style="margin-top:14px">${days.map((d, i) => `<div class="wd"><small>${L[i]}</small><span class="dot ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}"><b>${d.getDate()}</b></span></div>`).join('')}</div>
         <div class="cal">${cal.map(d => `<i class="${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
       </section>
-      <h2 id="rutinas">Rutinas</h2>
-      ${ROUTINES.map(r => `<button class="card" data-act="start" data-id="${r.id}"><b>${esc(r.name)} · ${esc(r.short)}</b>
-        <span class="sub">${r.day ? esc(r.day) + ' · ' : ''}${r.exercises.slice(0, 4).map(e => esc(e.name.replace(/ \(.*\)/, ''))).join(' · ')}…</span></button>`).join('')}
-      <button class="card dashed" data-act="start" data-id="free">+ Sesión libre</button>
       <h2>Últimas sesiones</h2>
       ${recent.length ? recent.map(s => `<div class="sess"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></div>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
   }
@@ -377,7 +373,7 @@
   const thumb = (n, cls) => {
     const i = exInfo(n);
     return i && i.img ? `<img class="${cls}" loading="lazy" alt="" src="${imgSrc(i, 0)}">`
-             : `<div class="${cls} ph">${ICON.registrar}</div>`;
+             : `<div class="${cls} ph">${ICON.registro}</div>`;
   };
   function routineMuscles(r) {
     const m = {};
@@ -445,6 +441,7 @@
           <button class="btn accent full" data-act="start" data-id="${r.id}">Empezar rutina</button>
         </section>`;
       }).join('')}
+      <button class="card dashed" data-act="start" data-id="free">+ Sesión libre</button>
       ${pushCard()}`;
   }
 
@@ -642,13 +639,13 @@
   }
 
   function render() {
-    $tabs.innerHTML = ['registrar', 'rutinas', 'progreso', 'dieta'].map(t =>
+    $tabs.innerHTML = ['registro', 'rutinas', 'progreso', 'dieta'].map(t =>
       `<button class="${tab === t ? 'on' : ''}" data-act="tab" data-t="${t}">${ICON[t]}<span>${t[0].toUpperCase() + t.slice(1)}</span></button>`).join('');
     let html = '';
-    if (active && tab !== 'registrar') {
-      html += `<button class="banner" data-act="tab" data-t="registrar"><span>Entrenamiento en curso</span><span>Volver →</span></button>`;
+    if (active && tab !== 'registro') {
+      html += `<button class="banner" data-act="tab" data-t="registro"><span>Entrenamiento en curso</span><span>Volver →</span></button>`;
     }
-    html += tab === 'registrar' ? viewRegistrar() : tab === 'rutinas' ? viewRutinas() : tab === 'dieta' ? viewDieta() : viewProgreso();
+    html += tab === 'registro' ? viewRegistro() : tab === 'rutinas' ? viewRutinas() : tab === 'dieta' ? viewDieta() : viewProgreso();
     $view.innerHTML = html;
     renderRest();
     keepAwake();
@@ -695,7 +692,7 @@
 
     if (a === 'tab') { tab = t.dataset.t; render(); window.scrollTo(0, 0); }
     else if (a === 'start') {
-      if (active) { tab = 'registrar'; render(); return; }
+      if (active) { tab = 'registro'; render(); return; }
       startFrom(t.dataset.id === 'free' ? null : ROUTINES.find(r => r.id === t.dataset.id));
       window.scrollTo(0, 0);
     }
@@ -741,7 +738,6 @@
       if (ok) { active.exercises.splice(ei, 1); persist(); render(); }
     }
     else if (a === 'addEx') addExercise();
-    else if (a === 'goRutinas') document.getElementById('rutinas')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     else if (a === 'finish') finish();
     else if (a === 'cancel') {
       const ok = await sheet('<h3>Cancelar entrenamiento</h3><p class="muted">Se perderá todo lo que has anotado.</p>', [{ label: 'Seguir', v: false }, { label: 'Cancelar', cls: 'accent', v: true }]);

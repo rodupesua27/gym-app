@@ -462,34 +462,40 @@
   }
 
   // ---------- vistas ----------
-  // Rango global ESTIMADO. Por ejercicio: ratio = 1RM estimado (Epley) / peso corporal, dividido entre un valor de
-  // referencia "intermedio" aproximado (REF, estimación propia: las máquinas y poleas no tienen tabla fiable).
-  // La puntuación global es la media de esos ejercicios. Gimnasio: intermedio = Platino 1. General: umbrales ×0,75.
-  const REF = {
-    'Press de banca inclinado (mancuerna)': .5, 'Curl de bíceps (mancuerna)': .25, 'Curl de bíceps inclinado (mancuerna)': .2,
-    'Curl martillo (mancuerna)': .25, 'Jalón al pecho (cable)': 1, 'Jalón al pecho agarre invertido (cable)': 1,
-    'Jalón al pecho a un brazo': .5, 'Remo sentado (máquina)': .9, 'Remo inclinado (barra)': .8, 'Press de piernas': 2.8,
-    'Extensión de pierna': 1.25, 'Curl de pierna acostado (máquina)': .8, 'Empuje de cadera (máquina)': 1.5,
-    'Mariposa (Pec Deck)': 1, 'Jalón de tríceps con cuerda': .5, 'Jalón de tríceps con barra V (polea)': .55,
-    'Extensión de tríceps por encima de la cabeza (cable)': .4, 'Elevación lateral (cable)': .1,
-    'Pájaro en polea (deltoides posterior)': .2, 'Curl predicador (máquina)': .4, 'Encogimiento de hombros (mancuerna)': .5,
-    'Aperturas en polea de abajo arriba': .2, 'Cables cruzados (de arriba abajo)': .3, 'Elevación frontal con barra (cable)': .25,
-    'Abducción de cadera (máquina)': 1.3, 'Aducción de cadera (máquina)': 1.3
+  // Rango de fuerza. Cada ejercicio se compara con la tabla publicada de StrengthLevel (hombres, 1RM / peso corporal):
+  // [principiante, novato, intermedio, avanzado, élite]. Solo cuentan ejercicios con tabla del mismo tipo de equipo.
+  // 1RM = fórmula de Epley con series de 1 a 12 repeticiones; mancuernas = peso de UNA mancuerna.
+  // Percentiles de gimnasio de esos niveles: 5 / 20 / 50 / 80 / 95 %. Se reparten así en la escala Valorant:
+  // principiante = Bronce 2, novato = Plata 2, intermedio = Oro 2, avanzado = Diamante 2, élite = Inmortal 1, Radiante = 30 % por encima de élite.
+  const STD = {
+    'Press de banca inclinado (mancuerna)': [0.25, 0.35, 0.50, 0.65, 0.85],
+    'Jalón al pecho (cable)': [0.50, 0.75, 1.00, 1.50, 1.75],
+    'Extensión de pierna': [0.50, 1.00, 1.25, 1.75, 2.50],
+    'Curl de bíceps (mancuerna)': [0.10, 0.15, 0.30, 0.40, 0.55],
+    'Remo inclinado (barra)': [0.50, 0.75, 1.00, 1.50, 1.75],
+    'Jalón de tríceps con cuerda': [0.20, 0.35, 0.60, 0.85, 1.15],
+    'Jalón de tríceps con barra V (polea)': [0.25, 0.45, 0.70, 1.05, 1.40]
   };
+  const LV = [1.5, 2.5, 3.5, 5.5, 7];
+  function vOf(r, st) {
+    if (r <= 0) return 0;
+    if (r <= st[0]) return r / st[0] * LV[0];
+    for (let k = 0; k < 4; k++) if (r <= st[k + 1]) return LV[k] + (r - st[k]) / (st[k + 1] - st[k]) * (LV[k + 1] - LV[k]);
+    return Math.min(8, 7 + (r - st[4]) / (st[4] * 0.3));
+  }
+  function rmOf(name) {
+    let m = 0;
+    sessions.forEach(ss => ss.exercises.forEach(x => {
+      if (x.name !== name) return;
+      x.sets.forEach(s => { const kg = +s.kg || 0, reps = +s.reps || 0; if (s.t === 'N' && kg > 0 && reps >= 1 && reps <= 12) m = Math.max(m, epley(kg, reps)); });
+    }));
+    return m;
+  }
   const TIERS = ['Hierro', 'Bronce', 'Plata', 'Oro', 'Platino', 'Diamante', 'Ascendente', 'Inmortal'];
   const TCOL = ['#8a8f98', '#b07a4a', '#b9c2cc', '#e2b43c', '#4fc3c7', '#8f7cf0', '#3fbf7f', '#e5484d', '#ffd86b'];
-  // Puntos de anclaje (relación con el nivel «intermedio» de las tablas de fuerza de gimnasio -> posición en la escala).
-  // Principiante 0,5 · Novato 0,75 · Intermedio 1 · Avanzado 1,5 · Élite 1,75 (proporciones de StrengthLevel); Radiante = muy por encima de élite.
-  // Intermedio queda en Oro 2 (la mitad de la gente de gimnasio), élite en Inmortal 1.
-  const ANCH = [[0, 0], [0.5, 1.5], [0.75, 2.5], [1, 3.5], [1.5, 5.5], [1.75, 7], [2.3, 8]];
-  function tierOf(m) {
-    if (m >= 2.3) return { i: 8, name: 'Radiante', sub: 3, pct: 1 };
-    let v = 0;
-    for (let k = 0; k < ANCH.length - 1; k++) {
-      const [x0, y0] = ANCH[k], [x1, y1] = ANCH[k + 1];
-      if (m <= x1) { v = y0 + (Math.max(0, m) - x0) / (x1 - x0) * (y1 - y0); break; }
-    }
-    v += 1e-9;
+  function tierOf(v) {
+    if (v >= 8) return { i: 8, name: 'Radiante', sub: 3, pct: 1 };
+    v = Math.max(0, v) + 1e-9;
     const i = Math.floor(v), sub = Math.min(2, Math.floor((v - i) * 3));
     return { i, name: TIERS[i] + ' ' + (sub + 1), sub: sub + 1, pct: (v - i) * 3 - sub };
   }
@@ -502,15 +508,19 @@
     return `<svg class="bdg" viewBox="0 0 64 72"><path d="M32 4l24 8v22c0 15-10 26-24 34C18 60 8 49 8 34V12z" fill="#14161a" stroke="${c}" stroke-width="3"/><path d="M32 10l18 6v18c0 11-7 20-18 26-11-6-18-15-18-26V16z" fill="${c}" opacity=".12"/>${mark}</svg>`;
   }
   function rankCard() {
-    const bw = body.length ? +body[body.length - 1].kg || 67.9 : 67.9;
-    const sc = [];
-    Object.keys(REF).forEach(n => { const r = recordsOf(n); if (r.rm) sc.push(r.rm / bw / REF[n]); });
-    if (sc.length < 3) return '<section class="card rank" style="cursor:default"><small class="muted">Rango de fuerza (estimado)</small><p class="muted" style="margin:8px 0 0">Registra series con peso en al menos 3 ejercicios para ver tu rango.</p></section>';
-    const m = sc.reduce((x, y) => x + y, 0) / sc.length;
-    const g = tierOf(m), a = tierOf(m * 1.2); // general: estimación propia (×1,2)
+    const head = '<section class="card rank" style="cursor:default"><b class="rk-t">Rango de fuerza</b>';
+    const last = body.length ? body.slice().sort((x, y) => x.ts - y.ts)[body.length - 1] : null;
+    const bw = last ? +last.kg : 0;
+    if (!(bw > 20)) return head + '<small class="muted">Anota tu peso en Progreso para calcular tu rango.</small></section>';
+    const vs = [], vg = [];
+    Object.keys(STD).forEach(n => { const rm = rmOf(n); if (rm) { const r = rm / bw; vs.push(vOf(r, STD[n])); vg.push(vOf(r * 1.2, STD[n])); } });
+    if (vs.length < 2) return head + '<small class="muted">Registra series (de 1 a 12 reps) en al menos 2 ejercicios con tabla: press inclinado, jalón, extensión de pierna, curl, remo con barra o tríceps en polea.</small></section>';
+    const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
+    const g = tierOf(avg(vs)), a = tierOf(avg(vg));
     const half = (t, lbl) => `<div class="rk">${badge(t)}<small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;
-    return `<section class="card rank" style="cursor:default"><b class="rk-t">Rango de fuerza aproximado</b><small class="muted">Comparado con gente de tu mismo peso</small>
-      <div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div></section>`;
+    return head + `<small class="muted" style="display:block">Comparado con gente de tu mismo peso</small>
+      <div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div>
+      <small class="muted" style="display:block;margin-top:14px;text-align:center">${vs.length} ejercicios · tablas de StrengthLevel · «general» es una estimación</small></section>`;
   }
 
   function viewRegistro() {
@@ -779,10 +789,7 @@
         <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></button>`).join('') : '<p class="muted">Aquí aparecerán tus entrenamientos.</p>'}
       <h2>Copia en la nube</h2>
       ${SYNC.id ? `<p class="muted"><small>${SYNC.msg || (SYNC.dirty ? 'Pendiente de subir…' : SYNC.t ? 'Última copia: ' + new Date(SYNC.t).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Activada')}</small></p><div class="row"><button class="btn" data-act="syncNow">Sincronizar ahora</button></div>`
-        : '<p class="muted"><small>Sin activar: tus datos solo viven en este móvil.</small></p><div class="row"><button class="btn accent" data-act="syncSetup">Activar copia en la nube</button></div>'}
-      <h2>Copia de seguridad</h2>
-      <p class="muted"><small>Tus datos viven en este móvil. Exporta una copia de vez en cuando.</small></p>
-      <div class="row"><button class="btn" data-act="export">Exportar</button><label class="btn" for="imp">Importar</label><input type="file" id="imp" accept="application/json" hidden></div>`;
+        : '<p class="muted"><small>Sin activar: tus datos solo viven en este móvil.</small></p><div class="row"><button class="btn accent" data-act="syncSetup">Activar copia en la nube</button></div>'}`;
   }
 
   // ---------- dieta ----------

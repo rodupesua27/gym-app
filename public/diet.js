@@ -2,7 +2,7 @@
 // Todo se hace con sartén y microondas, cocinando cada día.
 // kc / pr: kcal y proteína de cada ingrediente (misma posición que "ingredients").
 // Datos de etiqueta del usuario: Lidl (pan, pollo, yogur y queso Milbona, nata, huevos M), Real Valle (pavo), Tastino (tortillas), Nixe (atún), Hacendado (tomate frito), mayonesa (613 kcal/100 g).
-// Estimaciones: mantequilla (sin datos), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, peso de cada huevo M (55 g).
+// Estimaciones: mantequilla (sin datos), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, huevo medio entre M y L (60 g: unos 86 kcal y 7,6 g de proteína cada uno).
 window.DIET_TARGET = { kcal: 2700, protein: 120 };
 window.DIET = {
   slots: [
@@ -14,8 +14,8 @@ window.DIET = {
     {
       id: 'd1', slot: 'desayuno', short: 'Bocadillo', name: 'Bocadillo de pavo y huevos',
       min: 10,
-      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', 'Mantequilla (10 g)', '2 huevos M', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
-      kc: [379, 20, 72, 158, 99, 75], pr: [11, 4, 0, 14, 1, 4],
+      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', 'Mantequilla (10 g)', '2 huevos (M y L mezclados)', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
+      kc: [379, 20, 72, 172, 99, 75], pr: [11, 4, 0, 15, 1, 4],
       steps: 'Huevos a la plancha en la sartén (3-4 min). Monta el bocadillo con mantequilla y pavo. Plátano y café aparte.'
     },
     {
@@ -29,8 +29,8 @@ window.DIET = {
     {
       id: 'c1', slot: 'comida', short: 'Arroz, pollo y huevos', name: 'Arroz con pollo, huevos y medio aguacate',
       min: 15,
-      ingredients: ['80 g de arroz seco (≈200 g cocido)', '200 g de pechuga de pollo Lidl', '2 huevos M', '½ aguacate', '1 cucharada de aceite de oliva'],
-      kc: [277, 206, 158, 160, 120], pr: [6, 48, 14, 2, 0],
+      ingredients: ['80 g de arroz seco (≈200 g cocido)', '200 g de pechuga de pollo Lidl', '2 huevos (M y L mezclados)', '½ aguacate', '1 cucharada de aceite de oliva'],
+      kc: [277, 206, 172, 160, 120], pr: [6, 48, 15, 2, 0],
       steps: 'Pollo en tiras finas en la sartén con aceite, 6-8 min: así queda jugoso y no seco. Huevos revueltos o a la plancha en la misma sartén, 3 min. Arroz en el microondas (bolsa lista o 1 parte de arroz por 2 de agua, 10-12 min).'
     },
     {
@@ -58,15 +58,15 @@ window.DIET = {
     {
       id: 'n2', slot: 'cena', short: 'Bocadillo y tortilla', name: 'Bocadillo de pavo, queso y guacamole, y tortilla de 3 huevos',
       min: 8,
-      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', '30 g de queso Gouda Milbona', 'Guacamole: ½ aguacate, zumo de ½ limón, sal y pimienta', '3 huevos M'],
-      kc: [379, 20, 113, 160, 237], pr: [11, 4, 7, 2, 21],
+      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', '30 g de queso Gouda Milbona', 'Guacamole: ½ aguacate, zumo de ½ limón, sal y pimienta', '3 huevos (M y L mezclados)'],
+      kc: [379, 20, 113, 160, 258], pr: [11, 4, 7, 2, 23],
       steps: 'Guacamole: machaca el aguacate con el limón, sal y pimienta (3 min). Tortilla de 3 huevos en la sartén, 4 min. Bocadillo con pavo, queso y guacamole.'
     },
     {
       id: 'n3', slot: 'cena', short: 'Arroz y atún', name: 'Arroz con atún y huevos',
       min: 12,
-      ingredients: ['67 g de arroz seco (≈200 g cocido)', '2 latas de atún Nixe al natural (80 g escurrido c/u)', '2 huevos M', 'Tomate frito Hacendado (100 g)'],
-      kc: [232, 178, 158, 81], pr: [5, 42, 14, 1],
+      ingredients: ['67 g de arroz seco (≈200 g cocido)', '2 latas de atún Nixe al natural (80 g escurrido c/u)', '2 huevos (M y L mezclados)', 'Tomate frito Hacendado (100 g)'],
+      kc: [232, 178, 172, 81], pr: [5, 42, 15, 1],
       steps: 'Arroz en el microondas. Huevos fritos en la sartén. Mezcla con el atún y el tomate frito.',
       note: 'Con atún máximo 1-2 comidas por semana (2-4 latas).'
     },

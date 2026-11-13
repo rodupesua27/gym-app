@@ -478,10 +478,19 @@
   };
   const TIERS = ['Hierro', 'Bronce', 'Plata', 'Oro', 'Platino', 'Diamante', 'Ascendente', 'Inmortal'];
   const TCOL = ['#8a8f98', '#b07a4a', '#b9c2cc', '#e2b43c', '#4fc3c7', '#8f7cf0', '#3fbf7f', '#e5484d', '#ffd86b'];
-  function tierOf(u) {
-    if (u >= 9) return { i: 8, name: 'Radiante', sub: 3, pct: 1 };
-    u = Math.max(0, u) + 1e-9;
-    const v = u < 2 ? u / 2 : u - 1, i = Math.floor(v), sub = Math.min(2, Math.floor((v - i) * 3));
+  // Puntos de anclaje (relación con el nivel «intermedio» de las tablas de fuerza de gimnasio -> posición en la escala).
+  // Principiante 0,5 · Novato 0,75 · Intermedio 1 · Avanzado 1,5 · Élite 1,75 (proporciones de StrengthLevel); Radiante = muy por encima de élite.
+  // Intermedio queda en Oro 2 (la mitad de la gente de gimnasio), élite en Inmortal 1.
+  const ANCH = [[0, 0], [0.5, 1.5], [0.75, 2.5], [1, 3.5], [1.5, 5.5], [1.75, 7], [2.3, 8]];
+  function tierOf(m) {
+    if (m >= 2.3) return { i: 8, name: 'Radiante', sub: 3, pct: 1 };
+    let v = 0;
+    for (let k = 0; k < ANCH.length - 1; k++) {
+      const [x0, y0] = ANCH[k], [x1, y1] = ANCH[k + 1];
+      if (m <= x1) { v = y0 + (Math.max(0, m) - x0) / (x1 - x0) * (y1 - y0); break; }
+    }
+    v += 1e-9;
+    const i = Math.floor(v), sub = Math.min(2, Math.floor((v - i) * 3));
     return { i, name: TIERS[i] + ' ' + (sub + 1), sub: sub + 1, pct: (v - i) * 3 - sub };
   }
   // Insignia propia (escudo con galones); no copia ningún icono existente.
@@ -498,7 +507,7 @@
     Object.keys(REF).forEach(n => { const r = recordsOf(n); if (r.rm) sc.push(r.rm / bw / REF[n]); });
     if (sc.length < 3) return '<section class="card rank" style="cursor:default"><small class="muted">Rango de fuerza (estimado)</small><p class="muted" style="margin:8px 0 0">Registra series con peso en al menos 3 ejercicios para ver tu rango.</p></section>';
     const m = sc.reduce((x, y) => x + y, 0) / sc.length;
-    const g = tierOf(5 * m), a = tierOf(5 * m / 0.75);
+    const g = tierOf(m), a = tierOf(m * 1.2); // general: estimación propia (×1,2)
     const half = (t, lbl) => `<div class="rk">${badge(t)}<small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;
     return `<section class="card rank" style="cursor:default"><b class="rk-t">Rango de fuerza aproximado</b><small class="muted">Comparado con gente de tu mismo peso</small>
       <div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div></section>`;

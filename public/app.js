@@ -521,7 +521,7 @@
     return `<svg class="bdg" viewBox="0 0 64 72"><path d="M32 4l24 8v22c0 15-10 26-24 34C18 60 8 49 8 34V12z" fill="#14161a" stroke="${c}" stroke-width="3"/><path d="M32 10l18 6v18c0 11-7 20-18 26-11-6-18-15-18-26V16z" fill="${c}" opacity=".12"/>${mark}</svg>`;
   }
   function rankCard() {
-    const head = '<section class="card rank" style="cursor:default"><b class="rk-t">Rango de fuerza</b>';
+    const head = '<section class="card rank" style="cursor:default"><b class="rk-t">Rango de fuerza</b> <small class="muted">· comparación estimada con gente de tu mismo peso</small>';
     const last = body.length ? body.slice().sort((x, y) => x.ts - y.ts)[body.length - 1] : null;
     const bw = last ? +last.kg : 0;
     if (!(bw > 20)) return head + '<small class="muted">Anota tu peso en Progreso para calcular tu rango.</small></section>';
@@ -531,9 +531,7 @@
     const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
     const g = tierOf(avg(vs)), a = tierOf(avg(vg));
     const half = (t, lbl) => `<div class="rk">${badge(t)}<small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;
-    return head + `<small class="muted" style="display:block">Comparado con gente de tu mismo peso</small>
-      <div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div>
-      <small class="muted" style="display:block;margin-top:14px;text-align:center">${vs.length} ejercicios · tablas de StrengthLevel · «general» es una estimación</small></section>`;
+    return head + `<div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div></section>`;
   }
 
   function viewRegistro() {
@@ -544,8 +542,8 @@
     const days = [...Array(7)].map((_, i) => new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i));
     const set = new Set(sessions.map(s => isoDay(s.start)));
     const weekIso = days.map(isoDay);
-    const last = sessions.length ? sessions.reduce((m, x) => (x.start > m.start ? x : m)) : null;
     const L = 'LMXJVSD';
+    const thisMonth = sessions.filter(x => { const d = new Date(x.start); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth(); }).length;
     const recent = sessions.slice(-3).reverse();
     // Racha: días seguidos con entreno, contando desde hoy (o desde ayer si hoy aún no).
     const dayMs = 86400000;
@@ -564,7 +562,7 @@
     return `<h1>Registro</h1>
       <section class="card wk" style="cursor:default">
         <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b></div>
-          <div style="text-align:right"><small class="muted">Último entreno</small><br><b>${last ? dShort(last.start) : '–'}</b></div></div>
+          <div style="text-align:right"><small class="muted">Entrenos este mes</small><br><b>${thisMonth}</b> <small class="muted">· total ${sessions.length}</small></div></div>
         <div class="week" style="margin-top:14px">${days.map((d, i) => `<div class="wd"><small>${L[i]}</small><span class="dot ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}"><b>${d.getDate()}</b></span></div>`).join('')}</div>
         <div class="cal">${cal.map(d => `<i class="${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
       </section>

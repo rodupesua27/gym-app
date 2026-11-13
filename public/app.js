@@ -23,6 +23,7 @@
   const PUSH_KEY = 'BAwEpOB4wZkmNCi6MFGQ6c-h5a0pcmzeeR35j66aXUAv56GxPI9nsaxT_atsS0z0YiVkTBuR3XUm93APsTLfJHY';
   let bmetric = 'kg', bAll = false, bDraft = null;
   let tab = 'registro';
+  let lastTab = null;
   let openId = null;
 
   const $view = document.getElementById('view');
@@ -893,7 +894,7 @@
   }
 
   function render() {
-    $tabs.innerHTML = ['registro', 'rutinas', 'progreso', 'dieta'].map(t =>
+    $tabs.innerHTML = ['registro', 'rutinas', 'dieta', 'progreso'].map(t =>
       `<button class="${tab === t ? 'on' : ''}" data-act="tab" data-t="${t}">${ICON[t]}<span>${t[0].toUpperCase() + t.slice(1)}</span></button>`).join('');
     let html = '';
     if (active && tab !== 'registro') {
@@ -901,6 +902,10 @@
     }
     html += tab === 'registro' ? viewRegistro() : tab === 'rutinas' ? viewRutinas() : tab === 'dieta' ? viewDieta() : viewProgreso();
     $view.innerHTML = html;
+    if (tab !== lastTab) {
+      lastTab = tab;
+      $view.classList.remove('enter'); void $view.offsetWidth; $view.classList.add('enter');
+    }
     renderRest();
     keepAwake();
   }

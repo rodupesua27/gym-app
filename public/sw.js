@@ -1,5 +1,5 @@
 // Service worker: primero red (para que los cambios se vean al reabrir), con copia local sin conexión.
-var CACHE = 'gym-v5';
+var CACHE = 'gym-v6';
 
 self.addEventListener('install', function () { self.skipWaiting(); });
 
@@ -15,7 +15,7 @@ self.addEventListener('activate', function (e) {
 
 self.addEventListener('fetch', function (e) {
   var r = e.request;
-  if (r.method !== 'GET' || new URL(r.url).origin !== self.location.origin) return;
+  if (r.method !== 'GET' || new URL(r.url).origin !== self.location.origin || new URL(r.url).pathname.indexOf('/api/') === 0) return;
   e.respondWith(
     fetch(new Request(r, { cache: 'no-store' }))
       .then(function (res) {

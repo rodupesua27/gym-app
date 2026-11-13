@@ -7,7 +7,10 @@
   const K = { s: 'gym.sessions', a: 'gym.active', b: 'gym.body', d: 'gym.diet', p: 'gym.profile', n: 'gym.push' };
 
   const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
-  const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  const save = (k, v, quiet) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} if (!quiet && SYNCED.indexOf(k) >= 0) syncSoon(); };
+  // ---------- copia en la nube ----------
+  const SYNCED = ['gym.sessions', 'gym.body', 'gym.diet', 'gym.profile'];
+  const SYNC = { id: load('gym.syncid', null), rev: load('gym.syncrev', 0), dirty: load('gym.syncdirty', false), t: load('gym.synct', 0), msg: '', busy: false, timer: null };
 
   let sessions = load(K.s, []);
   // Nombres antiguos de las sesiones de cardio.
@@ -186,6 +189,72 @@
       const c = document.getElementById('ec' + i);
       if (c) c.textContent = e.sets.filter(s => s.done).length + '/' + e.sets.length;
     });
+  }
+
+  const sha = async txt => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('gym-app:' + txt)))).map(b => b.toString(16).padStart(2, '0')).join('');
+  const snap = () => ({ v: 2, sessions, body, diet, profile });
+  const hasData = d => d && ((d.sessions || []).length + (d.body || []).length) > 0;
+  function syncSoon() {
+    SYNC.dirty = true; try { localStorage.setItem('gym.syncdirty', 'true'); } catch (e) {}
+    if (!SYNC.id) return;
+    clearTimeout(SYNC.timer); SYNC.timer = setTimeout(syncNow, 2000);
+  }
+  function applyRemote(d) {
+    sessions = d.sessions || []; body = d.body || [];
+    if (d.diet && typeof d.diet === 'object') diet = d.diet;
+    if (d.profile && typeof d.profile === 'object') profile = d.profile;
+    sessions.forEach(s => { s.name = String(s.name).replace('Cardio 1 · abdomen y cinta', 'Abdomen y cinta').replace('Cardio 2 · abdomen y comba', 'Abdomen y comba'); });
+    save(K.s, sessions, true); save(K.b, body, true); save(K.d, diet, true); save(K.p, profile, true);
+  }
+  function mergeRemote(d) {
+    const ids = new Set(sessions.map(x => x.id));
+    sessions = sessions.concat((d.sessions || []).filter(x => !ids.has(x.id))).sort((a, b) => a.start - b.start);
+    const ts = new Set(body.map(x => x.ts));
+    body = body.concat((d.body || []).filter(x => !ts.has(x.ts))).sort((a, b) => a.ts - b.ts);
+    diet = Object.assign({}, d.diet || {}, diet);
+    profile = Object.assign({}, d.profile || {}, profile);
+    save(K.s, sessions, true); save(K.b, body, true); save(K.d, diet, true); save(K.p, profile, true);
+  }
+  async function syncCall(method, payload) {
+    const r = await fetch('/api/sync', { method, headers: { 'content-type': 'application/json', 'x-sync-id': SYNC.id }, body: payload ? JSON.stringify(payload) : undefined, cache: 'no-store' });
+    let j = null; try { j = await r.json(); } catch (e) {}
+    return { st: r.status, j };
+  }
+  async function syncNow() {
+    if (!SYNC.id || SYNC.busy || typeof fetch !== 'function') return;
+    SYNC.busy = true;
+    try {
+      for (let i = 0; i < 3; i++) {
+        const g = await syncCall('GET');
+        if (g.st !== 200 || !g.j) throw new Error('get');
+        const rd = g.j.data;
+        if (g.j.rev > SYNC.rev && hasData(rd)) {
+          if (!hasData(snap())) { applyRemote(rd); SYNC.dirty = false; }                 // móvil vacío: recuperar de la nube
+          else if (SYNC.dirty || SYNC.rev === 0) { mergeRemote(rd); SYNC.dirty = true; } // cambios en los dos lados: unir
+          else { applyRemote(rd); SYNC.dirty = false; }
+        }
+        SYNC.rev = g.j.rev;
+        if (!SYNC.dirty) break;
+        if (!hasData(snap())) break;                         // nunca subir una copia vacía
+        const p = await syncCall('PUT', { base: SYNC.rev, data: snap() });
+        if (p.st === 200) { SYNC.rev = p.j.rev; SYNC.dirty = false; SYNC.t = Date.now(); break; }
+        if (p.st !== 409) throw new Error('put');
+      }
+      SYNC.msg = '';
+    } catch (e) { SYNC.msg = 'Sin conexión: se reintentará'; }
+    try { localStorage.setItem('gym.syncrev', JSON.stringify(SYNC.rev)); localStorage.setItem('gym.syncdirty', JSON.stringify(SYNC.dirty)); localStorage.setItem('gym.synct', JSON.stringify(SYNC.t)); } catch (e) {}
+    SYNC.busy = false;
+    if (!active && !(document.activeElement && document.activeElement.tagName === 'INPUT')) render();
+  }
+  async function syncSetup() {
+    const v = await sheet('<h3>Copia en la nube</h3><p class="muted">Elige una frase secreta de 4 palabras o más. Con ella recuperas tus datos en cualquier móvil. Guárdala: si la pierdes, no se puede recuperar.</p><input id="sph" type="text" autocomplete="off" autocapitalize="none" placeholder="frase secreta" style="width:100%;margin-top:10px">',
+      [{ label: 'Cancelar', v: null }, { label: 'Activar', cls: 'accent', v: o => o.querySelector('#sph').value }]);
+    if (v === null) return;
+    const phrase = String(v).trim().toLowerCase().replace(/\s+/g, ' ');
+    if (phrase.length < 16) { await sheet('<h3>Frase demasiado corta</h3><p class="muted">Usa al menos 16 caracteres (por ejemplo, 4 palabras).</p>', [{ label: 'Vale', cls: 'accent', v: true }]); return; }
+    SYNC.id = await sha(phrase); SYNC.rev = 0; SYNC.dirty = true;
+    try { localStorage.setItem('gym.syncid', JSON.stringify(SYNC.id)); } catch (e) {}
+    render(); await syncNow();
   }
 
   function swapPage(base, cur, list, planOf) {
@@ -467,6 +536,7 @@
         <div class="week" style="margin-top:14px">${days.map((d, i) => `<div class="wd"><small>${L[i]}</small><span class="dot ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}"><b>${d.getDate()}</b></span></div>`).join('')}</div>
         <div class="cal">${cal.map(d => `<i class="${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
       </section>
+      ${SYNC.id ? '' : '<button class="btn full" style="margin-top:12px" data-act="syncSetup">Activar copia en la nube (para no perder tus datos)</button>'}
       ${rankCard()}
       <h2>Últimas sesiones</h2>
       ${recent.length ? recent.map(s => `<button class="sess" data-act="openSession" data-id="${s.id}"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></button>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
@@ -698,6 +768,9 @@
       <button class="btn full" style="margin-bottom:10px" data-act="pastAdd">+ Registrar entreno pasado</button>
       ${sessions.length ? sessions.slice().reverse().map(s => `<button class="sess" data-act="openSession" data-id="${s.id}">
         <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></button>`).join('') : '<p class="muted">Aquí aparecerán tus entrenamientos.</p>'}
+      <h2>Copia en la nube</h2>
+      ${SYNC.id ? `<p class="muted"><small>${SYNC.msg || (SYNC.dirty ? 'Pendiente de subir…' : SYNC.t ? 'Última copia: ' + new Date(SYNC.t).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Activada')}</small></p><div class="row"><button class="btn" data-act="syncNow">Sincronizar ahora</button></div>`
+        : '<p class="muted"><small>Sin activar: tus datos solo viven en este móvil.</small></p><div class="row"><button class="btn accent" data-act="syncSetup">Activar copia en la nube</button></div>'}
       <h2>Copia de seguridad</h2>
       <p class="muted"><small>Tus datos viven en este móvil. Exporta una copia de vez en cuando.</small></p>
       <div class="row"><button class="btn" data-act="export">Exportar</button><label class="btn" for="imp">Importar</label><input type="file" id="imp" accept="application/json" hidden></div>`;
@@ -931,6 +1004,8 @@
     else if (a === 'restskip') { active.rest = null; pushCancel(); persist(); renderRest(); }
     else if (a === 'openSession') sessionPage(+t.dataset.id);
     else if (a === 'pastAdd') pastAdd();
+    else if (a === 'syncSetup') syncSetup();
+    else if (a === 'syncNow') { SYNC.dirty = true; syncNow(); }
     else if (a === 'delSession') {
       ev.stopPropagation();
       const id = +t.dataset.id;
@@ -1018,4 +1093,6 @@
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(g => document.addEventListener(g, e => e.preventDefault()));
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).catch(() => {});
   render();
+  syncNow();
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') syncNow(); });
 })();

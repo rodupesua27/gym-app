@@ -8,8 +8,8 @@
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
   },
-  "durable_objects": { "bindings": [{ "name": "REST", "class_name": "RestTimer" }] },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["RestTimer"] }],
+  "durable_objects": { "bindings": [{ "name": "REST", "class_name": "RestTimer" }, { "name": "SYNC", "class_name": "SyncStore" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["RestTimer"] }, { "tag": "v2", "new_sqlite_classes": ["SyncStore"] }],
   "vars": {
     "VAPID_PUBLIC": "BAwEpOB4wZkmNCi6MFGQ6c-h5a0pcmzeeR35j66aXUAv56GxPI9nsaxT_atsS0z0YiVkTBuR3XUm93APsTLfJHY",
     "VAPID_SUBJECT": "https://gym-app.rodupesua.workers.dev"

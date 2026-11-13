@@ -911,14 +911,14 @@
       if (oldTab !== null && old && $view.parentNode && $view.getBoundingClientRect) {
         const r = $view.getBoundingClientRect(), g = document.createElement('div');
         g.className = 'ghost';
-        g.style.cssText = `top:${r.top + window.scrollY}px;left:${r.left}px;width:${r.width}px;--gdir:${order.indexOf(tab) > order.indexOf(oldTab) ? -1 : 1};--dur:${Math.abs(order.indexOf(tab) - order.indexOf(oldTab)) > 1 ? '.24s' : '.34s'}`;
+        g.style.cssText = `top:${r.top}px;left:${r.left}px;width:${r.width}px;--gdir:${order.indexOf(tab) > order.indexOf(oldTab) ? -1 : 1};--dur:${Math.abs(order.indexOf(tab) - order.indexOf(oldTab)) > 1 ? '.3s' : '.42s'}`;
         g.innerHTML = old;
         $view.parentNode.appendChild(g);
-        setTimeout(() => g.remove(), 380);
+        setTimeout(() => g.remove(), 460);
       }
       const from = order.indexOf(lastTab), to = order.indexOf(tab), jump = Math.abs(to - from);
       $view.style.setProperty('--dir', lastTab === null || to > from ? 1 : -1);
-      $view.style.setProperty('--dur', jump > 1 ? '.24s' : '.34s');
+      $view.style.setProperty('--dur', jump > 1 ? '.3s' : '.42s');
       lastTab = tab;
       $view.classList.remove('enter'); void $view.offsetWidth; $view.classList.add('enter');
     }
@@ -936,15 +936,18 @@
       const el = ev.target;
       ok = !(el.closest && el.closest('input, textarea, select, .fpage, .overlay, .sheet, .cal, .chart')) && !document.querySelector('.fpage, .overlay');
     }, { passive: true });
-    document.addEventListener('touchend', ev => {
+    const go = (x, y) => {
       if (!ok) return;
+      const dx = x - sx, dy = y - sy;
+      if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.2 || Date.now() - st > 900) return;
       ok = false;
-      const t = ev.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
-      if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.6 || Date.now() - st > 700) return;
       const i = ORDER.indexOf(tab), n = i + (dx < 0 ? 1 : -1);
       if (n < 0 || n >= ORDER.length) return;
       tab = ORDER[n]; render(); window.scrollTo(0, 0);
-    }, { passive: true });
+    };
+    document.addEventListener('touchmove', ev => { const t = ev.touches[0]; go(t.clientX, t.clientY); }, { passive: true });
+    document.addEventListener('touchend', () => { ok = false; }, { passive: true });
+    document.addEventListener('touchcancel', () => { ok = false; }, { passive: true });
   })();
 
   // ---------- eventos ----------

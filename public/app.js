@@ -220,10 +220,9 @@
     const s = sessions.find(x => x.id === id);
     if (!s) return;
     const o = document.createElement('div');
-    o.className = 'fpage';
     const min = Math.round((s.end - s.start) / 60000);
     const date = new Date(s.start).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-    const prevS = s.id && sessions.filter(x => x.start < s.start).sort((x, y) => y.start - x.start);
+    const prevS = sessions.filter(x => x.start < s.start).sort((x, y) => y.start - x.start);
     const prevSet = (e, si) => {
       const pe = prevS.map(x => x.exercises.find(y => y.name === e.name)).find(Boolean);
       if (!pe) return null;
@@ -232,29 +231,74 @@
       return pe.sets.filter(y => y.t === t)[k] || null;
     };
     const nsets = s.exercises.reduce((n, e) => n + e.sets.length, 0);
+    const filled = x => x.kg !== '' && x.reps !== '' && x.kg != null && x.reps != null;
     o.className = 'fpage sp';
     o.innerHTML = `<div class="ahead"><div style="min-width:0"><div class="atitle" style="font-size:17px">${esc(s.name)}</div>
         <div class="asub" style="font-size:13px">${esc(date)}</div></div><button class="btn small" data-close="1">Volver</button></div>
       <p class="muted" style="margin:0 4px 14px"><small>${min} min · ${thousands(volOf(s.exercises, false))} kg · ${nsets} series</small></p>
       ${s.cardio ? `<section class="ccard"><div class="row between"><b>${esc(s.cardio.title)}</b><span class="pill">${s.cardio.min} min</span></div></section>` : ''}
-      ${s.exercises.map(ex => { const cnt = { W: 0, N: 0 }; return `<section class="ex">
-        <div class="exh"><span class="exth">${thumb(ex.name, 'th')}</span><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b>${ex.reps ? `<small>${ex.reps} reps · descanso ${dur(ex.rest)}</small>` : ''}</div><span class="ecnt">${ex.sets.filter(x => x.done !== false).length}/${ex.sets.length}</span></div>
+      ${s.exercises.map((ex, ei) => { const cnt = { W: 0, N: 0 }; return `<section class="ex">
+        <div class="exh"><span class="exth">${thumb(ex.name, 'th')}</span><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b>${ex.reps ? `<small>${ex.reps} reps · descanso ${dur(ex.rest)}</small>` : ''}</div><span class="ecnt">${ex.sets.filter(filled).length}/${ex.sets.length}</span></div>
         <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
-        ${ex.sets.map((x, si) => { const idx = cnt[x.t]++; const p = prevSet(ex, si); return `<div class="set done">
+        ${ex.sets.map((x, si) => { const idx = cnt[x.t]++; const p = prevSet(ex, si); return `<div class="set ${filled(x) ? 'done' : ''}" data-ei="${ei}" data-si="${si}">
           <span class="tp ${x.t === 'W' ? 'w' : ''}" style="display:flex;align-items:center;justify-content:center">${x.t === 'W' ? 'C' : idx + 1}</span>
           <div class="pv">${p ? kgTxt(p.kg) + ' × ' + p.reps : '–'}</div>
-          <input value="${esc(x.kg)}" disabled aria-label="kg"><input value="${esc(x.reps)}" disabled aria-label="repeticiones">
+          <input data-f="kg" inputmode="decimal" value="${esc(x.kg)}" placeholder="kg" aria-label="kg"><input data-f="reps" inputmode="numeric" value="${esc(x.reps)}" placeholder="${esc(lowReps(ex.reps))}" aria-label="repeticiones">
           <span class="ck" style="display:flex;align-items:center;justify-content:center">${ICON.check}</span></div>`; }).join('')}</section>`; }).join('')}
       <div style="margin-top:56px;padding-top:24px;border-top:1px solid var(--line)"><button class="btn danger full" data-del="1">Borrar sesión</button></div>`;
     o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
+    o.addEventListener('change', ev => {
+      const inp = ev.target.closest('input[data-f]');
+      if (!inp) return;
+      const row = inp.closest('.set');
+      const set = s.exercises[+row.dataset.ei].sets[+row.dataset.si];
+      const v = inp.value.trim().replace(',', '.');
+      set[inp.dataset.f] = v === '' || isNaN(+v) ? '' : +v;
+      if (set.kg !== '' && set.reps !== '') set.done = true;
+      save(K.s, sessions);
+      row.classList.toggle('done', filled(set));
+      const cnt = row.closest('.ex').querySelector('.ecnt');
+      cnt.textContent = s.exercises[+row.dataset.ei].sets.filter(filled).length + '/' + s.exercises[+row.dataset.ei].sets.length;
+    });
     o.addEventListener('click', async ev => {
       const b = ev.target.closest('button');
       if (!b) return;
-      if (b.dataset.close) document.body.removeChild(o);
+      if (b.dataset.close) { document.body.removeChild(o); render(); }
       else if (b.dataset.del) {
         const ok = await sheet('<h3>Borrar sesión</h3><p class="muted">No se puede deshacer.</p>', [{ label: 'No', v: false }, { label: 'Borrar', cls: 'accent', v: true }]);
         if (ok) { sessions = sessions.filter(x => x.id !== id); save(K.s, sessions); document.body.removeChild(o); render(); }
       }
+    });
+    document.body.appendChild(o);
+  }
+
+  // Registrar un entreno de un día pasado: eliges rutina y fecha, luego rellenas los pesos en la pantalla de sesión.
+  function pastAdd() {
+    const o = document.createElement('div');
+    o.className = 'fpage sp';
+    const today = isoDay(new Date());
+    o.innerHTML = `<div class="ahead"><div style="min-width:0"><div class="atitle" style="font-size:17px">Registrar entreno pasado</div></div><button class="btn small" data-close="1">Cancelar</button></div>
+      <section class="card" style="cursor:default"><small class="muted">Fecha</small><input type="date" data-pdate value="${today}" max="${today}" style="width:100%;margin-top:6px"></section>
+      ${ROUTINES.map(r => `<button class="swr" data-rid="${esc(r.id)}"><div class="en"><b>${esc(r.name)} · ${esc(r.short)}</b><small>${esc(r.day || '')}</small></div></button>`).join('')}
+      <button class="swr" data-rid="free"><div class="en"><b>Sesión libre</b></div></button>`;
+    o.addEventListener('click', ev => {
+      const b = ev.target.closest('button');
+      if (!b) return;
+      if (b.dataset.close) { document.body.removeChild(o); return; }
+      const date = o.querySelector('[data-pdate]').value;
+      if (!date) return;
+      const r = b.dataset.rid === 'free' ? null : ROUTINES.find(x => x.id === b.dataset.rid);
+      const start = new Date(date + 'T18:00:00').getTime();
+      const ses = {
+        id: start + Math.floor(Math.random() * 1000), routineId: r ? r.id : null,
+        name: r ? `${r.name} · ${r.short}` : 'Sesión libre', start, end: start + 60 * 60000,
+        cardio: r && r.cardio ? { title: r.cardio.title, min: r.cardio.min, tip: r.cardio.tip, blocks: r.cardio.blocks, done: true } : null,
+        exercises: r ? r.exercises.map(e => mkEx(e.name, e.sets, e.warmup || 0, e.reps, e.rest)) : []
+      };
+      sessions.push(ses); save(K.s, sessions);
+      document.body.removeChild(o);
+      render();
+      sessionPage(ses.id);
     });
     document.body.appendChild(o);
   }
@@ -649,6 +693,7 @@
       ${list.length ? list.map(bodyRow).join('') : '<p class="muted">Todavía no hay registros.</p>'}
       ${body.length > 8 ? `<button class="btn full" style="margin-top:8px" data-act="bAll">${bAll ? 'Ver menos' : 'Ver todos (' + body.length + ')'}</button>` : ''}
       <h2>Historial</h2>
+      <button class="btn full" style="margin-bottom:10px" data-act="pastAdd">+ Registrar entreno pasado</button>
       ${sessions.length ? sessions.slice().reverse().map(s => `<button class="sess" data-act="openSession" data-id="${s.id}">
         <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></button>`).join('') : '<p class="muted">Aquí aparecerán tus entrenamientos.</p>'}
       <h2>Copia de seguridad</h2>
@@ -883,6 +928,7 @@
     else if (a === 'restp') { active.rest.end += 15000; active.rest.total += 15; pushRest((active.rest.end - Date.now()) / 1000); persist(); renderRest(); }
     else if (a === 'restskip') { active.rest = null; pushCancel(); persist(); renderRest(); }
     else if (a === 'openSession') sessionPage(+t.dataset.id);
+    else if (a === 'pastAdd') pastAdd();
     else if (a === 'delSession') {
       ev.stopPropagation();
       const id = +t.dataset.id;

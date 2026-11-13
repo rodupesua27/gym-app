@@ -894,8 +894,12 @@
   }
 
   function render() {
-    $tabs.innerHTML = ['registro', 'rutinas', 'dieta', 'progreso'].map(t =>
-      `<button class="${tab === t ? 'on' : ''}" data-act="tab" data-t="${t}">${ICON[t]}<span>${t[0].toUpperCase() + t.slice(1)}</span></button>`).join('');
+    const order = ['registro', 'rutinas', 'dieta', 'progreso'];
+    if (!$tabs.querySelector('.ind')) $tabs.insertAdjacentHTML('afterbegin', '<i class="ind"></i>');
+    $tabs.querySelectorAll('button').forEach(b => b.remove());
+    $tabs.insertAdjacentHTML('beforeend', order.map(t =>
+      `<button class="${tab === t ? 'on' : ''}" data-act="tab" data-t="${t}">${ICON[t]}<span>${t[0].toUpperCase() + t.slice(1)}</span></button>`).join(''));
+    $tabs.style.setProperty('--ti', order.indexOf(tab));
     let html = '';
     if (active && tab !== 'registro') {
       html += `<button class="banner" data-act="tab" data-t="registro"><span>Entrenamiento en curso</span><span>Volver →</span></button>`;
@@ -903,6 +907,9 @@
     html += tab === 'registro' ? viewRegistro() : tab === 'rutinas' ? viewRutinas() : tab === 'dieta' ? viewDieta() : viewProgreso();
     $view.innerHTML = html;
     if (tab !== lastTab) {
+      const from = order.indexOf(lastTab), to = order.indexOf(tab), jump = Math.abs(to - from);
+      $view.style.setProperty('--dir', lastTab === null || to > from ? 1 : -1);
+      $view.style.setProperty('--dur', jump > 1 ? '.2s' : '.34s');
       lastTab = tab;
       $view.classList.remove('enter'); void $view.offsetWidth; $view.classList.add('enter');
     }

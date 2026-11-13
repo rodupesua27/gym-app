@@ -243,7 +243,7 @@
         ${ex.sets.map((x, si) => { const idx = cnt[x.t]++; const p = prevSet(ex, si); return `<div class="set ${filled(x) ? 'done' : ''}" data-ei="${ei}" data-si="${si}">
           <span class="tp ${x.t === 'W' ? 'w' : ''}" style="display:flex;align-items:center;justify-content:center">${x.t === 'W' ? 'C' : idx + 1}</span>
           <div class="pv">${p ? kgTxt(p.kg) + ' × ' + p.reps : '–'}</div>
-          <input data-f="kg" inputmode="decimal" value="${esc(x.kg)}" placeholder="kg" aria-label="kg"><input data-f="reps" inputmode="numeric" value="${esc(x.reps)}" placeholder="reps" aria-label="repeticiones">
+          <input data-f="kg" inputmode="decimal" value="${esc(x.kg)}" placeholder="" aria-label="kg"><input data-f="reps" inputmode="numeric" value="${esc(x.reps)}" placeholder="" aria-label="repeticiones">
           <span class="ck" style="display:flex;align-items:center;justify-content:center">${ICON.check}</span></div>`; }).join('')}</section>`; }).join('')}
       <div style="margin-top:56px;padding-top:24px;border-top:1px solid var(--line)"><button class="btn danger full" data-del="1">Borrar sesión</button></div>`;
     o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });

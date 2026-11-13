@@ -247,7 +247,8 @@
           <span class="ck" style="display:flex;align-items:center;justify-content:center">${ICON.check}</span></div>`; }).join('')}</section>`; }).join('')}
       <div style="margin-top:56px;padding-top:24px;border-top:1px solid var(--line)"><button class="btn danger full" data-del="1">Borrar sesión</button></div>`;
     o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
-    o.addEventListener('focusin', ev => { if (ev.target.matches && ev.target.matches('input[data-f]')) ev.target.select(); });
+    // iOS coloca el cursor al final después de enfocar, así que se selecciona con un pequeño retraso.
+    o.addEventListener('focusin', ev => { const el = ev.target; if (el.matches && el.matches('input[data-f]')) setTimeout(() => el.select(), 60); });
     o.addEventListener('input', ev => {
       const inp = ev.target.closest && ev.target.closest('input[data-f]');
       if (!inp) return;

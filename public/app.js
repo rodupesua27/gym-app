@@ -562,7 +562,7 @@
     return `<h1>Registro</h1>
       <section class="card wk" style="cursor:default">
         <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b></div>
-          <div style="text-align:right"><small class="muted">Entrenos este mes</small><br><b>${thisMonth}</b> <small class="muted">· total ${sessions.length}</small></div></div>
+          <div style="text-align:right"><small class="muted">Entrenos mes</small><br><b>${thisMonth}</b></div></div>
         <div class="week" style="margin-top:14px">${days.map((d, i) => `<div class="wd"><small>${L[i]}</small><span class="dot ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}"><b>${d.getDate()}</b></span></div>`).join('')}</div>
         <div class="cal">${cal.map(d => `<i class="${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
       </section>

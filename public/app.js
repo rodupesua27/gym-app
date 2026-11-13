@@ -905,11 +905,20 @@
       html += `<button class="banner" data-act="tab" data-t="registro"><span>Entrenamiento en curso</span><span>Volver →</span></button>`;
     }
     html += tab === 'registro' ? viewRegistro() : tab === 'rutinas' ? viewRutinas() : tab === 'dieta' ? viewDieta() : viewProgreso();
+    const old = $view.innerHTML, oldTab = lastTab;
     $view.innerHTML = html;
     if (tab !== lastTab) {
+      if (oldTab !== null && old && $view.parentNode && $view.getBoundingClientRect) {
+        const r = $view.getBoundingClientRect(), g = document.createElement('div');
+        g.className = 'ghost';
+        g.style.cssText = `top:${r.top + window.scrollY}px;left:${r.left}px;width:${r.width}px;--gdir:${order.indexOf(tab) > order.indexOf(oldTab) ? -1 : 1}`;
+        g.innerHTML = old;
+        $view.parentNode.appendChild(g);
+        setTimeout(() => g.remove(), 420);
+      }
       const from = order.indexOf(lastTab), to = order.indexOf(tab), jump = Math.abs(to - from);
       $view.style.setProperty('--dir', lastTab === null || to > from ? 1 : -1);
-      $view.style.setProperty('--dur', jump > 1 ? '.2s' : '.34s');
+      $view.style.setProperty('--dur', jump > 1 ? '.34s' : '.5s');
       lastTab = tab;
       $view.classList.remove('enter'); void $view.offsetWidth; $view.classList.add('enter');
     }

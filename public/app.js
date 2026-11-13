@@ -474,7 +474,20 @@
     'Curl de bíceps (mancuerna)': [0.10, 0.15, 0.30, 0.40, 0.55],
     'Remo inclinado (barra)': [0.50, 0.75, 1.00, 1.50, 1.75],
     'Jalón de tríceps con cuerda': [0.20, 0.35, 0.60, 0.85, 1.15],
-    'Jalón de tríceps con barra V (polea)': [0.25, 0.45, 0.70, 1.05, 1.40]
+    'Jalón de tríceps con barra V (polea)': [0.25, 0.45, 0.70, 1.05, 1.40],
+    'Jalón al pecho agarre invertido (cable)': [0.50, 0.75, 1.00, 1.50, 1.75],
+    'Curl martillo (mancuerna)': [0.10, 0.20, 0.30, 0.40, 0.55],
+    'Encogimiento de hombros (mancuerna)': [0.20, 0.35, 0.55, 0.80, 1.10],
+    // Las tablas de máquina/polea vienen en kg absolutos (comunidad, ~77 kg de media): se pasan a ratio dividiendo entre 77.
+    'Extensión de tríceps por encima de la cabeza (cable)': [0.16, 0.31, 0.53, 0.81, 1.12],
+    'Aducción de cadera (máquina)': [0.42, 0.83, 1.42, 2.17, 3.03],
+    'Abducción de cadera (máquina)': [0.39, 0.77, 1.31, 1.99, 2.77],
+    'Mariposa (Pec Deck)': [0.44, 0.74, 1.13, 1.61, 2.16],
+    'Curl de pierna acostado (máquina)': [0.3, 0.52, 0.83, 1.21, 1.64],
+    'Remo sentado (máquina)': [0.49, 0.84, 1.31, 1.87, 2.51],
+    'Abdominal corto con cable': [0.23, 0.55, 1.0, 1.58, 2.27],
+    'Hiperextensión lumbar': [0.39, 0.87, 1.56, 2.44, 3.48],
+    'Cables cruzados (de arriba abajo)': [0.06, 0.23, 0.51, 0.88, 1.34]
   };
   const LV = [1.5, 2.5, 3.5, 5.5, 7];
   function vOf(r, st) {
@@ -514,7 +527,7 @@
     if (!(bw > 20)) return head + '<small class="muted">Anota tu peso en Progreso para calcular tu rango.</small></section>';
     const vs = [], vg = [];
     Object.keys(STD).forEach(n => { const rm = rmOf(n); if (rm) { const r = rm / bw; vs.push(vOf(r, STD[n])); vg.push(vOf(r * 1.2, STD[n])); } });
-    if (vs.length < 2) return head + '<small class="muted">Registra series (de 1 a 12 reps) en al menos 2 ejercicios con tabla: press inclinado, jalón, extensión de pierna, curl, remo con barra o tríceps en polea.</small></section>';
+    if (vs.length < 2) return head + '<small class="muted">Registra series (de 1 a 12 reps) en al menos 2 ejercicios con tabla (jalón, press inclinado, extensión de pierna, curl, remo, tríceps, mariposa, aductores…).</small></section>';
     const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
     const g = tierOf(avg(vs)), a = tierOf(avg(vg));
     const half = (t, lbl) => `<div class="rk">${badge(t)}<small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;

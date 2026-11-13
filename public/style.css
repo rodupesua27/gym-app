@@ -311,3 +311,5 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .fpage.sp .set input { opacity: 1; -webkit-text-fill-color: var(--text); }
 .fpage.sp .set { margin-bottom: 8px; }
 .fpage.sp .cols { margin-bottom: 4px; }
+.fpage.sp { padding-top: 0; }
+.fpage.sp .ahead { position: sticky; top: 0; background: #000; margin-top: 0; padding-top: 54px; z-index: 5; }

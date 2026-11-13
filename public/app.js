@@ -505,7 +505,7 @@
     return m;
   }
   const TIERS = ['Hierro', 'Bronce', 'Plata', 'Oro', 'Platino', 'Diamante', 'Ascendente', 'Inmortal'];
-  const TCOL = ['#8a8f98', '#b07a4a', '#b9c2cc', '#e2b43c', '#4fc3c7', '#8f7cf0', '#3fbf7f', '#e5484d', '#ffd86b'];
+  const TCOL = ['#8a8f98', '#b07a4a', '#b9c2cc', '#e2b43c', '#4fc3c7', '#8f7cf0', '#7b1e2b', '#e5484d', '#ffd86b'];
   function tierOf(v) {
     if (v >= 8) return { i: 8, name: 'Radiante', sub: 3, pct: 1 };
     v = Math.max(0, v) + 1e-9;

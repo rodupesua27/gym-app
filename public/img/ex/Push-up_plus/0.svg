@@ -10,7 +10,7 @@
   <line x1="150" y1="130" x2="110" y2="250" stroke="#eee" stroke-width="7" stroke-linecap="round"/>
   <line x1="110" y1="250" x2="140" y2="250" stroke="#eee" stroke-width="7" stroke-linecap="round"/>
   <!-- serrato resaltado en las costillas -->
-  <ellipse cx="215" cy="155" rx="26" ry="18" fill="#b6f23b" fill-opacity=".35" stroke="#b6f23b" stroke-width="2"/>
-  <text x="240" y="40" fill="#b6f23b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">Inicio</text>
+  <ellipse cx="215" cy="155" rx="26" ry="18" fill="#7b1e2b" fill-opacity=".35" stroke="#7b1e2b" stroke-width="2"/>
+  <text x="240" y="40" fill="#7b1e2b" font-family="system-ui,sans-serif" font-size="22" font-weight="700">Inicio</text>
   <text x="240" y="66" fill="#999" font-family="system-ui,sans-serif" font-size="16">Escápulas juntas, brazos rectos</text>
 </svg>

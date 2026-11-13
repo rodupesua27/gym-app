@@ -911,20 +911,41 @@
       if (oldTab !== null && old && $view.parentNode && $view.getBoundingClientRect) {
         const r = $view.getBoundingClientRect(), g = document.createElement('div');
         g.className = 'ghost';
-        g.style.cssText = `top:${r.top + window.scrollY}px;left:${r.left}px;width:${r.width}px;--gdir:${order.indexOf(tab) > order.indexOf(oldTab) ? -1 : 1}`;
+        g.style.cssText = `top:${r.top + window.scrollY}px;left:${r.left}px;width:${r.width}px;--gdir:${order.indexOf(tab) > order.indexOf(oldTab) ? -1 : 1};--dur:${Math.abs(order.indexOf(tab) - order.indexOf(oldTab)) > 1 ? '.24s' : '.34s'}`;
         g.innerHTML = old;
         $view.parentNode.appendChild(g);
-        setTimeout(() => g.remove(), 180);
+        setTimeout(() => g.remove(), 380);
       }
       const from = order.indexOf(lastTab), to = order.indexOf(tab), jump = Math.abs(to - from);
       $view.style.setProperty('--dir', lastTab === null || to > from ? 1 : -1);
-      $view.style.setProperty('--dur', jump > 1 ? '.2s' : '.26s');
+      $view.style.setProperty('--dur', jump > 1 ? '.24s' : '.34s');
       lastTab = tab;
       $view.classList.remove('enter'); void $view.offsetWidth; $view.classList.add('enter');
     }
     renderRest();
     keepAwake();
   }
+
+  // ---------- deslizar para cambiar de pestaña ----------
+  (function () {
+    const ORDER = ['registro', 'rutinas', 'dieta', 'progreso'];
+    let sx = 0, sy = 0, st = 0, ok = false;
+    document.addEventListener('touchstart', ev => {
+      const t = ev.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      const el = ev.target;
+      ok = !(el.closest && el.closest('input, textarea, select, .fpage, .overlay, .sheet, .cal, .chart')) && !document.querySelector('.fpage, .overlay');
+    }, { passive: true });
+    document.addEventListener('touchend', ev => {
+      if (!ok) return;
+      ok = false;
+      const t = ev.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.6 || Date.now() - st > 700) return;
+      const i = ORDER.indexOf(tab), n = i + (dx < 0 ? 1 : -1);
+      if (n < 0 || n >= ORDER.length) return;
+      tab = ORDER[n]; render(); window.scrollTo(0, 0);
+    }, { passive: true });
+  })();
 
   // ---------- eventos ----------
   $view.addEventListener('input', ev => {

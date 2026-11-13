@@ -233,8 +233,8 @@
     };
     const nsets = s.exercises.reduce((n, e) => n + e.sets.length, 0);
     o.className = 'fpage sp';
-    o.innerHTML = `<div class="ahead" style="justify-content:flex-start"><button class="btn small" data-close="1">‹ Volver</button><div style="min-width:0"><div class="atitle" style="font-size:17px">${esc(s.name)}</div>
-        <div class="asub" style="font-size:13px">${esc(date)}</div></div></div>
+    o.innerHTML = `<div class="ahead"><div style="min-width:0"><div class="atitle" style="font-size:17px">${esc(s.name)}</div>
+        <div class="asub" style="font-size:13px">${esc(date)}</div></div><button class="btn small" data-close="1">Volver</button></div>
       <p class="muted" style="margin:0 4px 14px"><small>${min} min · ${thousands(volOf(s.exercises, false))} kg · ${nsets} series</small></p>
       ${s.cardio ? `<section class="ccard"><div class="row between"><b>${esc(s.cardio.title)}</b><span class="pill">${s.cardio.min} min</span></div></section>` : ''}
       ${s.exercises.map(ex => { const cnt = { W: 0, N: 0 }; return `<section class="ex">

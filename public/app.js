@@ -423,6 +423,20 @@
     }));
     return r;
   }
+  const TROPHY = '<svg class="trf" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v3a5 5 0 0 1-10 0V4zM4 5h3v2a4 4 0 0 1-3-2zm13 0h3a4 4 0 0 1-3 2V5zM10.5 14h3v3h2.5v2h-8v-2h2.5v-3z"/></svg>';
+  // Sonido de celebración: arpegio ascendente corto (distinto del aviso de fin de descanso).
+  function celebrate() {
+    ensureAudio();
+    try {
+      if (actx) [523, 659, 784, 1047].forEach((f, i) => {
+        const o = actx.createOscillator(), g = actx.createGain();
+        o.type = 'triangle'; o.frequency.value = f; g.gain.value = 0.12;
+        o.connect(g); g.connect(actx.destination);
+        o.start(actx.currentTime + i * 0.11); o.stop(actx.currentTime + i * 0.11 + 0.2);
+      });
+    } catch (e) {}
+    try { if (navigator.vibrate) navigator.vibrate([60, 40, 60]); } catch (e) {}
+  }
   function showRecord(name, lines) {
     const d = document.createElement('div');
     d.className = 'recbanner';
@@ -615,7 +629,7 @@
         const phKg = p ? kgTxt(p.kg) : '';
         const phReps = p ? p.reps : lowReps(ex.reps);
         return `<div class="set ${s.done ? 'done' : ''}" data-e="${ei}" data-s="${si}">
-          <button class="tp ${s.t === 'W' ? 'w' : ''}" data-act="toggleType" title="Calentamiento / normal">${label}</button>
+          <button class="tp ${s.t === 'W' ? 'w' : ''}" data-act="toggleType" title="Calentamiento / normal">${label}${s.rec ? TROPHY : ''}</button>
           <div class="pv">${p ? kgTxt(p.kg) + ' × ' + p.reps : '–'}</div>
           <input inputmode="decimal" data-f="kg" placeholder="${esc(phKg)}" value="${esc(s.kg)}" aria-label="kg">
           <input inputmode="numeric" data-f="reps" placeholder="${esc(phReps)}" value="${esc(s.reps)}" aria-label="repeticiones">
@@ -1023,7 +1037,7 @@
     else if (a === 'check') {
       const ex = active.exercises[ei], s = ex.sets[si];
       if (s.done) {
-        s.done = false;
+        s.done = false; delete s.rec;
         if (active.rest && active.rest.key === ei + '-' + si) { active.rest = null; pushCancel(); }
         persist(); render(); return;
       }
@@ -1043,7 +1057,7 @@
         const lines = [];
         if (had && kg > hKg) lines.push(`Peso máximo ${kgTxt(kg)} kg`);
         if (had && vol > hVol) lines.push(`Mejor serie ${thousands(vol)} kg`);
-        if (lines.length) showRecord(ex.name, lines);
+        if (lines.length) { s.rec = true; showRecord(ex.name, lines); celebrate(); }
       }
       startRest(s.t === 'W' ? Math.min(ex.rest, 60) : ex.rest, ei + '-' + si);
       ensureAudio(); persist(); render();

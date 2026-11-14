@@ -772,8 +772,8 @@
   function bodySetup() {
     bodyCv = document.createElement('canvas');
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    bodyCv.width = Math.round(150 * dpr); bodyCv.height = Math.round(290 * dpr);
-    bodyCv.style.width = '150px'; bodyCv.style.height = '290px';
+    bodyCv.width = Math.round(176 * dpr); bodyCv.height = Math.round(340 * dpr);
+    bodyCv.style.width = '176px'; bodyCv.style.height = '340px';
     let x0 = null, lx = 0, lt = 0;
     bodyCv.addEventListener('pointerdown', e => { x0 = lx = e.clientX; lt = Date.now(); bodyVel = 0; try { bodyCv.setPointerCapture(e.pointerId); } catch (_) {} });
     bodyCv.addEventListener('pointermove', e => {

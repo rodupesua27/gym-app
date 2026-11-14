@@ -380,7 +380,7 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .prline .trf { width: 12px; height: 12px; vertical-align: -1px; margin-right: 4px; fill: var(--accent-text); }
 
 /* Tu cuerpo: figura 3D + radar */
-.bodyc .bgrid { display: grid; grid-template-columns: 150px 1fr; gap: 14px; align-items: center; margin-top: 8px; }
+.bodyc .bgrid { display: grid; grid-template-columns: 160px 1fr; gap: 14px; align-items: center; margin-top: 8px; }
 .bodyc .zbars { display: grid; gap: 14px; }
 .bodyc .zt { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; }
 .bodyc .zt b { color: var(--accent-text); font-variant-numeric: tabular-nums; }
@@ -393,5 +393,5 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 /* Más aire entre bloques de Registro */
 .card.rank, .card.bodyc { margin-bottom: 22px; }
 
-.bodyc .bfig { width: 150px; min-height: 290px; }
+.bodyc .bfig { width: 176px; min-height: 340px; border: 0 !important; background: none !important; padding: 0 !important; margin: 0 -8px 0 -14px; }
 .bodyc .bcred { display: block; margin-top: 10px; font-size: 11px; opacity: .8; }

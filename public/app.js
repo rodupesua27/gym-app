@@ -442,6 +442,7 @@
     d.className = 'recbanner';
     d.innerHTML = `<b>🏆 Récord · ${esc(name)}</b><small>${lines.map(esc).join(' · ')}</small>`;
     document.body.appendChild(d);
+    setTimeout(() => d.classList.add('out'), 3100);
     setTimeout(() => d.remove(), 3500);
   }
   async function finish() {

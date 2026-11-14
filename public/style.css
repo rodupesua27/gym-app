@@ -405,3 +405,7 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .nextw b{font-size:17px;text-transform:capitalize}
 .nwd{color:#e8a0ad;font-weight:600}
 .chartbtn{display:block;width:100%;text-align:left;background:none;border:0;padding:0;color:inherit;font:inherit}
+.fpage.pin{animation:pin .38s cubic-bezier(.22,.8,.3,1) both}
+.fpage.pout{animation:pout .28s ease-in both}
+@keyframes pin{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes pout{from{opacity:1;transform:none}to{opacity:0;transform:translateY(28px) scale(.97)}}

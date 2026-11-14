@@ -1057,7 +1057,7 @@
   }
   function statsPage() {
     const o = document.createElement('div');
-    o.className = 'fpage sp';
+    o.className = 'fpage sp pin';
     let m = 'kg';
     const avail = BM.filter(x => body.some(b => bval(b, x.k) !== null));
     const draw = () => {
@@ -1069,7 +1069,7 @@
     o.addEventListener('click', ev => {
       const b = ev.target.closest('button');
       if (!b) return;
-      if (b.dataset.close) { document.body.removeChild(o); render(); }
+      if (b.dataset.close) { o.classList.remove('pin'); o.classList.add('pout'); setTimeout(() => { if (o.parentNode) document.body.removeChild(o); render(); }, 280); }
       else if (b.dataset.k) { m = b.dataset.k; draw(); }
     });
     draw();
@@ -1128,11 +1128,11 @@
         ${bDraft ? '<button class="btn full" style="margin-top:8px" data-act="cancelBody">Cancelar edición</button>' : ''}
         <p class="muted" style="margin:10px 0 0"><small>Cambia la fecha para meter pesos de semanas o meses atrás. Si ya hay un registro ese día, se reemplaza. Mejor en ayunas y en la misma báscula.</small></p>
       </section>
-      <button class="chartbtn" data-act="openStats" style="margin-top:14px">${bHead('kg')}${chart('kg')}<small class="muted" style="display:block;margin-top:6px">Toca para ver más medidas →</small></button>
+      <button class="chartbtn" data-act="openStats" style="margin-top:14px">${bHead('kg')}${chart('kg')}</button>
+      ${radarCard()}
       <h2>Registros</h2>
       ${list.length ? list.map(bodyRow).join('') : '<p class="muted">Todavía no hay registros.</p>'}
       ${body.length > 8 ? `<button class="btn full" style="margin-top:8px" data-act="bAll">${bAll ? 'Ver menos' : 'Ver todos (' + body.length + ')'}</button>` : ''}
-      ${radarCard()}
       <h2>Historial</h2>
       <button class="btn full" style="margin-bottom:10px" data-act="pastAdd">+ Registrar entreno pasado</button>
       ${sessions.length ? sessions.slice().reverse().map(s => `<button class="sess" data-act="openSession" data-id="${s.id}">

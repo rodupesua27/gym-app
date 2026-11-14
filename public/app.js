@@ -1028,7 +1028,7 @@
   }
 
   // Comparación de fuerza por zona con tu yo de hace 1, 3 o 9 meses
-  let cmpM = 1;
+  let cmpM = 1, histOpen = false;
   function radarCard() {
     const now = zoneScores();
     const at = cmpM ? Date.now() - cmpM * 30.44 * 86400000 : 0;
@@ -1133,10 +1133,11 @@
       <h2>Registros</h2>
       ${list.length ? list.map(bodyRow).join('') : '<p class="muted">Todavía no hay registros.</p>'}
       ${body.length > 8 ? `<button class="btn full" style="margin-top:8px" data-act="bAll">${bAll ? 'Ver menos' : 'Ver todos (' + body.length + ')'}</button>` : ''}
-      <h2>Historial</h2>
+      <button class="hhead" data-act="toggleHist"><h2>Historial${sessions.length ? ' (' + sessions.length + ')' : ''}</h2><span class="harrow ${histOpen ? 'open' : ''}">⌄</span></button>
+      ${histOpen ? `<div class="hbody">${`
       <button class="btn full" style="margin-bottom:10px" data-act="pastAdd">+ Registrar entreno pasado</button>
       ${sessions.length ? sessions.slice().reverse().map(s => `<button class="sess" data-act="openSession" data-id="${s.id}">
-        <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div>${prLine(s)}</button>`).join('') : '<p class="muted">Aquí aparecerán tus entrenamientos.</p>'}
+        <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div>${prLine(s)}</button>`).join('') : '<p class="muted">Aquí aparecerán tus entrenamientos.</p>'}`}</div>` : ''}
       <h2>Copia en la nube</h2>
       ${SYNC.id ? `<p class="muted"><small>${SYNC.msg || (SYNC.dirty ? 'Pendiente de subir…' : SYNC.t ? 'Última copia: ' + new Date(SYNC.t).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Activada')}</small></p><div class="row"><button class="btn" data-act="syncNow">Sincronizar ahora</button></div>`
         : '<p class="muted"><small>Sin activar: tus datos solo viven en este móvil.</small></p><div class="row"><button class="btn accent" data-act="syncSetup">Activar copia en la nube</button></div>'}`;
@@ -1447,6 +1448,7 @@
     }
     else if (a === 'cancelBody') { bDraft = null; render(); }
     else if (a === 'openStats') statsPage();
+    else if (a === 'toggleHist') { histOpen = !histOpen; render(); }
     else if (a === 'bAll') { bAll = !bAll; render(); }
     else if (a === 'cmp') { const m = +t.dataset.m; cmpM = cmpM === m ? 0 : m; render(); }
     else if (a === 'openBody') {

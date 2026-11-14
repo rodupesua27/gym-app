@@ -409,3 +409,8 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .fpage.pout{animation:pout .28s ease-in both}
 @keyframes pin{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
 @keyframes pout{from{opacity:1;transform:none}to{opacity:0;transform:translateY(28px) scale(.97)}}
+.hhead{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left}
+.harrow{font-size:22px;color:var(--muted);margin-top:14px;transition:transform .25s;display:inline-block;line-height:1}
+.harrow.open{transform:rotate(180deg)}
+.hbody{animation:hin .3s ease-out both}
+@keyframes hin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}

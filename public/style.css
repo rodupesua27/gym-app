@@ -380,7 +380,12 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .prline .trf { width: 12px; height: 12px; vertical-align: -1px; margin-right: 4px; fill: var(--accent-text); }
 
 /* Tu cuerpo: figura 3D + radar */
-.bodyc .bfig { display: flex; justify-content: center; margin-top: 6px; }
+.bodyc .bgrid { display: grid; grid-template-columns: 150px 1fr; gap: 14px; align-items: center; margin-top: 8px; }
+.bodyc .zbars { display: grid; gap: 14px; }
+.bodyc .zt { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; }
+.bodyc .zt b { color: var(--accent-text); font-variant-numeric: tabular-nums; }
+.bodyc .zbar { height: 7px; border-radius: 99px; background: #26262a; overflow: hidden; }
+.bodyc .zbar i { display: block; height: 100%; background: var(--accent-text); border-radius: 99px; }
 .bodyc { margin-bottom: 14px; }
 .bodyc canvas { display: block; touch-action: pan-y; cursor: grab; }
 .bodyc .radar { width: 100%; height: auto; display: block; }

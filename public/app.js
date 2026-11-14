@@ -633,11 +633,12 @@
   function bodyCard() {
     const sc = zoneScores();
     const any = AXES.some(([z]) => sc[z] != null);
-    return `<section class="card bodyc" style="cursor:default"><b class="rk-t">Tu cuerpo</b> <small class="muted">Arrastra para girar la figura · las zonas se tiñen según tu fuerza</small>
-      <div class="chart bfig"><canvas id="bodycv" width="220" height="340"></canvas></div>
-      ${any ? '' : '<small class="muted">Anota tu peso en Progreso y registra series (1–12 reps) para ver tu fuerza por zona.</small>'}</section>
-      <section class="card bodyc" style="cursor:default"><b class="rk-t">Fuerza por zona</b> <small class="muted">Nivel de cada zona, de 0 a Radiante</small>
-      <div>${radarSvg(sc)}</div></section>`;
+    const order = ['Pecho', 'Espalda', 'Hombros', 'Brazos', 'Core', 'Piernas'];
+    const bars = order.map(z => { const pc = sc[z] == null ? 0 : Math.round(Math.min(1, sc[z] / 8) * 100);
+      return `<div class="zb"><div class="zt"><span>${z}</span><b>${sc[z] == null ? '–' : pc + ' %'}</b></div><div class="zbar"><i style="width:${pc}%"></i></div></div>`; }).join('');
+    return `<section class="card bodyc" style="cursor:default"><b class="rk-t">Tu cuerpo</b> <small class="muted">Arrastra la figura para girarla</small>
+      <div class="bgrid"><div class="chart bfig"><canvas id="bodycv" width="150" height="290"></canvas></div><div class="zbars">${bars}</div></div>
+      ${any ? '' : '<small class="muted">Anota tu peso en Progreso y registra series (1–12 reps) para ver tu fuerza por zona.</small>'}</section>`;
   }
   // Figura hecha con elipsoides; cada pieza pertenece a una zona y se tiñe según su nivel.
   const BODY = (() => {
@@ -716,8 +717,8 @@
     const cv = document.getElementById('bodycv');
     if (!cv) return;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = 220 * dpr; cv.height = 340 * dpr;
-    cv.style.width = '220px'; cv.style.height = '340px';
+    cv.width = 150 * dpr; cv.height = 290 * dpr;
+    cv.style.width = '150px'; cv.style.height = '290px';
     const sc = zoneScores();
     drawBody(cv, sc);
     let x0 = null, raf = 0;

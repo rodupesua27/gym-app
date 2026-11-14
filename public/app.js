@@ -428,14 +428,19 @@
   // Sonido de celebración: arpegio ascendente corto (distinto del aviso de fin de descanso).
   function celebrate() {
     ensureAudio();
-    try {
-      if (actx) [523, 659, 784, 1047].forEach((f, i) => {
-        const o = actx.createOscillator(), g = actx.createGain();
-        o.type = 'triangle'; o.frequency.value = f; g.gain.value = 0.12;
-        o.connect(g); g.connect(actx.destination);
-        o.start(actx.currentTime + i * 0.11); o.stop(actx.currentTime + i * 0.11 + 0.2);
-      });
-    } catch (e) {}
+    const play = () => {
+      try {
+        if (actx) [523, 659, 784, 1047].forEach((f, i) => {
+          const o = actx.createOscillator(), g = actx.createGain();
+          o.type = 'triangle'; o.frequency.value = f; g.gain.value = 0.12;
+          o.connect(g); g.connect(actx.destination);
+          o.start(actx.currentTime + i * 0.11); o.stop(actx.currentTime + i * 0.11 + 0.2);
+        });
+      } catch (e) {}
+    };
+    // iOS puede dejar el contexto suspendido/interrumpido: lo reanudamos y luego sonamos
+    if (actx && actx.state !== 'running') { try { actx.resume().then(play, play); } catch (e) { play(); } }
+    else play();
     try { if (navigator.vibrate) navigator.vibrate([60, 40, 60]); } catch (e) {}
   }
   function showRecord(name, lines) {

@@ -1126,7 +1126,6 @@
         </details>
         <button class="btn accent full" style="margin-top:12px" data-act="saveBody">${bDraft ? 'Guardar cambios' : 'Guardar'}</button>
         ${bDraft ? '<button class="btn full" style="margin-top:8px" data-act="cancelBody">Cancelar edición</button>' : ''}
-        <p class="muted" style="margin:10px 0 0"><small>Cambia la fecha para meter pesos de semanas o meses atrás. Si ya hay un registro ese día, se reemplaza. Mejor en ayunas y en la misma báscula.</small></p>
       </section>
       <button class="chartbtn" data-act="openStats" style="margin-top:14px">${bHead('kg')}${chart('kg')}</button>
       ${radarCard()}

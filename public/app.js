@@ -641,8 +641,9 @@
   const prLine = s => {
     const rows = [];
     prsOf(s).forEach(x => {
-      const short = x.name.replace(/\s*\(.*?\)/g, '').trim();
-      x.lines.forEach(l => rows.push(`<span>${TROPHY}${esc(short)} <small class="muted">· ${l.startsWith('Mayor peso') ? 'Mayor peso' : 'Mayor volumen'}</small></span>`));
+      // Nombre corto: sin paréntesis ni palabras de enlace, máximo 3 palabras
+      const short = x.name.replace(/\s*\(.*?\)/g, '').split(/\s+/).filter(w => !/^(de|del|la|el|en|por|con|y|a|al)$/i.test(w)).slice(0, 3).join(' ');
+      x.lines.forEach(l => rows.push(`<span>${TROPHY}<em>${esc(short)}</em><small class="muted">${l.startsWith('Mayor peso') ? 'Mayor peso' : 'Mayor volumen'}</small></span>`));
     });
     return rows.length ? `<div class="prline">${rows.join('')}</div>` : '';
   };

@@ -599,6 +599,121 @@
     return head + `<div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div></section>`;
   }
 
+
+  // ---------- Tu cuerpo: figura 3D (gira arrastrando) + radar de fuerza ----------
+  const AXES = [['Core', 0], ['Hombros', 60], ['Brazos', 120], ['Piernas', 180], ['Espalda', 240], ['Pecho', 300]];
+  const AXOF = { Pecho: 'Pecho', Serrato: 'Pecho', Dorsales: 'Espalda', 'Espalda media': 'Espalda', Trapecio: 'Espalda', Lumbares: 'Espalda',
+    Hombros: 'Hombros', 'Bíceps': 'Brazos', 'Tríceps': 'Brazos', Antebrazos: 'Brazos', Abdominales: 'Core',
+    'Cuádriceps': 'Piernas', Isquios: 'Piernas', Abductores: 'Piernas', Aductores: 'Piernas', 'Glúteos': 'Piernas', Gemelos: 'Piernas' };
+  // Nivel de fuerza (0-8, misma escala que el rango) por zona: media de los ejercicios con tabla de esa zona.
+  function zoneScores() {
+    const last = body.length ? body.slice().sort((x, y) => x.ts - y.ts)[body.length - 1] : null;
+    const bw = last ? +last.kg : 0;
+    const acc = {};
+    if (bw > 20) Object.keys(STD).forEach(n => {
+      const rm = rmOf(n), z = AXOF[groupOf(n)];
+      if (rm && z) (acc[z] = acc[z] || []).push(vOf(rm / bw, STD[n]));
+    });
+    const out = {};
+    AXES.forEach(([z]) => { out[z] = acc[z] ? acc[z].reduce((a, b) => a + b, 0) / acc[z].length : null; });
+    return out;
+  }
+  function radarSvg(sc) {
+    const cx = 100, cy = 95, R = 62, MAX = 8;
+    const pt = (deg, r) => { const a = deg * Math.PI / 180; return [cx + Math.cos(a) * r, cy + Math.sin(a) * r]; };
+    const poly = r => AXES.map(([, d]) => pt(d, r).join(',')).join(' ');
+    let g = [1, 2, 3, 4].map(k => `<polygon points="${poly(R * k / 4)}" fill="none" stroke="#2a2a2e" stroke-width="1"/>`).join('');
+    g += AXES.map(([, d]) => { const [x, y] = pt(d, R); return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#2a2a2e" stroke-width="1"/>`; }).join('');
+    const pts = AXES.map(([z, d]) => pt(d, R * Math.min(1, Math.max(0.04, (sc[z] || 0) / MAX))).join(',')).join(' ');
+    g += `<polygon points="${pts}" fill="rgba(123,30,43,.5)" stroke="#cc4560" stroke-width="2" stroke-linejoin="round"/>`;
+    g += AXES.map(([z, d]) => { const [x, y] = pt(d, R + 16); const anc = Math.abs(Math.cos(d * Math.PI / 180)) < .2 ? 'middle' : Math.cos(d * Math.PI / 180) > 0 ? 'start' : 'end'; const dx = anc === 'start' ? -8 : anc === 'end' ? 8 : 0;
+      return `<text x="${x + dx}" y="${y + 4}" text-anchor="${anc}" font-size="11" fill="#9a9aa2">${z}</text>`; }).join('');
+    return `<svg viewBox="0 0 200 190" class="radar" aria-label="Fuerza por zona">${g}</svg>`;
+  }
+  function bodyCard() {
+    const sc = zoneScores();
+    const any = AXES.some(([z]) => sc[z] != null);
+    return `<section class="card bodyc" style="cursor:default"><b class="rk-t">Tu cuerpo</b> <small class="muted">Fuerza por zona · arrastra la figura para girarla</small>
+      <div class="bgrid"><div class="chart"><canvas id="bodycv" width="150" height="270"></canvas></div><div>${radarSvg(sc)}</div></div>
+      ${any ? '' : '<small class="muted">Anota tu peso en Progreso y registra series (1–12 reps) para ver tu fuerza por zona.</small>'}</section>`;
+  }
+  // Figura hecha con elipsoides; cada pieza pertenece a una zona y se tiñe según su nivel.
+  const BODY = (() => {
+    const P = [], two = (f) => { f(1); f(-1); };
+    const add = (c, r, z, rz) => P.push({ c, r, z: z || null, rz: rz || 0 });
+    add([0, 1.69, 0], [.085, .105, .095]);
+    add([0, 1.56, -.01], [.05, .06, .05], 'Espalda');
+    add([0, 1.27, 0], [.175, .27, .085]);
+    add([0, 1.37, -.035], [.165, .16, .07], 'Espalda');
+    add([-.095, 1.4, .04], [.095, .08, .06], 'Pecho'); add([.095, 1.4, .04], [.095, .08, .06], 'Pecho');
+    add([0, 1.13, .025], [.125, .13, .07], 'Core');
+    add([0, .96, 0], [.15, .1, .095]);
+    two(sg => { add([sg * .075, .93, -.065], [.08, .09, .06], 'Piernas');
+      add([sg * .225, 1.46, 0], [.07, .075, .075], 'Hombros');
+      add([sg * .265, 1.31, 0], [.048, .14, .05], 'Brazos', sg * .09);
+      add([sg * .30, 1.06, .01], [.04, .13, .04], 'Brazos', sg * .06);
+      add([sg * .325, .87, .01], [.032, .05, .022]);
+      add([sg * .085, .71, 0], [.088, .23, .088], 'Piernas');
+      add([sg * .09, .33, -.01], [.058, .2, .058], 'Piernas');
+      add([sg * .09, .04, .05], [.045, .035, .09]); });
+    return P;
+  })();
+  let bodyRot = 0.5;
+  function drawBody(cv, sc) {
+    const ctx = cv.getContext('2d'), W = cv.width, H = cv.height, k = H / 1.9;
+    ctx.clearRect(0, 0, W, H);
+    const cs = Math.cos(bodyRot), sn = Math.sin(bodyRot);
+    const quads = [], NU = 12, NV = 8;
+    BODY.forEach(pt => {
+      const v = pt.z && sc[pt.z] != null ? Math.min(1, sc[pt.z] / 8) : 0;
+      const base = pt.z && sc[pt.z] != null ? [58 + (204 - 58) * v, 58 + (69 - 58) * v, 64 + (96 - 64) * v] : [52, 52, 58];
+      const cz = Math.cos(pt.rz), sz = Math.sin(pt.rz);
+      const vert = (i, j) => {
+        const th = Math.PI * i / NV, ph = 2 * Math.PI * j / NU;
+        let x = pt.r[0] * Math.sin(th) * Math.cos(ph), y = pt.r[1] * Math.cos(th), z = pt.r[2] * Math.sin(th) * Math.sin(ph);
+        const nx0 = x / pt.r[0] ** 2, ny0 = y / pt.r[1] ** 2, nz0 = z / pt.r[2] ** 2;
+        const x1 = x * cz - y * sz, y1 = x * sz + y * cz;
+        const n1x = nx0 * cz - ny0 * sz, n1y = nx0 * sz + ny0 * cz;
+        const X = x1 + pt.c[0], Y = y1 + pt.c[1], Z = z + pt.c[2];
+        const nl = Math.hypot(n1x, n1y, nz0) || 1;
+        return { x: X * cs + Z * sn, y: Y, z: -X * sn + Z * cs, nx: (n1x * cs + nz0 * sn) / nl, ny: n1y / nl, nz: (-n1x * sn + nz0 * cs) / nl };
+      };
+      const grid = [];
+      for (let i = 0; i <= NV; i++) { grid.push([]); for (let j = 0; j <= NU; j++) grid[i].push(vert(i, j)); }
+      for (let i = 0; i < NV; i++) for (let j = 0; j < NU; j++) {
+        const a = grid[i][j], b = grid[i + 1][j], c = grid[i + 1][j + 1], d = grid[i][j + 1];
+        const nz = (a.nz + b.nz + c.nz + d.nz) / 4;
+        if (nz < -0.05) continue;
+        const nx = (a.nx + b.nx + c.nx + d.nx) / 4, ny = (a.ny + b.ny + c.ny + d.ny) / 4;
+        const lum = .32 + .68 * Math.max(0, nx * -.35 + ny * .45 + nz * .82);
+        quads.push({ z: (a.z + b.z + c.z + d.z) / 4, p: [a, b, c, d], col: `rgb(${base.map(q => Math.round(q * lum)).join(',')})` });
+      }
+    });
+    quads.sort((a, b) => a.z - b.z);
+    ctx.lineWidth = .7; ctx.lineJoin = 'round';
+    quads.forEach(q => {
+      ctx.beginPath();
+      q.p.forEach((v, n) => { const px = W / 2 + v.x * k, py = H - 8 - v.y * k; n ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+      ctx.closePath(); ctx.fillStyle = q.col; ctx.strokeStyle = q.col; ctx.fill(); ctx.stroke();
+    });
+  }
+  function initBody() {
+    const cv = document.getElementById('bodycv');
+    if (!cv) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = 150 * dpr; cv.height = 270 * dpr;
+    cv.style.width = '150px'; cv.style.height = '270px';
+    const sc = zoneScores();
+    drawBody(cv, sc);
+    let x0 = null, raf = 0;
+    const redraw = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; drawBody(cv, sc); }); };
+    // Solo giro horizontal (eje vertical). Un dedo o el ratón.
+    cv.addEventListener('pointerdown', e => { x0 = e.clientX; try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
+    cv.addEventListener('pointermove', e => { if (x0 === null) return; bodyRot += (e.clientX - x0) * 0.012; x0 = e.clientX; redraw(); });
+    const up = () => { x0 = null; };
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+  }
+
   function viewRegistro() {
     if (active && !overview) return viewActive();
     const now = new Date();
@@ -633,6 +748,7 @@
       </section>
       ${SYNC.id ? '' : '<button class="btn full" style="margin-top:12px" data-act="syncSetup">Activar copia en la nube (para no perder tus datos)</button>'}
       ${rankCard()}
+      ${bodyCard()}
       <h2>Últimas sesiones</h2>
       ${recent.length ? recent.map(s => `<button class="sess" data-act="openSession" data-id="${s.id}"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div>${prLine(s)}</button>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
   }
@@ -983,6 +1099,7 @@
     html += tab === 'registro' ? viewRegistro() : tab === 'rutinas' ? viewRutinas() : tab === 'dieta' ? viewDieta() : viewProgreso();
     const old = $view.innerHTML, oldTab = lastTab;
     $view.innerHTML = html;
+    initBody();
     if (tab !== lastTab) {
       if (oldTab !== null && old && $view.parentNode && $view.getBoundingClientRect) {
         const r = $view.getBoundingClientRect(), g = document.createElement('div');

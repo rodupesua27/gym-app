@@ -613,10 +613,11 @@
         ${ALT[ex.orig || ex.name] ? `<button class="btn full" style="margin-top:8px" data-act="swapEx" data-e="${ei}">Cambiar ejercicio</button>` : ''}
       </section>`;
     }).join('');
-    return `<div class="ahead"><div><div class="atitle">${esc(active.name)}</div>
+    return `<div class="ahead fixtop"><div><div class="atitle">${esc(active.name)}</div>
         <div class="asub"><span id="elapsed">${dur((Date.now() - active.start) / 1000)}</span> · <span id="vol">${thousands(volOf(active.exercises, true))}</span> kg · <span id="nsets">${done}</span>/${total} series · <span id="ppct">${total ? Math.round(done * 100 / total) : 0} %</span></div></div>
         <button class="btn accent" data-act="finish">Terminar</button>
         <div class="pbar"><i id="pbar" style="width:${total ? Math.round(done * 100 / total) : 0}%"></i></div></div>
+      <div class="ahead-sp"></div>
       ${exs || '<p class="muted">Sesión libre: añade tu primer ejercicio.</p>'}
       <button class="btn full" data-act="addEx">+ Añadir ejercicio</button>
       ${active.cardio ? '<div style="height:14px"></div>' + cardioCard(active.cardio, true) : ''}

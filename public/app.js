@@ -412,6 +412,32 @@
 
   // Récords como en Hevy: peso máximo, 1RM estimado (Epley) y mejor serie (kg × reps).
   const epley = (kg, reps) => (reps > 0 ? kg * (1 + reps / 30) : 0);
+  // Récords de una sesión frente a las sesiones anteriores a ella (así el historial sale igual siempre)
+  function prsOf(ses) {
+    const prev = sessions.filter(x => x.id !== ses.id && x.start < ses.start);
+    const out = [];
+    ses.exercises.forEach(e => {
+      const sets = e.sets.filter(s => s.t === 'N');
+      if (!sets.length) return;
+      let n = 0, hk = 0, hv = 0;
+      prev.forEach(p => p.exercises.forEach(x => {
+        if (x.name !== e.name) return;
+        x.sets.forEach(s => {
+          if (s.t !== 'N') return;
+          const kg = +s.kg || 0, reps = +s.reps || 0;
+          n++; hk = Math.max(hk, kg); hv = Math.max(hv, kg * reps);
+        });
+      }));
+      if (!n) return;
+      const kg = Math.max(0, ...sets.map(s => +s.kg || 0));
+      const vol = Math.max(0, ...sets.map(s => (+s.kg || 0) * (+s.reps || 0)));
+      const lines = [];
+      if (kg > hk) lines.push(`Mayor peso: ${kgTxt(kg)} kg`);
+      if (vol > hv) lines.push(`Mayor volumen en una serie: ${thousands(vol)} kg`);
+      if (lines.length) out.push({ name: e.name, lines });
+    });
+    return out;
+  }
   function recordsOf(name) {
     const r = { n: 0, kg: 0, rm: 0, vol: 0 };
     sessions.forEach(ss => ss.exercises.forEach(x => {
@@ -488,19 +514,8 @@
     if (!exs.length && !cardio) { active = null; persist(); render(); return; }
 
     const end = endMs;
-    const prs = [];
-    exs.forEach(e => {
-      const h = recordsOf(e.name);
-      if (!h.n) return;
-      const sets = e.sets.filter(s => s.t === 'N');
-      const kg = Math.max(0, ...sets.map(s => s.kg));
-      const vol = Math.max(0, ...sets.map(s => s.kg * s.reps));
-      const lines = [];
-      if (kg > h.kg) lines.push(`Mayor peso: ${kgTxt(kg)} kg`);
-      if (vol > h.vol) lines.push(`Mayor volumen en una serie: ${thousands(vol)} kg`);
-      if (lines.length) prs.push({ name: e.name, lines });
-    });
     const ses = { id: active.id, routineId: active.routineId, name: active.name, start: active.start, end, exercises: exs, cardio };
+    const prs = prsOf(ses);
     sessions.push(ses); save(K.s, sessions);
     active = null; overview = false; persist(); tab = 'registro'; render();
     const nsets = exs.reduce((n, e) => n + e.sets.length, 0);
@@ -619,9 +634,10 @@
       ${SYNC.id ? '' : '<button class="btn full" style="margin-top:12px" data-act="syncSetup">Activar copia en la nube (para no perder tus datos)</button>'}
       ${rankCard()}
       <h2>Últimas sesiones</h2>
-      ${recent.length ? recent.map(s => `<button class="sess" data-act="openSession" data-id="${s.id}"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></button>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
+      ${recent.length ? recent.map(s => `<button class="sess" data-act="openSession" data-id="${s.id}"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div>${prLine(s)}</button>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
   }
 
+  const prLine = s => { const p = prsOf(s); return p.length ? `<div class="prline">${p.map(x => `<span>${TROPHY}${esc(x.name)} <small class="muted">${x.lines.map(esc).join(' · ')}</small></span>`).join('')}</div>` : ''; };
   const sessPill = s => { const v = volOf(s.exercises, false); return s.cardio ? (v > 0 ? 'Cardio · ' + thousands(v) + ' kg' : 'Cardio') : thousands(v) + ' kg'; };
 
   function cardioCard(c, live) {
@@ -848,7 +864,7 @@
       <h2>Historial</h2>
       <button class="btn full" style="margin-bottom:10px" data-act="pastAdd">+ Registrar entreno pasado</button>
       ${sessions.length ? sessions.slice().reverse().map(s => `<button class="sess" data-act="openSession" data-id="${s.id}">
-        <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div></button>`).join('') : '<p class="muted">Aquí aparecerán tus entrenamientos.</p>'}
+        <div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div>${prLine(s)}</button>`).join('') : '<p class="muted">Aquí aparecerán tus entrenamientos.</p>'}
       <h2>Copia en la nube</h2>
       ${SYNC.id ? `<p class="muted"><small>${SYNC.msg || (SYNC.dirty ? 'Pendiente de subir…' : SYNC.t ? 'Última copia: ' + new Date(SYNC.t).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Activada')}</small></p><div class="row"><button class="btn" data-act="syncNow">Sincronizar ahora</button></div>`
         : '<p class="muted"><small>Sin activar: tus datos solo viven en este móvil.</small></p><div class="row"><button class="btn accent" data-act="syncSetup">Activar copia en la nube</button></div>'}`;

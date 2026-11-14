@@ -17,10 +17,10 @@ html, body { margin: 0; background: var(--bg); color: var(--text); }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   font-size: 16px; line-height: 1.35;
-  padding-top: env(safe-area-inset-top);
   -webkit-text-size-adjust: 100%;
 }
-#view { padding: 16px 16px calc(var(--tabh) + 110px + env(safe-area-inset-bottom)); max-width: 640px; margin: 0 auto; }
+#view { padding: calc(16px + env(safe-area-inset-top)) 16px calc(var(--tabh) + 110px + env(safe-area-inset-bottom)); max-width: 640px; margin: 0 auto; }
+#view:has(.ahead.fixtop) { padding-top: 0; }
 h1 { font-size: 34px; font-weight: 800; letter-spacing: -.02em; margin: 6px 0 18px; }
 h2 { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin: 26px 0 10px; }
 h3 { margin: 0 0 8px; font-size: 20px; }

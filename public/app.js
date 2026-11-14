@@ -483,8 +483,10 @@
       const sets = e.sets.filter(s => s.t === 'N');
       const kg = Math.max(0, ...sets.map(s => s.kg));
       const vol = Math.max(0, ...sets.map(s => s.kg * s.reps));
-      if (kg > h.kg) prs.push(`${e.name} · peso ${kgTxt(kg)} kg`);
-      if (vol > h.vol) prs.push(`${e.name} · mejor serie ${thousands(vol)} kg de volumen`);
+      const lines = [];
+      if (kg > h.kg) lines.push(`Mayor peso: ${kgTxt(kg)} kg`);
+      if (vol > h.vol) lines.push(`Mayor volumen en una serie: ${thousands(vol)} kg`);
+      if (lines.length) prs.push({ name: e.name, lines });
     });
     const ses = { id: active.id, routineId: active.routineId, name: active.name, start: active.start, end, exercises: exs, cardio };
     sessions.push(ses); save(K.s, sessions);
@@ -492,7 +494,7 @@
     const nsets = exs.reduce((n, e) => n + e.sets.length, 0);
     await sheet(
       `<h3>¡Entrenamiento guardado!</h3><p>${dur((end - ses.start) / 1000)} · ${cardio ? 'Cardio ✓ · ' : ''}${thousands(volOf(exs, false))} kg · ${nsets} series</p>` +
-      (prs.length ? `<p><b>Récords nuevos</b><br>${prs.map(esc).join('<br>')}</p>` : ''),
+      (prs.length ? `<div class="prsum"><b>Récords de esta sesión</b>${prs.map(p => `<div class="prx"><span>${TROPHY}${esc(p.name)}</span><small class="muted">${p.lines.map(esc).join(' · ')}</small></div>`).join('')}</div>` : ''),
       [{ label: 'Genial', cls: 'accent', v: true }]
     );
   }

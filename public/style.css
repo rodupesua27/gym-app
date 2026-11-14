@@ -356,3 +356,9 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 /* Récord: trofeo junto al número de la serie */
 .tp { position: relative; }
 .tp .trf { position: absolute; right: -5px; top: -6px; width: 14px; height: 14px; fill: var(--accent-text); background: #000; border-radius: 50%; padding: 2px; box-sizing: content-box; }
+
+.prsum { margin-top: 12px; text-align: left; }
+.prx { margin-top: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface2); }
+.prx span { display: flex; align-items: center; gap: 6px; font-weight: 600; }
+.prx .trf { position: static; width: 16px; height: 16px; flex: none; border-radius: 0; background: none; padding: 0; }
+.prx small { display: block; margin-top: 4px; }

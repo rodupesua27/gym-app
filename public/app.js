@@ -724,7 +724,7 @@
   let bodyCv = null, bodyG = null, bodyMode = null, bodyVel = 0, bodyRaf = 0, bodyLoad = null, bodySc = {};
   const ZORD = ['Pecho', 'Espalda', 'Hombros', 'Brazos', 'Core', 'Piernas'];
   const BODY_VS = 'attribute vec3 aPos;attribute vec3 aNor;attribute vec3 aW0;attribute vec3 aW1;uniform vec3 uExt;uniform vec3 uCen;uniform vec3 uL0;uniform vec3 uL1;uniform float uRot;uniform float uAsp;varying vec3 vN;varying float vT;void main(){vec3 p=aPos*uExt+uCen;float c=cos(uRot),s=sin(uRot);vec3 q=vec3(p.x*c+p.z*s,p.y,-p.x*s+p.z*c);vN=vec3(aNor.x*c+aNor.z*s,aNor.y,-aNor.x*s+aNor.z*c);vT=dot(aW0,uL0)+dot(aW1,uL1);gl_Position=vec4(q.x/(0.99*uAsp),(q.y-0.9)/0.99,-q.z*0.5,1.0);}';
-  const BODY_FS = 'precision mediump float;varying vec3 vN;varying float vT;void main(){vec3 n=normalize(vN);vec3 L=normalize(vec3(-0.35,0.45,0.82));float d=max(dot(n,L),0.0);float w=max(dot(n,L)*0.5+0.5,0.0);float rim=pow(1.0-max(n.z,0.0),3.0);vec3 base=mix(vec3(0.50,0.50,0.54),vec3(0.80,0.27,0.38),clamp(vT,0.0,1.0));vec3 col=base*(0.2+0.62*d+0.24*w)+vec3(0.9,0.9,1.0)*rim*0.16+vec3(1.0)*pow(max(dot(reflect(-L,n),vec3(0.0,0.0,1.0)),0.0),24.0)*0.1;gl_FragColor=vec4(col,1.0);}';
+  const BODY_FS = 'precision mediump float;varying vec3 vN;varying float vT;void main(){vec3 n=normalize(vN);vec3 L=normalize(vec3(-0.35,0.45,0.82));float d=max(dot(n,L),0.0);float w=max(dot(n,L)*0.5+0.5,0.0);float rim=pow(1.0-max(n.z,0.0),3.0);vec3 base=mix(vec3(0.52,0.52,0.56),vec3(0.88,0.12,0.28),clamp(vT,0.0,1.0));vec3 col=base*(0.2+0.62*d+0.24*w)+vec3(0.9,0.9,1.0)*rim*0.16+vec3(1.0)*pow(max(dot(reflect(-L,n),vec3(0.0,0.0,1.0)),0.0),24.0)*0.1;gl_FragColor=vec4(col,1.0);}';
   function bodyGL(buf) {
     const gl = bodyCv.getContext('webgl2', { antialias: true }) || bodyCv.getContext('webgl', { antialias: true });
     if (!gl) throw new Error('sin webgl');
@@ -762,7 +762,7 @@
     if (!bodyCv) return;
     if (bodyMode === 'gl' && bodyG) {
       const { gl, u, n } = bodyG;
-      const L = ZORD.map(z => bodySc[z] == null ? 0 : .25 + .75 * Math.min(1, bodySc[z] / 8));
+      const L = ZORD.map(z => bodySc[z] == null ? 0 : .22 + .78 * Math.pow(Math.min(1, bodySc[z] / 6), .75));
       gl.viewport(0, 0, bodyCv.width, bodyCv.height);
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       gl.uniform1f(u.uRot, bodyRot); gl.uniform1f(u.uAsp, bodyCv.width / bodyCv.height);
@@ -1059,8 +1059,18 @@
     const prevB = body.filter(b => bval(b, bmetric) !== null);
     const delta = prevB.length > 1 ? bval(prevB[prevB.length - 1], bmetric) - bval(prevB[0], bmetric) : null;
     const list = bAll ? body.slice().reverse() : body.slice(-8).reverse();
+    let nextW = '';
+    if (lastB) {
+      const ld = new Date(lastB.ts); ld.setHours(0, 0, 0, 0);
+      const nd = new Date(ld); nd.setDate(nd.getDate() + 14);
+      const t0 = new Date(); t0.setHours(0, 0, 0, 0);
+      const dd = Math.round((nd - t0) / 86400000);
+      const fd = nd.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+      nextW = `<div class="nextw"><small class="muted">Próximo pesaje</small><b>${fd}</b><small class="muted">${dd > 1 ? 'en ' + dd + ' días' : dd === 1 ? 'mañana' : dd === 0 ? 'hoy' : 'toca ya · hace ' + (-dd) + (dd === -1 ? ' día' : ' días')}</small></div>`;
+    }
     return `<h1>Progreso</h1>
       <h2 style="margin-top:0">Medidas corporales</h2>
+      ${nextW}
       <section class="card">
         <div class="grid2">
           <label class="fl"><small class="muted">Fecha</small><input class="t" type="date" id="bdate" value="${dDay}" max="${isoDay(Date.now())}"></label>

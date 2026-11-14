@@ -1044,6 +1044,38 @@
       ${cmpM && !hasPrev ? `<small class="muted">Todavía no hay entrenos de ${lbl.toLowerCase()} para comparar.</small>` : ''}</section>`;
   }
 
+  function bHead(k) {
+    const cur = BM.find(m => m.k === k);
+    const lastB = body.length ? body[body.length - 1] : null;
+    const lastV = lastB ? bval(lastB, k) : null;
+    const prevB = body.filter(b => bval(b, k) !== null);
+    const delta = prevB.length > 1 ? bval(prevB[prevB.length - 1], k) - bval(prevB[0], k) : null;
+    const last7 = body.slice(-7);
+    const avg = last7.length ? last7.reduce((a, b) => a + b.kg, 0) / last7.length : null;
+    return `<div class="row between" style="margin-bottom:8px"><span><b style="font-size:22px">${lastV !== null ? bfmt(lastV, cur.u) : '–'}</b> <small class="muted">${cur.n}</small></span>
+      <small class="muted">${delta !== null ? (delta > 0 ? '+' : '') + bfmt(delta, cur.u) + ' desde ' + dShort(prevB[0].ts) : ''}${k === 'kg' && avg ? ` · media ${last7.length}: ${kgTxt(avg)} kg` : ''}</small></div>`;
+  }
+  function statsPage() {
+    const o = document.createElement('div');
+    o.className = 'fpage sp';
+    let m = 'kg';
+    const avail = BM.filter(x => body.some(b => bval(b, x.k) !== null));
+    const draw = () => {
+      o.innerHTML = `<div class="ahead"><div style="min-width:0"><div class="atitle" style="font-size:17px">Estadísticas</div>
+        <div class="asub" style="font-size:13px">Medidas corporales</div></div><button class="btn small" data-close="1">Volver</button></div>
+        <div class="chips" style="margin:6px 0 14px">${avail.map(x => `<button class="chip ${x.k === m ? 'on' : ''}" data-k="${x.k}">${x.n}</button>`).join('')}</div>
+        ${bHead(m)}${chart(m)}`;
+    };
+    o.addEventListener('click', ev => {
+      const b = ev.target.closest('button');
+      if (!b) return;
+      if (b.dataset.close) { document.body.removeChild(o); render(); }
+      else if (b.dataset.k) { m = b.dataset.k; draw(); }
+    });
+    draw();
+    document.body.appendChild(o);
+  }
+
   function viewProgreso() {
     const last7 = body.slice(-7);
     const avg = last7.length ? last7.reduce((a, b) => a + b.kg, 0) / last7.length : null;
@@ -1096,10 +1128,7 @@
         ${bDraft ? '<button class="btn full" style="margin-top:8px" data-act="cancelBody">Cancelar edición</button>' : ''}
         <p class="muted" style="margin:10px 0 0"><small>Cambia la fecha para meter pesos de semanas o meses atrás. Si ya hay un registro ese día, se reemplaza. Mejor en ayunas y en la misma báscula.</small></p>
       </section>
-      <div class="chips" style="margin-top:14px">${avail.map(m => `<button class="chip ${m.k === bmetric ? 'on' : ''}" data-act="bmetric" data-k="${m.k}">${m.n}</button>`).join('')}</div>
-      <div class="row between" style="margin-bottom:8px"><span><b style="font-size:22px">${lastV !== null ? bfmt(lastV, cur.u) : '–'}</b> <small class="muted">${cur.n}</small></span>
-        <small class="muted">${delta !== null ? (delta > 0 ? '+' : '') + bfmt(delta, cur.u) + ' desde ' + dShort(prevB[0].ts) : ''}${bmetric === 'kg' && avg ? ` · media ${last7.length}: ${kgTxt(avg)} kg` : ''}</small></div>
-      ${chart(bmetric)}
+      <button class="chartbtn" data-act="openStats" style="margin-top:14px">${bHead('kg')}${chart('kg')}<small class="muted" style="display:block;margin-top:6px">Toca para ver más medidas →</small></button>
       <h2>Registros</h2>
       ${list.length ? list.map(bodyRow).join('') : '<p class="muted">Todavía no hay registros.</p>'}
       ${body.length > 8 ? `<button class="btn full" style="margin-top:8px" data-act="bAll">${bAll ? 'Ver menos' : 'Ver todos (' + body.length + ')'}</button>` : ''}
@@ -1417,7 +1446,7 @@
       save(K.b, body); render();
     }
     else if (a === 'cancelBody') { bDraft = null; render(); }
-    else if (a === 'bmetric') { bmetric = t.dataset.k; render(); }
+    else if (a === 'openStats') statsPage();
     else if (a === 'bAll') { bAll = !bAll; render(); }
     else if (a === 'cmp') { const m = +t.dataset.m; cmpM = cmpM === m ? 0 : m; render(); }
     else if (a === 'openBody') {

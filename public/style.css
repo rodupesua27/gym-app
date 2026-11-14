@@ -343,6 +343,8 @@ html { height: 100%; overflow: hidden; }
 body { height: 100%; box-sizing: border-box; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: none; scrollbar-width: none; }
 body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
-/* Cabecera del entreno fija arriba (funciona con el scroll en el body) */
-.ahead.fixtop { position: fixed; top: 0; left: 0; right: 0; margin: 0 auto !important; margin-top: 0 !important; max-width: 640px; width: auto; z-index: 15; background: var(--bg); padding-top: calc(10px + env(safe-area-inset-top)); }
-.ahead-sp { height: calc(86px + env(safe-area-inset-top)); }
+/* Cabecera del entreno fija arriba: tapa todo lo que haya por encima y por debajo, sin huecos */
+.ahead.fixtop { position: fixed; top: 0; left: 0; right: 0; margin: 0 auto !important; max-width: 640px; width: auto; z-index: 15; background: var(--bg); padding-top: calc(10px + env(safe-area-inset-top)); margin-bottom: 0 !important; border-bottom: 1px solid var(--line); }
+.ahead.fixtop::before { content: ''; position: absolute; left: 0; right: 0; top: -80px; height: 80px; background: var(--bg); }
+.ahead.fixtop::after { content: ''; position: absolute; left: 0; right: 0; bottom: -10px; height: 10px; background: var(--bg); }
+.ahead-sp { height: calc(96px + env(safe-area-inset-top)); }

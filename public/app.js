@@ -566,7 +566,7 @@
     return `<svg class="bdg" viewBox="0 0 64 72"><path d="M32 4l24 8v22c0 15-10 26-24 34C18 60 8 49 8 34V12z" fill="#14161a" stroke="${c}" stroke-width="3"/><path d="M32 10l18 6v18c0 11-7 20-18 26-11-6-18-15-18-26V16z" fill="${c}" opacity=".12"/>${mark}</svg>`;
   }
   function rankCard() {
-    const head = '<section class="card rank" style="cursor:default"><b class="rk-t">Rango de fuerza</b> <small class="muted">· comparación estimada con gente de tu mismo peso</small>';
+    const head = '<section class="card rank" style="cursor:default"><b class="rk-t">Rango de fuerza</b> <small class="muted">Comparación estimada con gente de tu mismo peso</small>';
     const last = body.length ? body.slice().sort((x, y) => x.ts - y.ts)[body.length - 1] : null;
     const bw = last ? +last.kg : 0;
     if (!(bw > 20)) return head + '<small class="muted">Anota tu peso en Progreso para calcular tu rango.</small></section>';

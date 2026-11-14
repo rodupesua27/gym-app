@@ -392,3 +392,6 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* Más aire entre bloques de Registro */
 .card.rank, .card.bodyc { margin-bottom: 22px; }
+
+.bodyc .bfig { width: 150px; min-height: 290px; }
+.bodyc .bcred { display: block; margin-top: 10px; font-size: 11px; opacity: .8; }

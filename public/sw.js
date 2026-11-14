@@ -1,5 +1,5 @@
 // Service worker: primero red (para que los cambios se vean al reabrir), con copia local sin conexión.
-var CACHE = 'gym-v9';
+var CACHE = 'gym-v10';
 
 self.addEventListener('install', function () { self.skipWaiting(); });
 
@@ -16,6 +16,16 @@ self.addEventListener('activate', function (e) {
 self.addEventListener('fetch', function (e) {
   var r = e.request;
   if (r.method !== 'GET' || new URL(r.url).origin !== self.location.origin || new URL(r.url).pathname.indexOf('/api/') === 0) return;
+  // El modelo 3D pesa varios MB y no cambia: primero copia local
+  if (new URL(r.url).pathname === '/body.bin') {
+    e.respondWith(caches.match(r).then(function (m) {
+      return m || fetch(r).then(function (res) {
+        if (res && res.ok) { var cp = res.clone(); caches.open(CACHE).then(function (c) { c.put(r, cp); }); }
+        return res;
+      });
+    }));
+    return;
+  }
   e.respondWith(
     fetch(new Request(r, { cache: 'no-store' }))
       .then(function (res) {

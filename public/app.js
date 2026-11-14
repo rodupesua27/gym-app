@@ -642,8 +642,8 @@
     const bars = order.map(z => { const pc = sc[z] == null ? 0 : Math.round(Math.min(1, sc[z] / 8) * 100);
       return `<div class="zb"><div class="zt"><span>${z}</span><b>${sc[z] == null ? '–' : pc + ' %'}</b></div><div class="zbar"><i style="width:${pc}%"></i></div></div>`; }).join('');
     return `<section class="card bodyc" style="cursor:default"><b class="rk-t">Tu cuerpo</b> <small class="muted">Arrastra la figura para girarla</small>
-      <div class="bgrid"><div class="chart bfig"><canvas id="bodycv" width="150" height="290"></canvas></div><div class="zbars">${bars}</div></div>
-      ${any ? '' : '<small class="muted">Anota tu peso en Progreso y registra series (1–12 reps) para ver tu fuerza por zona.</small>'}</section>`;
+      <div class="bgrid"><div class="chart bfig" id="bodyhost"></div><div class="zbars">${bars}</div></div>
+      ${any ? '' : '<small class="muted">Anota tu peso en Progreso y registra series (1–12 reps) para ver tu fuerza por zona.</small>'}<small class="muted bcred">Modelo 3D: «Male Full Body Ecorche», de Diego Luján García (Sketchfab, CC BY 4.0)</small></section>`;
   }
   // Figura hecha con elipsoides; cada pieza pertenece a una zona y se tiñe según su nivel.
   const BODY = (() => {
@@ -718,21 +718,87 @@
       ctx.closePath(); ctx.fillStyle = q.col; ctx.strokeStyle = q.col; ctx.fill(); ctx.stroke();
     });
   }
-  function initBody() {
-    const cv = document.getElementById('bodycv');
-    if (!cv) return;
+  // ---- Visor 3D propio (WebGL, sin librerías): modelo en body.bin, gris teñido de granate por zona ----
+  let bodyCv = null, bodyG = null, bodyMode = null, bodyVel = 0, bodyRaf = 0, bodyLoad = null, bodySc = {};
+  const ZORD = ['Pecho', 'Espalda', 'Hombros', 'Brazos', 'Core', 'Piernas'];
+  const BODY_VS = 'attribute vec3 aPos;attribute vec3 aNor;attribute vec3 aW0;attribute vec3 aW1;uniform vec3 uExt;uniform vec3 uCen;uniform vec3 uL0;uniform vec3 uL1;uniform float uRot;uniform float uAsp;varying vec3 vN;varying float vT;void main(){vec3 p=aPos*uExt+uCen;float c=cos(uRot),s=sin(uRot);vec3 q=vec3(p.x*c+p.z*s,p.y,-p.x*s+p.z*c);vN=vec3(aNor.x*c+aNor.z*s,aNor.y,-aNor.x*s+aNor.z*c);vT=dot(aW0,uL0)+dot(aW1,uL1);gl_Position=vec4(q.x/(0.99*uAsp),(q.y-0.9)/0.99,-q.z*0.5,1.0);}';
+  const BODY_FS = 'precision mediump float;varying vec3 vN;varying float vT;void main(){vec3 n=normalize(vN);vec3 L=normalize(vec3(-0.35,0.45,0.82));float d=max(dot(n,L),0.0);float w=max(dot(n,L)*0.5+0.5,0.0);float rim=pow(1.0-max(n.z,0.0),3.0);vec3 base=mix(vec3(0.50,0.50,0.54),vec3(0.80,0.27,0.38),clamp(vT,0.0,1.0));vec3 col=base*(0.2+0.62*d+0.24*w)+vec3(0.9,0.9,1.0)*rim*0.16+vec3(1.0)*pow(max(dot(reflect(-L,n),vec3(0.0,0.0,1.0)),0.0),24.0)*0.1;gl_FragColor=vec4(col,1.0);}';
+  function bodyGL(buf) {
+    const gl = bodyCv.getContext('webgl2', { antialias: true }) || bodyCv.getContext('webgl', { antialias: true });
+    if (!gl) throw new Error('sin webgl');
+    gl.getExtension('OES_element_index_uint');
+    const dv = new DataView(buf);
+    if (dv.getUint32(0, false) !== 0x424f4459) throw new Error('modelo');
+    const nv = dv.getUint32(4, true), nt = dv.getUint32(8, true);
+    const ext = [0, 1, 2].map(i => dv.getFloat32(16 + i * 4, true)), cen = [0, 1, 2].map(i => dv.getFloat32(28 + i * 4, true));
+    let o = 40;
+    const pos = new Int16Array(buf, o, nv * 3); o += nv * 6;
+    const nor = new Int8Array(buf, o, nv * 4); o += nv * 4;
+    const wts = new Uint8Array(buf, o, nv * 6); o += nv * 6;
+    const idx = new Uint32Array(buf, o, nt * 3);
+    const sh = (t, src) => { const x = gl.createShader(t); gl.shaderSource(x, src); gl.compileShader(x); if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) throw new Error('shader'); return x; };
+    const pr = gl.createProgram();
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, BODY_VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, BODY_FS)); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) throw new Error('link');
+    gl.useProgram(pr);
+    const buffer = (target, data) => { const b = gl.createBuffer(); gl.bindBuffer(target, b); gl.bufferData(target, data, gl.STATIC_DRAW); return b; };
+    const attr = (name, data, size, type, norm, stride, off) => {
+      buffer(gl.ARRAY_BUFFER, data);
+      const l = gl.getAttribLocation(pr, name); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, size, type, norm, stride, off);
+    };
+    attr('aPos', pos, 3, gl.SHORT, true, 6, 0);
+    attr('aNor', nor, 3, gl.BYTE, true, 4, 0);
+    buffer(gl.ARRAY_BUFFER, wts);
+    ['aW0', 'aW1'].forEach((nm, k) => { const l = gl.getAttribLocation(pr, nm); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 3, gl.UNSIGNED_BYTE, true, 6, k * 3); });
+    buffer(gl.ELEMENT_ARRAY_BUFFER, idx);
+    const u = {}; ['uExt', 'uCen', 'uL0', 'uL1', 'uRot', 'uAsp'].forEach(k => { u[k] = gl.getUniformLocation(pr, k); });
+    gl.uniform3f(u.uExt, ext[0], ext[1], ext[2]); gl.uniform3f(u.uCen, cen[0], cen[1], cen[2]);
+    gl.enable(gl.DEPTH_TEST); gl.enable(gl.CULL_FACE); gl.cullFace(gl.BACK);
+    return { gl, u, n: nt * 3 };
+  }
+  function bodyPaint() {
+    if (!bodyCv) return;
+    if (bodyMode === 'gl' && bodyG) {
+      const { gl, u, n } = bodyG;
+      const L = ZORD.map(z => bodySc[z] == null ? 0 : .25 + .75 * Math.min(1, bodySc[z] / 8));
+      gl.viewport(0, 0, bodyCv.width, bodyCv.height);
+      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.uniform1f(u.uRot, bodyRot); gl.uniform1f(u.uAsp, bodyCv.width / bodyCv.height);
+      gl.uniform3f(u.uL0, L[0], L[1], L[2]); gl.uniform3f(u.uL1, L[3], L[4], L[5]);
+      gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_INT, 0);
+    } else if (bodyMode === '2d') drawBody(bodyCv, bodySc);
+  }
+  const bodyRedraw = () => { if (!bodyRaf) bodyRaf = requestAnimationFrame(() => { bodyRaf = 0; bodyPaint(); }); };
+  function bodySetup() {
+    bodyCv = document.createElement('canvas');
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = 150 * dpr; cv.height = 290 * dpr;
-    cv.style.width = '150px'; cv.style.height = '290px';
-    const sc = zoneScores();
-    drawBody(cv, sc);
-    let x0 = null, raf = 0;
-    const redraw = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; drawBody(cv, sc); }); };
-    // Solo giro horizontal (eje vertical). Un dedo o el ratón.
-    cv.addEventListener('pointerdown', e => { x0 = e.clientX; try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
-    cv.addEventListener('pointermove', e => { if (x0 === null) return; bodyRot += (e.clientX - x0) * 0.012; x0 = e.clientX; redraw(); });
-    const up = () => { x0 = null; };
-    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    bodyCv.width = Math.round(150 * dpr); bodyCv.height = Math.round(290 * dpr);
+    bodyCv.style.width = '150px'; bodyCv.style.height = '290px';
+    let x0 = null, lx = 0, lt = 0;
+    bodyCv.addEventListener('pointerdown', e => { x0 = lx = e.clientX; lt = Date.now(); bodyVel = 0; try { bodyCv.setPointerCapture(e.pointerId); } catch (_) {} });
+    bodyCv.addEventListener('pointermove', e => {
+      if (x0 === null) return;
+      const dx = (e.clientX - lx) * 0.012; bodyRot += dx; bodyVel = dx; lx = e.clientX; lt = Date.now(); bodyRedraw();
+    });
+    const up = () => {
+      if (x0 === null) return; x0 = null;
+      if (Date.now() - lt > 80) bodyVel = 0;
+      const spin = () => { if (Math.abs(bodyVel) < 0.0006 || !bodyCv.isConnected) return; bodyRot += bodyVel; bodyVel *= 0.94; bodyPaint(); requestAnimationFrame(spin); };
+      requestAnimationFrame(spin);
+    };
+    bodyCv.addEventListener('pointerup', up); bodyCv.addEventListener('pointercancel', up);
+    bodyLoad = fetch('body.bin?v=1').then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error('red')))
+      .then(buf => { bodyG = bodyGL(buf); bodyMode = 'gl'; })
+      .catch(() => { try { if (bodyCv.getContext('2d')) bodyMode = '2d'; } catch (_) {} })
+      .then(bodyRedraw);
+  }
+  function initBody() {
+    const host = document.getElementById('bodyhost');
+    if (!host) return;
+    bodySc = zoneScores();
+    if (!bodyCv) bodySetup();
+    host.appendChild(bodyCv);
+    bodyRedraw();
   }
 
   function viewRegistro() {

@@ -442,8 +442,13 @@
     d.className = 'recbanner';
     d.innerHTML = `<b>🏆 Récord · ${esc(name)}</b><small>${lines.map(esc).join(' · ')}</small>`;
     document.body.appendChild(d);
-    setTimeout(() => d.classList.add('out'), 3100);
-    setTimeout(() => d.remove(), 3500);
+    let timers = [];
+    const close = () => { timers.forEach(clearTimeout); d.classList.add('out'); setTimeout(() => d.remove(), 400); };
+    timers.push(setTimeout(close, 3100));
+    let y0 = null;
+    d.addEventListener('touchstart', ev => { y0 = ev.touches[0].clientY; timers.forEach(clearTimeout); timers = []; }, { passive: true });
+    d.addEventListener('touchmove', ev => { if (y0 !== null && ev.touches[0].clientY - y0 < -15) { y0 = null; close(); } }, { passive: true });
+    d.addEventListener('click', close);
   }
   async function finish() {
     const pending = pendingSets();

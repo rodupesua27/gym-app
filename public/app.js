@@ -633,29 +633,44 @@
   function bodyCard() {
     const sc = zoneScores();
     const any = AXES.some(([z]) => sc[z] != null);
-    return `<section class="card bodyc" style="cursor:default"><b class="rk-t">Tu cuerpo</b> <small class="muted">Fuerza por zona · arrastra la figura para girarla</small>
-      <div class="bgrid"><div class="chart"><canvas id="bodycv" width="150" height="270"></canvas></div><div>${radarSvg(sc)}</div></div>
-      ${any ? '' : '<small class="muted">Anota tu peso en Progreso y registra series (1–12 reps) para ver tu fuerza por zona.</small>'}</section>`;
+    return `<section class="card bodyc" style="cursor:default"><b class="rk-t">Tu cuerpo</b> <small class="muted">Arrastra para girar la figura · las zonas se tiñen según tu fuerza</small>
+      <div class="chart bfig"><canvas id="bodycv" width="220" height="340"></canvas></div>
+      ${any ? '' : '<small class="muted">Anota tu peso en Progreso y registra series (1–12 reps) para ver tu fuerza por zona.</small>'}</section>
+      <section class="card bodyc" style="cursor:default"><b class="rk-t">Fuerza por zona</b> <small class="muted">Nivel de cada zona, de 0 a Radiante</small>
+      <div>${radarSvg(sc)}</div></section>`;
   }
   // Figura hecha con elipsoides; cada pieza pertenece a una zona y se tiñe según su nivel.
   const BODY = (() => {
-    const P = [], two = (f) => { f(1); f(-1); };
-    const add = (c, r, z, rz) => P.push({ c, r, z: z || null, rz: rz || 0 });
-    add([0, 1.69, 0], [.085, .105, .095]);
-    add([0, 1.56, -.01], [.05, .06, .05], 'Espalda');
-    add([0, 1.27, 0], [.175, .27, .085]);
-    add([0, 1.37, -.035], [.165, .16, .07], 'Espalda');
-    add([-.095, 1.4, .04], [.095, .08, .06], 'Pecho'); add([.095, 1.4, .04], [.095, .08, .06], 'Pecho');
-    add([0, 1.13, .025], [.125, .13, .07], 'Core');
-    add([0, .96, 0], [.15, .1, .095]);
-    two(sg => { add([sg * .075, .93, -.065], [.08, .09, .06], 'Piernas');
-      add([sg * .225, 1.46, 0], [.07, .075, .075], 'Hombros');
-      add([sg * .265, 1.31, 0], [.048, .14, .05], 'Brazos', sg * .09);
-      add([sg * .30, 1.06, .01], [.04, .13, .04], 'Brazos', sg * .06);
-      add([sg * .325, .87, .01], [.032, .05, .022]);
-      add([sg * .085, .71, 0], [.088, .23, .088], 'Piernas');
-      add([sg * .09, .33, -.01], [.058, .2, .058], 'Piernas');
-      add([sg * .09, .04, .05], [.045, .035, .09]); });
+    const P = [];
+    const add = (c, r, z, rz, dim) => P.push({ c, r, z: z || null, rz: rz || 0, dim: !!dim });
+    const two = f => { f(1); f(-1); };
+    // cabeza y cuello
+    add([0, 1.71, 0], [.078, .1, .09], null, 0, 1); add([0, 1.645, .03], [.055, .045, .055], null, 0, 1);
+    two(g => add([g * .032, 1.575, 0], [.03, .065, .035], null, g * .1, 1));
+    // trapecio
+    two(g => add([g * .075, 1.525, -.03], [.1, .04, .055], 'Espalda', -g * .3));
+    add([0, 1.39, -.07], [.095, .15, .03], 'Espalda');
+    // tronco base
+    add([0, 1.26, 0], [.15, .29, .07]);
+    // pecho y serrato
+    two(g => { add([g * .085, 1.41, .045], [.098, .07, .05], 'Pecho', -g * .12); add([g * .155, 1.29, .03], [.028, .075, .05], 'Pecho'); });
+    // abdominales (tableta) y oblicuos
+    two(g => { [1.26, 1.18, 1.10].forEach(y => add([g * .033, y, .07], [.03, .036, .025], 'Core')); add([g * .125, 1.17, .03], [.04, .105, .055], 'Core', g * .15); });
+    // espalda: dorsales, espalda media, lumbares
+    two(g => { add([g * .115, 1.28, -.055], [.075, .15, .04], 'Espalda', g * .22); add([g * .04, 1.07, -.06], [.035, .1, .035], 'Espalda'); });
+    // hombros (deltoides) y brazos
+    two(g => { add([g * .215, 1.455, .005], [.062, .075, .068], 'Hombros'); add([g * .2, 1.445, -.045], [.045, .06, .042], 'Hombros');
+      add([g * .258, 1.32, .028], [.04, .1, .04], 'Brazos', g * .08); add([g * .27, 1.31, -.03], [.04, .1, .036], 'Brazos', g * .08);
+      add([g * .297, 1.085, .008], [.04, .125, .04], 'Brazos', g * .05); add([g * .325, .89, .01], [.032, .05, .022], null, 0, 1); });
+    // cadera y glúteos
+    add([0, .975, 0], [.15, .075, .085]);
+    two(g => add([g * .078, .935, -.07], [.085, .085, .07], 'Piernas'));
+    // piernas
+    two(g => { add([g * .09, .74, .035], [.062, .21, .058], 'Piernas'); add([g * .14, .74, 0], [.043, .19, .05], 'Piernas', g * .03);
+      add([g * .055, .62, .04], [.045, .1, .045], 'Piernas'); add([g * .095, .74, -.05], [.068, .2, .05], 'Piernas');
+      add([g * .045, .78, 0], [.04, .17, .05], 'Piernas'); add([g * .09, .52, .02], [.045, .04, .045], null, 0, 1);
+      add([g * .085, .335, -.04], [.052, .14, .05], 'Piernas'); add([g * .095, .31, .03], [.033, .14, .033], 'Piernas');
+      add([g * .09, .04, .05], [.045, .035, .09], null, 0, 1); });
     return P;
   })();
   let bodyRot = 0.5;
@@ -663,10 +678,10 @@
     const ctx = cv.getContext('2d'), W = cv.width, H = cv.height, k = H / 1.9;
     ctx.clearRect(0, 0, W, H);
     const cs = Math.cos(bodyRot), sn = Math.sin(bodyRot);
-    const quads = [], NU = 12, NV = 8;
+    const quads = [], NU = 14, NV = 9;
     BODY.forEach(pt => {
       const v = pt.z && sc[pt.z] != null ? Math.min(1, sc[pt.z] / 8) : 0;
-      const base = pt.z && sc[pt.z] != null ? [58 + (204 - 58) * v, 58 + (69 - 58) * v, 64 + (96 - 64) * v] : [52, 52, 58];
+      const t = .25 + .75 * v, base = pt.dim ? [92, 92, 100] : pt.z && sc[pt.z] != null ? [132 + (204 - 132) * t, 132 + (69 - 132) * t, 140 + (96 - 140) * t] : [132, 132, 140];
       const cz = Math.cos(pt.rz), sz = Math.sin(pt.rz);
       const vert = (i, j) => {
         const th = Math.PI * i / NV, ph = 2 * Math.PI * j / NU;
@@ -685,7 +700,7 @@
         const nz = (a.nz + b.nz + c.nz + d.nz) / 4;
         if (nz < -0.05) continue;
         const nx = (a.nx + b.nx + c.nx + d.nx) / 4, ny = (a.ny + b.ny + c.ny + d.ny) / 4;
-        const lum = .32 + .68 * Math.max(0, nx * -.35 + ny * .45 + nz * .82);
+        const lum = .22 + .78 * Math.max(0, nx * -.35 + ny * .45 + nz * .82);
         quads.push({ z: (a.z + b.z + c.z + d.z) / 4, p: [a, b, c, d], col: `rgb(${base.map(q => Math.round(q * lum)).join(',')})` });
       }
     });
@@ -701,8 +716,8 @@
     const cv = document.getElementById('bodycv');
     if (!cv) return;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = 150 * dpr; cv.height = 270 * dpr;
-    cv.style.width = '150px'; cv.style.height = '270px';
+    cv.width = 220 * dpr; cv.height = 340 * dpr;
+    cv.style.width = '220px'; cv.style.height = '340px';
     const sc = zoneScores();
     drawBody(cv, sc);
     let x0 = null, raf = 0;

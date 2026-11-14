@@ -3,6 +3,26 @@
 
   const ROUTINES = window.ROUTINES || [];
   const ALT = {};
+  // Zona concreta de cada ejercicio: solo los que comparten grupo Y zona aparecen como «Recomendado».
+  const ZONE = {
+    'Press de banca inclinado (mancuerna)': 'pecho superior', 'Aperturas en polea de abajo arriba': 'pecho superior',
+    'Mariposa (Pec Deck)': 'pecho medio', 'Cables cruzados (de arriba abajo)': 'pecho inferior',
+    'Elevación lateral (cable)': 'hombro lateral', 'Elevación lateral sentado en polea': 'hombro lateral', 'Elevación lateral y frontal con mancuerna': 'hombro lateral',
+    'Elevación frontal con barra (cable)': 'hombro frontal',
+    'Pájaro en polea (deltoides posterior)': 'hombro posterior', 'Aperturas inversas en polea': 'hombro posterior', 'Face pull en polea': 'hombro posterior',
+    'Rotación externa en polea': 'manguito',
+    'Jalón al pecho (cable)': 'dorsal vertical', 'Jalón al pecho agarre invertido (cable)': 'dorsal vertical', 'Jalón al pecho a un brazo': 'dorsal vertical',
+    'Remo sentado (máquina)': 'espalda horizontal', 'Remo inclinado (barra)': 'espalda horizontal', 'Remo en máquina (iso)': 'espalda horizontal',
+    'Jalón de tríceps con barra V (polea)': 'tríceps jalón', 'Jalón de tríceps con cuerda': 'tríceps jalón',
+    'Extensión de tríceps por encima de la cabeza (cable)': 'tríceps extensión', 'Patada de tríceps con mancuerna': 'tríceps extensión',
+    'Extensión de pierna': 'cuádriceps aislado', 'Press de piernas': 'cuádriceps compuesto',
+    'Curl de bíceps (mancuerna)': 'bíceps curl', 'Curl de bíceps inclinado (mancuerna)': 'bíceps inclinado', 'Curl martillo (mancuerna)': 'bíceps martillo', 'Curl predicador (máquina)': 'bíceps predicador'
+  };
+  const groupOf = n => { const i = (window.EXINFO || {})[n]; return i && i.m && i.m[0] ? i.m[0] : null; };
+  const allNames = [...new Set(ROUTINES.flatMap(r => r.exercises.map(e => e.name)))];
+  const candidatesOf = base => allNames.filter(n => n !== base && groupOf(n) && groupOf(n) === groupOf(base))
+    .sort((a, b) => (isRec(base, a) ? 0 : 1) - (isRec(base, b) ? 0 : 1));
+  const isRec = (base, n) => !!ZONE[base] && ZONE[base] === ZONE[n];
   ROUTINES.forEach(r => r.exercises.forEach(e => { if (e.alt) ALT[e.name] = e.alt; }));
   const K = { s: 'gym.sessions', a: 'gym.active', b: 'gym.body', d: 'gym.diet', p: 'gym.profile', n: 'gym.push' };
 
@@ -258,22 +278,23 @@
     render(); await syncNow();
   }
 
-  function swapPage(base, cur, list, planOf) {
+  function swapPage(base, cur, list, planOf, isRecFn) {
     return new Promise(resolve => {
       const o = document.createElement('div');
       o.className = 'fpage';
       const row = (n, tag) => {
         const i = exInfo(n);
-        return `<button class="swr ${n === cur ? 'sel' : ''}" data-n="${esc(n)}">
+        const label = n === cur ? '✓ Actual' : (isRecFn(base, n) ? 'Recomendado' : tag);
+        return `<button class="swr ${n === cur ? 'sel' : ''} ${isRecFn(base, n) && n !== cur ? 'rec' : ''}" data-n="${esc(n)}">
           <div class="swt"><div class="en"><b>${esc(n)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small>
           <span class="plan">${esc(planOf(n))}</span></div>
-          <span class="es">${n === cur ? '✓ Actual' : tag}</span></div>
+          <span class="es">${label}</span></div>
           ${i && i.img ? `<div class="swi"><img loading="lazy" alt="" src="${imgSrc(i, 0)}"><img loading="lazy" alt="" src="${imgSrc(i, 1)}"></div>` : ''}</button>`;
       };
       o.innerHTML = `<div class="fhead"><button class="btn small" data-close="1">‹ Volver</button><b>Cambiar ejercicio</b></div>
         <p class="muted" style="margin:6px 4px 12px"><small>Elige un sustituto. La sesión guarda el que elijas.</small></p>
         <h2>Original</h2>${row(base, 'Elegir')}
-        <h2>Alternativas</h2>${list.map(n => row(n, 'Elegir')).join('')}`;
+        <h2>Mismo grupo: ${esc(groupOf(base) || '')}</h2>${list.map(n => row(n, 'Elegir')).join('')}`;
       const done = v => { document.body.removeChild(o); resolve(v); };
       o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
       o.addEventListener('click', ev => {
@@ -610,7 +631,7 @@
           <button class="btn small" data-act="delSet">− Serie</button>
           <button class="btn small danger" data-act="delEx">Quitar</button>
         </div>
-        ${ALT[ex.orig || ex.name] ? `<button class="btn full" style="margin-top:8px" data-act="swapEx" data-e="${ei}">Cambiar ejercicio</button>` : ''}
+        ${candidatesOf(ex.orig || ex.name).length ? `<button class="btn full" style="margin-top:8px" data-act="swapEx" data-e="${ei}">Cambiar ejercicio</button>` : ''}
       </section>`;
     }).join('');
     return `<div class="ahead fixtop"><div><div class="atitle">${esc(active.name)}</div>
@@ -1030,11 +1051,11 @@
     else if (a === 'addSet') { active.exercises[ei].sets.push({ t: 'N', kg: '', reps: '', done: false }); persist(); render(); }
     else if (a === 'delSet') { const ss = active.exercises[ei].sets; if (ss.length > 1) ss.pop(); persist(); render(); }
     else if (a === 'swapEx') {
-      const ex = active.exercises[ei], base = ex.orig || ex.name, list = ALT[base] || [];
+      const ex = active.exercises[ei], base = ex.orig || ex.name, list = candidatesOf(base);
       const op = ex.origPlan || { n: ex.sets.length, w: ex.sets.filter(x => x.t === 'W').length, reps: ex.reps, rest: ex.rest };
       const AP = window.ALT_PLAN || {};
       const txt = n => n === base ? `${op.n - op.w} series × ${op.reps || '–'} reps${op.w ? ' + ' + op.w + ' calent.' : ''}` : (AP[n] ? `${AP[n].sets} series × ${AP[n].reps} reps` : '');
-      const pick = await swapPage(base, ex.name, list, txt);
+      const pick = await swapPage(base, ex.name, list, txt, isRec);
       if (pick && pick !== ex.name) {
         if (!ex.origPlan) ex.origPlan = op;
         const np = pick === base ? { n: op.n, w: op.w, reps: op.reps, rest: op.rest } : (AP[pick] ? { n: AP[pick].sets, w: 0, reps: AP[pick].reps, rest: AP[pick].rest } : null);

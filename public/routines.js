@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta o carrera que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-14r';
+window.ROUTINES_VERSION = '2026-11-14s';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -82,7 +82,7 @@ window.ROUTINES = [
     short: 'Pecho, hombro y tríceps',
     exercises: [
       { name: 'Press de banca inclinado (mancuerna)', alt: ["Aperturas en polea de abajo arriba"], sets: 5, warmup: 2, reps: '8-12', rest: 120 },
-      { name: 'Aperturas en polea de abajo arriba', sets: 3, reps: '10-15', rest: 90 },
+      { name: 'Mariposa (Pec Deck)', sets: 3, reps: '10-15', rest: 90 },
       { name: 'Aperturas inversas en polea', alt: ["Pájaro en polea (deltoides posterior)"], sets: 4, reps: '12-20', rest: 75 },
       { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Pájaro en polea (deltoides posterior)"], sets: 4, reps: '10-15', rest: 75 },
       { name: 'Jalón de tríceps con cuerda', sets: 3, reps: '10-15', rest: 75 },

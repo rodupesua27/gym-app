@@ -1,7 +1,8 @@
 (function () {
   'use strict';
 
-  const ROUTINES = window.ROUTINES || [];
+  let ROUTINES = window.ROUTINES || [];
+  try { if (ROUTINES.length) localStorage.setItem('gym.routinesCache', JSON.stringify(ROUTINES)); else ROUTINES = JSON.parse(localStorage.getItem('gym.routinesCache') || '[]'); } catch (e) {}
   const ALT = {};
   // Zona concreta de cada ejercicio: solo los que comparten grupo Y zona aparecen como «Recomendado».
   const ZONE = {
@@ -1066,7 +1067,7 @@
       const t0 = new Date(); t0.setHours(0, 0, 0, 0);
       const dd = Math.round((nd - t0) / 86400000);
       const fd = nd.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-      nextW = `<div class="nextw"><small class="muted">Próximo pesaje</small><b>${fd}</b><small class="muted">${dd > 1 ? 'en ' + dd + ' días' : dd === 1 ? 'mañana' : dd === 0 ? 'hoy' : 'toca ya · hace ' + (-dd) + (dd === -1 ? ' día' : ' días')}</small></div>`;
+      nextW = `<div class="nextw"><div class="row between"><small class="muted">Próximo pesaje</small><small class="nwd">${dd > 1 ? 'en ' + dd + ' días' : dd === 1 ? 'mañana' : dd === 0 ? 'hoy' : 'toca ya · hace ' + (-dd) + (dd === -1 ? ' día' : ' días')}</small></div><b>${fd}</b></div>`;
     }
     return `<h1>Progreso</h1>
       <h2 style="margin-top:0">Medidas corporales</h2>

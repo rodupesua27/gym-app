@@ -635,7 +635,7 @@
     g += `<polygon points="${poly2(sc)}" fill="rgba(123,30,43,.5)" stroke="#cc4560" stroke-width="2" stroke-linejoin="round"/>`;
     g += AXES.map(([z, d]) => { const [x, y] = pt(d, R + 16); const anc = Math.abs(Math.cos(d * Math.PI / 180)) < .2 ? 'middle' : Math.cos(d * Math.PI / 180) > 0 ? 'start' : 'end'; const dx = anc === 'start' ? -8 : anc === 'end' ? 8 : 0;
       return `<text x="${x + dx}" y="${y + 4}" text-anchor="${anc}" font-size="11" fill="#9a9aa2">${z}</text>`; }).join('');
-    return `<svg viewBox="0 0 200 190" class="radar" aria-label="Fuerza por zona">${g}</svg>`;
+    return `<svg viewBox="-16 0 232 190" class="radar" aria-label="Fuerza por zona">${g}</svg>`;
   }
   function bodyCard() {
     const sc = zoneScores();

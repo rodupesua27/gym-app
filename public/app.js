@@ -566,10 +566,10 @@
     for (let k = 0; k < 4; k++) if (r <= st[k + 1]) return LV[k] + (r - st[k]) / (st[k + 1] - st[k]) * (LV[k + 1] - LV[k]);
     return Math.min(8, 7 + (r - st[4]) / (st[4] * 0.3));
   }
-  function rmOf(name) {
+  function rmOf(name, at) {
     let m = 0;
     sessions.forEach(ss => ss.exercises.forEach(x => {
-      if (x.name !== name) return;
+      if (x.name !== name || (at && ss.start > at)) return;
       x.sets.forEach(s => { const kg = +s.kg || 0, reps = +s.reps || 0; if (s.t === 'N' && kg > 0 && reps >= 1 && reps <= 12) m = Math.max(m, epley(kg, reps)); });
     }));
     return m;
@@ -611,26 +611,28 @@
     Hombros: 'Hombros', 'Bíceps': 'Brazos', 'Tríceps': 'Brazos', Antebrazos: 'Brazos', Abdominales: 'Core',
     'Cuádriceps': 'Piernas', Isquios: 'Piernas', Abductores: 'Piernas', Aductores: 'Piernas', 'Glúteos': 'Piernas', Gemelos: 'Piernas' };
   // Nivel de fuerza (0-8, misma escala que el rango) por zona: media de los ejercicios con tabla de esa zona.
-  function zoneScores() {
-    const last = body.length ? body.slice().sort((x, y) => x.ts - y.ts)[body.length - 1] : null;
+  function zoneScores(at) {
+    const bs = body.slice().sort((x, y) => x.ts - y.ts);
+    const last = at ? (bs.filter(b => b.ts <= at).pop() || bs[0]) : bs[bs.length - 1];
     const bw = last ? +last.kg : 0;
     const acc = {};
     if (bw > 20) Object.keys(STD).forEach(n => {
-      const rm = rmOf(n), z = AXOF[groupOf(n)];
+      const rm = rmOf(n, at), z = AXOF[groupOf(n)];
       if (rm && z) (acc[z] = acc[z] || []).push(vOf(rm / bw, STD[n]));
     });
     const out = {};
     AXES.forEach(([z]) => { out[z] = acc[z] ? acc[z].reduce((a, b) => a + b, 0) / acc[z].length : null; });
     return out;
   }
-  function radarSvg(sc) {
+  function radarSvg(sc, prev) {
     const cx = 100, cy = 95, R = 62, MAX = 8;
     const pt = (deg, r) => { const a = deg * Math.PI / 180; return [cx + Math.cos(a) * r, cy + Math.sin(a) * r]; };
     const poly = r => AXES.map(([, d]) => pt(d, r).join(',')).join(' ');
     let g = [1, 2, 3, 4].map(k => `<polygon points="${poly(R * k / 4)}" fill="none" stroke="#2a2a2e" stroke-width="1"/>`).join('');
     g += AXES.map(([, d]) => { const [x, y] = pt(d, R); return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#2a2a2e" stroke-width="1"/>`; }).join('');
-    const pts = AXES.map(([z, d]) => pt(d, R * Math.min(1, Math.max(0.04, (sc[z] || 0) / MAX))).join(',')).join(' ');
-    g += `<polygon points="${pts}" fill="rgba(123,30,43,.5)" stroke="#cc4560" stroke-width="2" stroke-linejoin="round"/>`;
+    const poly2 = o => AXES.map(([z, d]) => pt(d, R * Math.min(1, Math.max(0.04, (o[z] || 0) / MAX))).join(',')).join(' ');
+    if (prev) g += `<polygon points="${poly2(prev)}" fill="rgba(200,200,210,.14)" stroke="#a9a9b3" stroke-width="2" stroke-linejoin="round"/>`;
+    g += `<polygon points="${poly2(sc)}" fill="rgba(123,30,43,.5)" stroke="#cc4560" stroke-width="2" stroke-linejoin="round"/>`;
     g += AXES.map(([z, d]) => { const [x, y] = pt(d, R + 16); const anc = Math.abs(Math.cos(d * Math.PI / 180)) < .2 ? 'middle' : Math.cos(d * Math.PI / 180) > 0 ? 'start' : 'end'; const dx = anc === 'start' ? -8 : anc === 'end' ? 8 : 0;
       return `<text x="${x + dx}" y="${y + 4}" text-anchor="${anc}" font-size="11" fill="#9a9aa2">${z}</text>`; }).join('');
     return `<svg viewBox="0 0 200 190" class="radar" aria-label="Fuerza por zona">${g}</svg>`;
@@ -1024,6 +1026,23 @@
     return `<button class="brow" data-act="openBody" data-ts="${b.ts}"><div class="row between"><span>${dShort(b.ts)} ${new Date(b.ts).getFullYear()}</span><b>${kgTxt(b.kg)} kg</b></div>${ex ? `<small class="muted">${ex}</small>` : ''}</button>`;
   }
 
+  // Comparación de fuerza por zona con tu yo de hace 1, 3 o 9 meses
+  let cmpM = 1;
+  function radarCard() {
+    const now = zoneScores();
+    const at = cmpM ? Date.now() - cmpM * 30.44 * 86400000 : 0;
+    const hasPrev = cmpM && sessions.some(x => x.start <= at);
+    const prev = hasPrev ? zoneScores(at) : null;
+    const lbl = cmpM === 1 ? 'Hace 1 mes' : 'Hace ' + cmpM + ' meses';
+    const chips = [1, 3, 9].map(m => `<button class="chip ${m === cmpM ? 'on' : ''}" data-act="cmp" data-m="${m}">${m === 1 ? '1 mes' : m + ' meses'}</button>`).join('');
+    return `<h2>Fuerza por zona</h2><section class="card radcard" style="cursor:default">
+      <small class="muted">Compárate con tu yo de hace…</small>
+      <div class="chips" style="margin:8px 0 4px">${chips}</div>
+      ${radarSvg(now, prev)}
+      <div class="rleg"><span><i style="background:#cc4560"></i>Ahora</span>${cmpM ? `<span><i style="background:#a9a9b3"></i>${lbl}</span>` : ''}</div>
+      ${cmpM && !hasPrev ? `<small class="muted">Todavía no hay entrenos de ${lbl.toLowerCase()} para comparar.</small>` : ''}</section>`;
+  }
+
   function viewProgreso() {
     const last7 = body.slice(-7);
     const avg = last7.length ? last7.reduce((a, b) => a + b.kg, 0) / last7.length : null;
@@ -1073,6 +1092,7 @@
       <h2>Registros</h2>
       ${list.length ? list.map(bodyRow).join('') : '<p class="muted">Todavía no hay registros.</p>'}
       ${body.length > 8 ? `<button class="btn full" style="margin-top:8px" data-act="bAll">${bAll ? 'Ver menos' : 'Ver todos (' + body.length + ')'}</button>` : ''}
+      ${radarCard()}
       <h2>Historial</h2>
       <button class="btn full" style="margin-bottom:10px" data-act="pastAdd">+ Registrar entreno pasado</button>
       ${sessions.length ? sessions.slice().reverse().map(s => `<button class="sess" data-act="openSession" data-id="${s.id}">
@@ -1388,6 +1408,7 @@
     else if (a === 'cancelBody') { bDraft = null; render(); }
     else if (a === 'bmetric') { bmetric = t.dataset.k; render(); }
     else if (a === 'bAll') { bAll = !bAll; render(); }
+    else if (a === 'cmp') { const m = +t.dataset.m; cmpM = cmpM === m ? 0 : m; render(); }
     else if (a === 'openBody') {
       const b = body.find(x => String(x.ts) === t.dataset.ts);
       if (!b) return;

@@ -389,3 +389,6 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .bodyc { margin-bottom: 14px; }
 .bodyc canvas { display: block; touch-action: pan-y; cursor: grab; }
 .bodyc .radar { width: 100%; height: auto; display: block; }
+
+/* Más aire entre bloques de Registro */
+.card.rank, .card.bodyc { margin-bottom: 22px; }

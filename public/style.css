@@ -20,7 +20,6 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 #view { padding: calc(16px + env(safe-area-inset-top)) 16px calc(var(--tabh) + 110px + env(safe-area-inset-bottom)); max-width: 640px; margin: 0 auto; }
-#view:has(.ahead.fixtop) { padding-top: 0; }
 h1 { font-size: 34px; font-weight: 800; letter-spacing: -.02em; margin: 6px 0 18px; }
 h2 { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin: 26px 0 10px; }
 h3 { margin: 0 0 8px; font-size: 20px; }
@@ -344,10 +343,9 @@ body { height: 100%; box-sizing: border-box; overflow-y: auto; overflow-x: hidde
 body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* Cabecera del entreno anclada arriba: tapa lo que haya por encima y por debajo, sin huecos */
-.ahead.fixtop { position: sticky; top: 0; margin: 0 auto !important; max-width: 640px; width: auto; z-index: 15; background: var(--bg); padding-top: calc(10px + env(safe-area-inset-top)); margin-bottom: 0 !important; border-bottom: 1px solid var(--line); }
-.ahead.fixtop::before { content: ''; position: absolute; left: 0; right: 0; top: -80px; height: 80px; background: var(--bg); }
-.ahead.fixtop::after { content: ''; position: absolute; left: 0; right: 0; bottom: -10px; height: 10px; background: var(--bg); }
-.ahead-sp { height: 0; }
+/* Compensa el padding superior de #view (sin :has, que algunos iOS antiguos no leen) */
+.ahead.fixtop { position: sticky; top: 0; margin: calc(-16px - env(safe-area-inset-top)) auto 0 !important; max-width: 640px; width: auto; z-index: 15; background: var(--bg); padding-top: calc(8px + env(safe-area-inset-top)); margin-bottom: 0 !important; border-bottom: 1px solid var(--line); }
+.ahead-sp { height: 14px; }
 
 /* Cambiar ejercicio: mismo espaciado que las sesiones pasadas */
 .fpage .swr { margin-bottom: 14px; border-radius: 18px; }

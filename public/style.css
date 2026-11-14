@@ -374,5 +374,5 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* Récords dentro de las tarjetas de sesión */
 .prline { margin-top: 8px; display: grid; gap: 4px; font-size: 13px; }
-.prline span { display: block; }
+.prline span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .prline .trf { width: 12px; height: 12px; vertical-align: -1px; margin-right: 4px; fill: var(--accent-text); }

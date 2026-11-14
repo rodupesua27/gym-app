@@ -637,7 +637,15 @@
       ${recent.length ? recent.map(s => `<button class="sess" data-act="openSession" data-id="${s.id}"><div class="row between"><div><b>${esc(s.name)}</b><br><small>${dShort(s.start)} · ${s.exercises.length} ejercicios · ${Math.round((s.end - s.start) / 60000)} min</small></div><span class="pill">${sessPill(s)}</span></div>${prLine(s)}</button>`).join('') : '<p class="muted">Todavía no has registrado ningún entrenamiento.</p>'}`;
   }
 
-  const prLine = s => { const p = prsOf(s); return p.length ? `<div class="prline">${p.map(x => `<span>${TROPHY}${esc(x.name)} <small class="muted">${x.lines.map(esc).join(' · ')}</small></span>`).join('')}</div>` : ''; };
+  // Una fila por tipo de récord: nombre corto (sin paréntesis) y solo el tipo
+  const prLine = s => {
+    const rows = [];
+    prsOf(s).forEach(x => {
+      const short = x.name.replace(/\s*\(.*?\)/g, '').trim();
+      x.lines.forEach(l => rows.push(`<span>${TROPHY}${esc(short)} <small class="muted">· ${l.startsWith('Mayor peso') ? 'Mayor peso' : 'Mayor volumen'}</small></span>`));
+    });
+    return rows.length ? `<div class="prline">${rows.join('')}</div>` : '';
+  };
   const sessPill = s => { const v = volOf(s.exercises, false); return s.cardio ? (v > 0 ? 'Cardio · ' + thousands(v) + ' kg' : 'Cardio') : thousands(v) + ' kg'; };
 
   function cardioCard(c, live) {

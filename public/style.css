@@ -350,5 +350,5 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .ahead-sp { height: 0; }
 
 /* Cambiar ejercicio: mismo espaciado que las sesiones pasadas */
-.fpage .swr { margin-bottom: 8px; border-radius: 14px; }
+.fpage .swr { margin-bottom: 14px; border-radius: 18px; }
 .fpage .swr.rec .es { color: var(--accent-text); font-weight: 600; }

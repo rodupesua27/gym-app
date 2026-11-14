@@ -65,7 +65,7 @@
   const isoDay = ts => { const d = new Date(ts); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
   const persist = () => save(K.a, active);
 
-  const setVol = s => (s.t === 'N' ? (num(s.kg) || 0) * (num(s.reps) || 0) : 0);
+  const setVol = s => (num(s.kg) || 0) * (num(s.reps) || 0);
   const volOf = (exs, onlyDone) => {
     let v = 0;
     exs.forEach(e => e.sets.forEach(s => { if (!onlyDone || s.done) v += setVol(s); }));

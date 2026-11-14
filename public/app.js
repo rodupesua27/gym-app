@@ -534,6 +534,11 @@
   // principiante = Bronce 2, novato = Plata 2, intermedio = Oro 2, avanzado = Diamante 2, élite = Inmortal 1, Radiante = 30 % por encima de élite.
   const STD = {
     'Press de banca inclinado (mancuerna)': [0.25, 0.35, 0.50, 0.65, 0.85],
+    // Hombros: tabla de elevación lateral con mancuerna de StrengthLevel (hombres) usada como referencia aproximada para las variantes en polea
+    'Elevación lateral (cable)': [0.05, 0.10, 0.20, 0.30, 0.45],
+    'Elevación frontal con barra (cable)': [0.05, 0.11, 0.21, 0.32, 0.48],
+    'Pájaro en polea (deltoides posterior)': [0.05, 0.10, 0.20, 0.30, 0.45],
+    'Aperturas inversas en polea': [0.05, 0.10, 0.20, 0.30, 0.45],
     'Jalón al pecho (cable)': [0.50, 0.75, 1.00, 1.50, 1.75],
     'Extensión de pierna': [0.50, 1.00, 1.25, 1.75, 2.50],
     'Curl de bíceps (mancuerna)': [0.10, 0.15, 0.30, 0.40, 0.55],

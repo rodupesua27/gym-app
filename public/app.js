@@ -44,6 +44,7 @@
   let bmetric = 'kg', bAll = false, bDraft = null;
   let tab = 'registro';
   let lastTab = null;
+  let overview = false;
   let openId = null;
 
   const $view = document.getElementById('view');
@@ -496,7 +497,7 @@
     });
     const ses = { id: active.id, routineId: active.routineId, name: active.name, start: active.start, end, exercises: exs, cardio };
     sessions.push(ses); save(K.s, sessions);
-    active = null; persist(); tab = 'registro'; render();
+    active = null; overview = false; persist(); tab = 'registro'; render();
     const nsets = exs.reduce((n, e) => n + e.sets.length, 0);
     await sheet(
       `<h3>¡Entrenamiento guardado!</h3><p>${dur((end - ses.start) / 1000)} · ${cardio ? 'Cardio ✓ · ' : ''}${thousands(volOf(exs, false))} kg · ${nsets} series</p>` +
@@ -579,7 +580,7 @@
   }
 
   function viewRegistro() {
-    if (active) return viewActive();
+    if (active && !overview) return viewActive();
     const now = new Date();
     const todayIso = isoDay(now);
     const mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
@@ -656,7 +657,7 @@
         ${candidatesOf(ex.orig || ex.name).length ? `<button class="btn full" style="margin-top:8px" data-act="swapEx" data-e="${ei}">Cambiar ejercicio</button>` : ''}
       </section>`;
     }).join('');
-    return `<div class="ahead fixtop"><div><div class="atitle">${esc(active.name)}</div>
+    return `<button class="btn small full" style="margin-bottom:10px" data-act="overview">Ver registro</button><div class="ahead fixtop"><div><div class="atitle">${esc(active.name)}</div>
         <div class="asub"><span id="elapsed">${dur((Date.now() - active.start) / 1000)}</span> · <span id="vol">${thousands(volOf(active.exercises, true))}</span> kg · <span id="nsets">${done}</span>/${total} series · <span id="ppct">${total ? Math.round(done * 100 / total) : 0} %</span></div></div>
         <button class="btn accent" data-act="finish">Terminar</button>
         <div class="pbar"><i id="pbar" style="width:${total ? Math.round(done * 100 / total) : 0}%"></i></div></div>
@@ -938,6 +939,7 @@
   }
 
   function render() {
+    if (!active) overview = false;
     const order = ['registro', 'rutinas', 'dieta', 'progreso'];
     if (!$tabs.querySelector('.ind')) $tabs.insertAdjacentHTML('afterbegin', '<i class="ind"></i>');
     $tabs.querySelectorAll('button').forEach(b => b.remove());
@@ -945,8 +947,8 @@
       `<button class="${tab === t ? 'on' : ''}" data-act="tab" data-t="${t}">${ICON[t]}<span>${t[0].toUpperCase() + t.slice(1)}</span></button>`).join(''));
     $tabs.style.setProperty('--ti', order.indexOf(tab));
     let html = '';
-    if (active && tab !== 'registro') {
-      html += `<button class="banner" data-act="tab" data-t="registro"><span>Entrenamiento en curso</span><span>Volver →</span></button>`;
+    if (active && (tab !== 'registro' || overview)) {
+      html += `<button class="banner" data-act="backActive"><span>Entrenamiento en curso</span><span>Volver →</span></button>`;
     }
     html += tab === 'registro' ? viewRegistro() : tab === 'rutinas' ? viewRutinas() : tab === 'dieta' ? viewDieta() : viewProgreso();
     const old = $view.innerHTML, oldTab = lastTab;
@@ -1035,9 +1037,11 @@
     const ei = wrap ? +wrap.dataset.e : -1;
     const si = t.closest('.set') ? +t.closest('.set').dataset.s : -1;
 
-    if (a === 'tab') { tab = t.dataset.t; render(); toTop(); }
+    if (a === 'tab') { tab = t.dataset.t; overview = !!active && tab === 'registro'; render(); toTop(); }
+    else if (a === 'overview') { overview = true; render(); toTop(); }
+    else if (a === 'backActive') { overview = false; tab = 'registro'; render(); toTop(); }
     else if (a === 'start') {
-      if (active) { tab = 'registro'; render(); return; }
+      if (active) { tab = 'registro'; overview = false; render(); return; }
       startFrom(t.dataset.id === 'free' ? null : ROUTINES.find(r => r.id === t.dataset.id));
       toTop();
     }

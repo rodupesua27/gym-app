@@ -911,20 +911,22 @@
       if (oldTab !== null && old && $view.parentNode && $view.getBoundingClientRect) {
         const r = $view.getBoundingClientRect(), g = document.createElement('div');
         g.className = 'ghost';
-        g.style.cssText = `top:${r.top}px;left:${r.left}px;width:${r.width}px;--gdir:${order.indexOf(tab) > order.indexOf(oldTab) ? -1 : 1};--dur:${Math.abs(order.indexOf(tab) - order.indexOf(oldTab)) > 1 ? '.3s' : '.42s'}`;
+        g.style.cssText = `top:${r.top}px;left:${r.left}px;width:${r.width}px;--gdir:${order.indexOf(tab) > order.indexOf(oldTab) ? -1 : 1};--dur:${Math.abs(order.indexOf(tab) - order.indexOf(oldTab)) > 1 ? '.38s' : '.52s'}`;
         g.innerHTML = old;
         $view.parentNode.appendChild(g);
-        setTimeout(() => g.remove(), 460);
+        setTimeout(() => g.remove(), 560);
       }
       const from = order.indexOf(lastTab), to = order.indexOf(tab), jump = Math.abs(to - from);
       $view.style.setProperty('--dir', lastTab === null || to > from ? 1 : -1);
-      $view.style.setProperty('--dur', jump > 1 ? '.3s' : '.42s');
+      $view.style.setProperty('--dur', jump > 1 ? '.38s' : '.52s');
       lastTab = tab;
       $view.classList.remove('enter'); void $view.offsetWidth; $view.classList.add('enter');
     }
     renderRest();
     keepAwake();
   }
+
+  const toTop = () => { try { document.body.scrollTop = 0; window.scrollTo(0, 0); } catch (e) {} };
 
   // ---------- deslizar para cambiar de pestaña ----------
   (function () {
@@ -943,7 +945,7 @@
       ok = false;
       const i = ORDER.indexOf(tab), n = i + (dx < 0 ? 1 : -1);
       if (n < 0 || n >= ORDER.length) return;
-      tab = ORDER[n]; render(); window.scrollTo(0, 0);
+      tab = ORDER[n]; render(); toTop();
     };
     document.addEventListener('touchmove', ev => { const t = ev.touches[0]; go(t.clientX, t.clientY); }, { passive: true });
     document.addEventListener('touchend', () => { ok = false; }, { passive: true });
@@ -989,11 +991,11 @@
     const ei = wrap ? +wrap.dataset.e : -1;
     const si = t.closest('.set') ? +t.closest('.set').dataset.s : -1;
 
-    if (a === 'tab') { tab = t.dataset.t; render(); window.scrollTo(0, 0); }
+    if (a === 'tab') { tab = t.dataset.t; render(); toTop(); }
     else if (a === 'start') {
       if (active) { tab = 'registro'; render(); return; }
       startFrom(t.dataset.id === 'free' ? null : ROUTINES.find(r => r.id === t.dataset.id));
-      window.scrollTo(0, 0);
+      toTop();
     }
     else if (a === 'toggleType') { const s = active.exercises[ei].sets[si]; s.t = s.t === 'W' ? 'N' : 'W'; persist(); render(); }
     else if (a === 'check') {
@@ -1111,7 +1113,7 @@
       const r = await sheet(`<h3>${dShort(b.ts)} ${new Date(b.ts).getFullYear()}</h3>${rows}`,
         [{ label: 'Borrar', v: 'del' }, { label: 'Editar', v: 'edit' }, { label: 'Cerrar', cls: 'accent', v: false }]);
       if (r === 'del') { body = body.filter(x => x !== b); save(K.b, body); render(); }
-      else if (r === 'edit') { bDraft = b; render(); window.scrollTo(0, 0); }
+      else if (r === 'edit') { bDraft = b; render(); toTop(); }
     }
     else if (a === 'toggleR') { openR = openR === t.dataset.id ? null : t.dataset.id; render(); }
     else if (a === 'exinfo') exSheet(t.dataset.ex);

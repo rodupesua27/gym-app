@@ -948,7 +948,7 @@
     $tabs.style.setProperty('--ti', order.indexOf(tab));
     let html = '';
     if (active && (tab !== 'registro' || overview)) {
-      html += `<button class="banner" data-act="backActive"><span>Entrenamiento en curso</span><span>Volver →</span></button>`;
+      html += `<div class="bsticky"><button class="banner" data-act="backActive"><span>Entrenamiento en curso</span><span>Volver →</span></button></div>`;
     }
     html += tab === 'registro' ? viewRegistro() : tab === 'rutinas' ? viewRutinas() : tab === 'dieta' ? viewDieta() : viewProgreso();
     const old = $view.innerHTML, oldTab = lastTab;

@@ -11,38 +11,38 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="icon" type="image/png" href="/icon-192.png">
-<link rel="stylesheet" href="/style.css?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz">
+<link rel="stylesheet" href="/style.css?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz">
 <title>Gym</title>
 <style>#splash{position:fixed;inset:0;z-index:99999;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity .5s ease}#splash.out{opacity:0;pointer-events:none}#splash video{width:min(100vw,100vh,960px);height:min(100vw,100vh,960px);object-fit:contain;background:#000;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 12%,#000 88%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 12%,#000 88%,transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent 0,#000 12%,#000 88%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 12%,#000 88%,transparent 100%);mask-composite:intersect}</style>
 </head>
 <body>
-<div id="splash"><video id="splashv" src="/splash3.mp4" poster="/splash3.jpg" muted playsinline autoplay preload="auto"></video></div>
+<div id="splash"><video id="splashv" src="/splash4.mp4" poster="/splash4.jpg" muted playsinline autoplay preload="auto"></video></div>
 <script>
 (function(){
   var sp=document.getElementById('splash'),v=document.getElementById('splashv');
   if(!sp)return;
-  var ready=false,ended=false,gone=false,last=-1,still=0;
-  function hide(){ if(gone)return; gone=true; sp.classList.add('out'); setTimeout(function(){ if(sp.parentNode)sp.parentNode.removeChild(sp); },600); }
-  function check(){ if(ready&&ended)hide(); }
-  window.addEventListener('load',function(){ ready=true; check(); });
-  v.addEventListener('ended',function(){ ended=true; check(); });
-  sp.addEventListener('click',function(){ ended=true; check(); });
-  // Si el vídeo se queda parado (red lenta o iOS lo bloquea), no lo cortamos antes de tiempo: esperamos a que avance
-  setInterval(function(){
-    if(gone||ended)return;
-    if(v.currentTime>last+0.05){ last=v.currentTime; still=0; } else { still++; }
-    if(still>=12){ ended=true; check(); }
-  },500);
-  var pr=v.play&&v.play(); if(pr&&pr.catch)pr.catch(function(){ setTimeout(function(){ ended=true; check(); },2500); });
-  setTimeout(hide,25000);
+  var t0=Date.now(),gone=false,lastT=-1,stillMs=0;
+  function hide(){ if(gone)return; gone=true; sp.classList.add('out'); setTimeout(function(){ if(sp.parentNode)sp.parentNode.removeChild(sp); },500); }
+  v.addEventListener('ended',hide);
+  sp.addEventListener('click',hide);
+  v.addEventListener('error',hide);
+  // No esperamos a que cargue toda la página: la app se ve en cuanto acaba el vídeo o si se atasca
+  var timer=setInterval(function(){
+    if(gone){ clearInterval(timer); return; }
+    var el=Date.now()-t0;
+    if(v.currentTime>lastT+0.02){ lastT=v.currentTime; stillMs=0; } else { stillMs+=250; }
+    if(stillMs>=1500 && el>1500) hide();   // vídeo congelado o sin cargar
+    if(el>=4800) hide();                    // tope absoluto
+  },250);
+  var pr=v.play&&v.play(); if(pr&&pr.catch)pr.catch(hide);
 })();
 </script>
 <main id="view"></main>
 <div id="restbar"></div>
 <nav id="tabs"></nav>
-<script src="/routines.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
-<script src="/diet.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
-<script src="/exinfo.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
-<script src="/app.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/routines.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/diet.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/exinfo.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/app.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
 </body>
 </html>

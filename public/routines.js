@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta o carrera que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-15z';
+window.ROUTINES_VERSION = '2026-11-15aa';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -56,11 +56,11 @@ window.ROUTINES = [
     day: 'Jueves',
     badge: '4',
     name: 'Día 4',
-    short: 'Abdomen y cinta',
+    short: 'Abdomen, lumbar y cinta',
     cardio: {
       title: 'Cinta zona 2',
       min: 35,
-      tip: 'Primero el abdomen y después la cinta. Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez.',
+      tip: 'Primero el abdomen y la zona lumbar, y después la cinta. Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez.',
       blocks: [
         { name: 'Cinta · calentamiento', min: 5, desc: '4 km/h · 3 % de inclinación' },
         { name: 'Cinta · parte principal', min: 25, desc: '5,5 km/h · 6 % de inclinación' },
@@ -68,10 +68,12 @@ window.ROUTINES = [
       ]
     },
     exercises: [
-      { name: 'Abdominal corto con cable', sets: 5, warmup: 2, reps: '12-15', rest: 60 },
+      { name: 'Abdominal corto con cable', sets: 4, warmup: 2, reps: '12-15', rest: 60 },
+      { name: 'Crunch inverso', sets: 3, reps: '12-15', rest: 60 },
       { name: 'Elevación de piernas en máquina (silla romana)', sets: 3, reps: '10-15', rest: 60 },
       { name: 'Flexión lateral en polea (oblicuos)', sets: 3, reps: '12-15', rest: 60 },
-      { name: 'Hiperextensión lumbar', sets: 3, reps: '10-15', rest: 60 }
+      { name: 'Hiperextensión lumbar', sets: 3, reps: '10-15', rest: 60 },
+      { name: 'Plancha', sets: 2, reps: '30-45 s', rest: 45 }
     ]
   },
   {
@@ -110,21 +112,13 @@ window.ROUTINES = [
     day: 'Domingo',
     badge: '7',
     name: 'Día 7',
-    short: 'Abdomen y comba',
-    cardio: {
-      title: 'Comba hasta que no puedas',
-      min: 23,
-      tip: 'Primero el abdomen y después la comba. Salta hasta que no puedas, descansa 10 s y repite hasta llegar al tiempo del bloque. Si fallas mucho, no pasa nada: cuenta lo que aguantes.',
-      blocks: [
-        { name: 'Comba · hasta que no puedas', min: 18, desc: 'Saltar hasta que no puedas + 10 s de descanso, y repetir' },
-        { name: 'Comba · vuelta a la calma', min: 5, desc: 'Andar y estirar' }
-      ]
-    },
+    short: 'Pierna y pantorrilla',
     exercises: [
-      { name: 'Abdominal (máquina)', sets: 5, warmup: 2, reps: '12-15', rest: 60 },
-      { name: 'Crunch inverso', sets: 3, reps: '12-15', rest: 60 },
-      { name: 'Dead bug', sets: 3, reps: '10 por lado', rest: 60 },
-      { name: 'Push-up plus (serrato)', sets: 3, reps: '10-15', rest: 60 }
+      { name: 'Empuje de cadera (máquina)', sets: 4, warmup: 2, reps: '8-10', rest: 120 },
+      { name: 'Extensión de pierna', sets: 3, reps: '10-12', rest: 90 },
+      { name: 'Curl de pierna acostado (máquina)', sets: 4, reps: '10-12', rest: 90 },
+      { name: 'Pantorrilla en prensa, puntas hacia fuera', sets: 4, reps: '10-15', rest: 75 },
+      { name: 'Pantorrilla en prensa, puntas hacia dentro', sets: 3, reps: '9-15', rest: 75 }
     ]
   }
 ];

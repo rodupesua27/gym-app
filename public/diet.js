@@ -2,7 +2,7 @@
 // Todo se hace con sartén y microondas, cocinando cada día.
 // kc / pr: kcal y proteína de cada ingrediente (misma posición que "ingredients").
 // Datos de etiqueta del usuario: Lidl (pan, pollo, yogur y queso Milbona, nata, huevos M), Real Valle (pavo), Tastino (tortillas), Nixe (atún), Hacendado (tomate frito), mayonesa (613 kcal/100 g).
-// Cereales Ultrapop: etiqueta de la caja (30 g = 115 kcal, 2,6 g proteína). Estimaciones: lomo de ternera, mantequilla (sin datos), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, huevo medio entre M y L (60 g: unos 86 kcal y 7,6 g de proteína cada uno).
+// Cereales Ultrapop: etiqueta de la caja (30 g = 115 kcal, 2,6 g proteína). Lomo de ternera Lidl: valores de «Lomo Bajo de Ternera» Lidl (FatSecret, 161 kcal y 21,7 g proteína por 100 g). Estimaciones: mantequilla (sin datos), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, huevo medio entre M y L (60 g: unos 86 kcal y 7,6 g de proteína cada uno).
 window.DIET_TARGET = { kcal: 2700, protein: 120 };
 window.DIET = {
   slots: [
@@ -36,8 +36,8 @@ window.DIET = {
     {
       id: 'd4', slot: 'desayuno', short: 'Bocadillo de lomo', name: 'Bocadillo de lomo de ternera con mayonesa',
       min: 8,
-      ingredients: ['140 g de pan Lidl (bocadillo)', '80 g de lomo de ternera en lonchas (estimación)', '1 cucharada de mayonesa (15 g)'],
-      kc: [379, 112, 92], pr: [11, 17, 0],
+      ingredients: ['140 g de pan Lidl (bocadillo)', '80 g de lomo de ternera Lidl en lonchas', '1 cucharada de mayonesa (15 g)'],
+      kc: [379, 129, 92], pr: [11, 17, 0],
       steps: 'Lomo a la sartén sin aceite, 2-3 min por lado a fuego fuerte, hasta que quede dorado. Monta el bocadillo con la mayonesa.'
     },
     {

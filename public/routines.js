@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta o carrera que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-15ar';
+window.ROUTINES_VERSION = '2026-11-15as';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -58,7 +58,7 @@ window.ROUTINES = [
     name: 'Día 4',
     short: 'Abdomen, lumbar y cinta',
     cardio: {
-      title: 'Cinta zona 2',
+      title: 'Cardio',
       min: 35,
       tip: 'Primero el abdomen y la zona lumbar, y después la cinta. Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez.',
       blocks: [

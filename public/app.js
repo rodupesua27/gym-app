@@ -967,7 +967,7 @@
             <span class="chev">${open ? '▾' : '▸'}</span>
           </div>
           <div class="mchips">${mus.map(([m, n]) => `<span class="mchip">${esc(m)} <b>${n}</b></span>`).join('')}</div>
-          ${open ? `<section class="ccard rbox"><div class="row between"><b>Rutina</b><span class="pill">${r.exercises.length} ejercicios</span></div><div class="elist">${r.exercises.map(e => {
+          ${open ? `<section class="ccard rbox"><div class="elist">${r.exercises.map(e => {
             const i = exInfo(e.name);
             return `<button class="erow" data-act="exinfo" data-ex="${esc(e.name)}">${thumb(e.name, 'th')}
               <div class="en"><b>${esc(e.name)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small></div>

@@ -215,7 +215,8 @@ html, body, button, input, label, summary { touch-action: manipulation; }
 .ccard.done { border-color: var(--accent); background: var(--accent-dim); }
 .rcard .ccard { background: var(--surface2); margin: 10px 0; }
 .cblocks { margin-top: 8px; }
-.rbox .elist { margin: 8px 0 0; border-top: 0; }
+.rbox .elist { margin: 0; border-top: 0; }
+.rbox .erow:first-child { padding-top: 0; }
 .rbox .erow:last-child { border-bottom: 0; }
 .cb { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
 .cb:first-child { border-top: 0; }

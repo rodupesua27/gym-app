@@ -2,7 +2,7 @@
 // cuando pides un cambio y la app lo recoge al abrirse.
 // Orden = semana de lunes a domingo. "cardio": bloques de cinta o carrera que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-15au';
+window.ROUTINES_VERSION = '2026-11-15av';
 window.ROUTINES = [
   {
     id: 'd1',
@@ -101,9 +101,9 @@ window.ROUTINES = [
       { name: 'Jalón al pecho agarre invertido (cable)', sets: 6, warmup: 2, reps: '8-12', rest: 120 },
       { name: 'Remo inclinado (barra)', alt: ["Face pull en polea"], sets: 4, reps: '9-11', rest: 120 },
       { name: 'Encogimiento de hombros (mancuerna)', sets: 3, reps: '10-12', rest: 90 },
+      { name: 'Curl de bíceps (mancuerna)', sets: 3, reps: '8-10', rest: 75 },
       { name: 'Curl martillo (mancuerna)', sets: 3, reps: '8-12', rest: 75 },
       { name: 'Curl de bíceps inclinado (mancuerna)', sets: 3, reps: '8-12', rest: 75 },
-      { name: 'Curl de bíceps (mancuerna)', sets: 3, reps: '8-10', rest: 75 },
       { name: 'Curl de muñeca (polea alta)', sets: 3, reps: '8-15', rest: 60 }
     ]
   },

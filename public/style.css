@@ -418,15 +418,19 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .hbody{animation:hin .3s ease-out both}
 @keyframes hin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 
-/* Selector de ejercicios: lista compacta como el resto de la app, búsqueda fija arriba */
-.xpick { padding-bottom: 50vh; }
-.xtop { position: sticky; top: 0; z-index: 3; background: #000; padding-bottom: 8px; }
-.xhead { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+/* Selector de ejercicios: cabecera fija y lista con scroll propio (sin contenido por detrás) */
+.fpage.xpick { padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+.xtop { flex: none; padding: calc(14px + env(safe-area-inset-top)) 16px 12px; background: #000; border-bottom: 1px solid var(--line); }
+.xhead { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
 .xhead b { font-size: 18px; }
 .xsearch input { width: 100%; box-sizing: border-box; background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: 16px; -webkit-appearance: none; appearance: none; }
-.xrow { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 9px 4px; margin: 0; background: none; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; color: var(--text); }
-.xrow .th { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; flex: none; background: var(--surface2); }
+#exlistwrap { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 4px 16px calc(50vh + env(safe-area-inset-bottom)); }
+.xpick .egrp h2 { margin: 18px 0 4px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.xrow { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 8px 0; margin: 0; background: none; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; color: var(--text); }
+.xrow .th { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; flex: none; background: var(--surface2); }
 .xrow .ph { display: flex; align-items: center; justify-content: center; }
 .xtx { flex: 1; min-width: 0; }
 .xtx b { display: block; font-size: 15px; font-weight: 600; line-height: 1.25; }
-.xtx small { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; }
+.xtx small { display: block; margin-top: 3px; color: var(--muted); font-size: 13px; }
+/* Fecha de entreno pasado: campo oscuro como el resto */
+[data-pdate] { box-sizing: border-box; background: var(--surface2); color: var(--text); border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: 16px; -webkit-appearance: none; appearance: none; min-height: 44px; }

@@ -967,14 +967,14 @@
             <span class="chev">${open ? '▾' : '▸'}</span>
           </div>
           <div class="mchips">${mus.map(([m, n]) => `<span class="mchip">${esc(m)} <b>${n}</b></span>`).join('')}</div>
-          ${open ? `<div class="elist">${r.exercises.map(e => {
+          ${open ? `<section class="ccard rbox"><div class="row between"><b>Rutina</b><span class="pill">${r.exercises.length} ejercicios</span></div><div class="elist">${r.exercises.map(e => {
             const i = exInfo(e.name);
             return `<button class="erow" data-act="exinfo" data-ex="${esc(e.name)}">${thumb(e.name, 'th')}
               <div class="en"><b>${esc(e.name)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small></div>
               <span class="es">${e.sets} × ${esc(e.reps)}${e.warmup ? `<small><br>${e.warmup} calent.</small>` : ''}</span></button>`;
-          }).join('')}</div>`
+          }).join('')}</div></section>
+          ${r.cardio ? cardioCard(r.cardio, false) : ''}`
           : ''}
-          ${r.cardio ? cardioCard(r.cardio, false) : ''}
           <button class="btn accent full" data-act="start" data-id="${r.id}">Empezar rutina</button>
         </section>`;
       }).join('')}

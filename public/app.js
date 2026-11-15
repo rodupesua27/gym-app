@@ -338,6 +338,7 @@
           <div class="pv">${p ? kgTxt(p.kg) + ' × ' + p.reps : '–'}</div>
           <input data-f="kg" inputmode="decimal" value="${esc(x.kg)}" placeholder="" aria-label="kg"><input data-f="reps" inputmode="numeric" value="${esc(x.reps)}" placeholder="" aria-label="repeticiones">
           <span class="ck" style="display:flex;align-items:center;justify-content:center">${ICON.check}</span></div>`; }).join('')}</section>`; }).join('')}
+      <button class="btn full" style="margin-top:18px" data-addpast="1">+ Añadir ejercicio</button>
       <div style="margin-top:56px;padding-top:24px;border-top:1px solid var(--line)"><button class="btn danger full" data-del="1">Borrar sesión</button></div>`;
     o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
     // iOS coloca el cursor al final después de enfocar, así que se selecciona con un pequeño retraso.
@@ -359,6 +360,10 @@
       const b = ev.target.closest('button');
       if (!b) return;
       if (b.dataset.close) { document.body.removeChild(o); render(); }
+      else if (b.dataset.addpast) {
+        const added = await addExercise(s);
+        if (added) { document.body.removeChild(o); sessionPage(id); }
+      }
       else if (b.dataset.del) {
         const ok = await sheet('<h3>Borrar sesión</h3><p class="muted">No se puede deshacer.</p>', [{ label: 'No', v: false }, { label: 'Borrar', cls: 'accent', v: true }]);
         if (ok) { sessions = sessions.filter(x => x.id !== id); save(K.s, sessions); document.body.removeChild(o); render(); }
@@ -398,7 +403,8 @@
     document.body.appendChild(o);
   }
 
-  async function addExercise() {
+  async function addExercise(target) {
+    const ses = target || active;
     const catalog = Object.keys(window.EXINFO || {});
     const extra = [...new Set([
       ...ROUTINES.flatMap(r => r.exercises.map(e => e.name)),
@@ -408,25 +414,23 @@
     const fold = t => String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     const v = await new Promise(resolve => {
       const o = document.createElement('div');
-      o.className = 'fpage';
+      o.className = 'fpage xpick';
       const groups = {};
       all.forEach(n => { const g = groupOf(n) || 'Otros'; (groups[g] = groups[g] || []).push(n); });
       const row = n => {
         const i = exInfo(n);
-        return `<button class="swr" data-n="${esc(n)}" data-f="${esc(fold(n))}">
-          <div class="swt"><div class="en"><b>${esc(n)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small></div></div>
-          ${i && i.img ? `<div class="swi"><img loading="lazy" alt="" src="${imgSrc(i, 0)}"></div>` : ''}</button>`;
+        return `<button class="xrow" data-n="${esc(n)}" data-f="${esc(fold(n))}">${thumb(n, 'th')}<span class="xtx"><b>${esc(n)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small></span></button>`;
       };
       const body = Object.keys(groups).sort((x, y) => x.localeCompare(y, 'es')).map(g =>
         `<div class="egrp" data-grp><h2>${esc(g)}</h2>${groups[g].sort((x, y) => x.localeCompare(y, 'es')).map(row).join('')}</div>`).join('');
-      o.innerHTML = `<div class="fhead"><button class="btn small" data-close="1">‹ Volver</button><b>Añadir ejercicio</b></div>
-        <input id="exsearch" type="search" placeholder="Buscar ejercicio" autocomplete="off" style="margin:12px 0;width:100%">
+      o.innerHTML = `<div class="xtop"><div class="xhead"><button class="btn small" data-close="1">‹ Volver</button><b>Añadir ejercicio</b></div>
+        <div class="xsearch"><input id="exsearch" type="search" placeholder="Buscar ejercicio" autocomplete="off" enterkeyhint="search"></div></div>
         <div id="exlistwrap">${body}</div>`;
       const inp = o.querySelector('#exsearch');
       inp.addEventListener('input', () => {
         const q = fold(inp.value.trim());
-        o.querySelectorAll('.swr').forEach(b => { b.style.display = !q || b.dataset.f.includes(q) ? '' : 'none'; });
-        o.querySelectorAll('.egrp').forEach(g => { g.style.display = [...g.querySelectorAll('.swr')].some(b => b.style.display !== 'none') ? '' : 'none'; });
+        o.querySelectorAll('.xrow').forEach(b => { b.style.display = !q || b.dataset.f.includes(q) ? '' : 'none'; });
+        o.querySelectorAll('.egrp').forEach(g => { g.style.display = [...g.querySelectorAll('.xrow')].some(b => b.style.display !== 'none') ? '' : 'none'; });
       });
       const done = v => { document.body.removeChild(o); resolve(v); };
       o.addEventListener('click', ev => {
@@ -437,7 +441,11 @@
       });
       document.body.appendChild(o);
     });
-    if (v) { active.exercises.push(mkEx(v, 3, 0, '', 90)); persist(); render(); }
+    if (v) {
+      ses.exercises.push(mkEx(v, 3, 0, '', 90));
+      if (ses === active) { persist(); render(); } else save(K.s, sessions);
+    }
+    return v;
   }
 
   // Récords como en Hevy: peso máximo, 1RM estimado (Epley) y mejor serie (kg × reps).

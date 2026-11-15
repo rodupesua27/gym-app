@@ -743,7 +743,7 @@
       return `<div class="zb"><div class="zt"><span>${z}</span><b>${sc[z] == null ? '–' : pc + ' %'}</b></div><div class="zbar"><i style="width:${pc}%"></i></div></div>`; }).join('');
     return `<section class="card bodyc" style="cursor:default"><b class="rk-t">Tu cuerpo</b>
       <div class="bgrid"><div class="chart bfig" id="bodyhost"></div><div class="zbars">${bars}</div></div>
-      ${any ? '' : '<small class="muted">Anota tu peso en Progreso y registra series (1–12 reps) para ver tu fuerza por zona.</small>'}</section>`;
+      ${any ? '' : '<small class="muted">Anota tu peso en Progreso y registra series (1–12 reps) para ver tu fuerza por zona.</small>'}<small class="muted bcred">Modelo: Diego Luján García (CC BY 4.0)</small></section>`;
   }
   // Figura hecha con elipsoides; cada pieza pertenece a una zona y se tiñe según su nivel.
   const BODY = (() => {

@@ -480,7 +480,7 @@
     }));
     return r;
   }
-  const TROPHY = '<svg class="trf" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v3a5 5 0 0 1-10 0V4zM4 5h3v2a4 4 0 0 1-3-2zm13 0h3a4 4 0 0 1-3 2V5zM10.5 14h3v3h2.5v2h-8v-2h2.5v-3z"/></svg>';
+  const TROPHY = '<svg class="trf" fill="#7b1e2b" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v3a5 5 0 0 1-10 0V4zM4 5h3v2a4 4 0 0 1-3-2zm13 0h3a4 4 0 0 1-3 2V5zM10.5 14h3v3h2.5v2h-8v-2h2.5v-3z"/></svg>';
   // Sonido de celebración: arpegio ascendente corto (distinto del aviso de fin de descanso).
   function celebrate() {
     ensureAudio();

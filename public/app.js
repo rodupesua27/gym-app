@@ -334,10 +334,10 @@
         <div class="exh"><span class="exth">${thumb(ex.name, 'th')}</span><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b>${ex.reps ? `<small>${ex.reps} reps · descanso ${dur(ex.rest)}</small>` : ''}</div><span class="ecnt">${ex.sets.filter(filled).length}/${ex.sets.length}</span></div>
         <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
         ${ex.sets.map((x, si) => { const idx = cnt[x.t]++; const p = prevSet(ex, si); return `<div class="set ${filled(x) ? 'done' : ''}" data-ei="${ei}" data-si="${si}">
-          <span class="tp ${x.t === 'W' ? 'w' : ''}" style="display:flex;align-items:center;justify-content:center">${x.t === 'W' ? 'C' : idx + 1}</span>
+          <button class="tp ${x.t === 'W' ? 'w' : ''}" data-ptype="1" style="display:flex;align-items:center;justify-content:center" aria-label="Cambiar tipo de serie">${x.t === 'W' ? 'C' : idx + 1}</button>
           <div class="pv">${p ? kgTxt(p.kg) + ' × ' + p.reps : '–'}</div>
           <input data-f="kg" inputmode="decimal" value="${esc(x.kg)}" placeholder="" aria-label="kg"><input data-f="reps" inputmode="numeric" value="${esc(x.reps)}" placeholder="" aria-label="repeticiones">
-          <span class="ck" style="display:flex;align-items:center;justify-content:center">${ICON.check}</span></div>`; }).join('')}</section>`; }).join('')}
+          <span class="ck" style="display:flex;align-items:center;justify-content:center">${ICON.check}</span></div>`; }).join('')}<div class="xsetbtns"><button class="btn small" data-padd="${ei}">+ Serie</button><button class="btn small" data-pdel="${ei}">− Serie</button></div></section>`; }).join('')}
       <button class="btn full" style="margin-top:18px" data-addpast="1">+ Añadir ejercicio</button>
       <div style="margin-top:56px;padding-top:24px;border-top:1px solid var(--line)"><button class="btn danger full" data-del="1">Borrar sesión</button></div>`;
     o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
@@ -360,6 +360,17 @@
       const b = ev.target.closest('button');
       if (!b) return;
       if (b.dataset.close) { document.body.removeChild(o); render(); }
+      else if (b.dataset.ptype !== undefined || b.dataset.padd !== undefined || b.dataset.pdel !== undefined) {
+        const sc = o.scrollTop;
+        const row = b.closest('.set');
+        if (b.dataset.ptype !== undefined) { const st = s.exercises[+row.dataset.ei].sets[+row.dataset.si]; st.t = st.t === 'W' ? 'N' : 'W'; }
+        else if (b.dataset.padd !== undefined) s.exercises[+b.dataset.padd].sets.push({ t: 'N', kg: '', reps: '', done: false });
+        else { const ss = s.exercises[+b.dataset.pdel].sets; if (ss.length > 1) ss.pop(); }
+        save(K.s, sessions);
+        document.body.removeChild(o);
+        const n = sessionPage(id);
+        if (n) n.scrollTop = sc;
+      }
       else if (b.dataset.addpast) {
         const added = await addExercise(s);
         if (added) { document.body.removeChild(o); sessionPage(id); }
@@ -370,6 +381,7 @@
       }
     });
     document.body.appendChild(o);
+    return o;
   }
 
   // Registrar un entreno de un día pasado: eliges rutina y fecha, luego rellenas los pesos en la pantalla de sesión.

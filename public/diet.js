@@ -2,7 +2,7 @@
 // Todo se hace con sartén y microondas, cocinando cada día.
 // kc / pr: kcal y proteína de cada ingrediente (misma posición que "ingredients").
 // Datos de etiqueta del usuario: Lidl (pan, pollo, yogur y queso Milbona, nata, huevos M), Real Valle (pavo), Tastino (tortillas), Nixe (atún), Hacendado (tomate frito), mayonesa (613 kcal/100 g).
-// Estimaciones: mantequilla (sin datos), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, huevo medio entre M y L (60 g: unos 86 kcal y 7,6 g de proteína cada uno).
+// Cereales Ultrapop: etiqueta de la caja (30 g = 115 kcal, 2,6 g proteína). Estimaciones: lomo de ternera, mantequilla (sin datos), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, huevo medio entre M y L (60 g: unos 86 kcal y 7,6 g de proteína cada uno).
 window.DIET_TARGET = { kcal: 2700, protein: 120 };
 window.DIET = {
   slots: [
@@ -25,6 +25,20 @@ window.DIET = {
       kc: [379, 216, 10, 151, 20, 99, 75], pr: [11, 0, 0, 3, 4, 1, 4],
       steps: 'Sin cocinar. Para el día sin hambre o sin tiempo.',
       note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
+    },
+    {
+      id: 'd3', slot: 'desayuno', short: 'Cereales con leche', name: 'Cereales Ultrapop con leche desnatada sin lactosa',
+      min: 2,
+      ingredients: ['30 g de cereales Ultrapop (1 ración, según etiqueta)', '200 ml de leche desnatada sin lactosa (la misma del café)'],
+      kc: [115, 66], pr: [2.6, 7],
+      steps: 'Sin cocinar. Sirve los cereales en un bol y echa la leche fría.'
+    },
+    {
+      id: 'd4', slot: 'desayuno', short: 'Bocadillo de lomo', name: 'Bocadillo de lomo de ternera con mayonesa',
+      min: 8,
+      ingredients: ['140 g de pan Lidl (bocadillo)', '80 g de lomo de ternera en lonchas (estimación)', '1 cucharada de mayonesa (15 g)'],
+      kc: [379, 112, 92], pr: [11, 17, 0],
+      steps: 'Lomo a la sartén sin aceite, 2-3 min por lado a fuego fuerte, hasta que quede dorado. Monta el bocadillo con la mayonesa.'
     },
     {
       id: 'c1', slot: 'comida', short: 'Arroz, pollo y huevos', name: 'Arroz con pollo, huevos y medio aguacate',

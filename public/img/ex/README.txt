@@ -29,3 +29,6 @@ Hyperextensions_Back_Extensions: dos fotogramas de «Back extension 3D animation
 Incline_Dumbbell_Curl: dos fotogramas de «Incline Dumbbell Curl | Biceps 3D Anatomy» (YouTube short, KLnCQZfkhI0) (YouTube), uso personal en la app.
 Dumbbell_Bicep_Curl: dos fotogramas de «Dumbbell Biceps Curl | 3D Muscle Anatomy» (YouTube short, VfMYbv_1z5Y) (YouTube), uso personal en la app.
 Plank, Hyperextensions, Incline_Dumbbell_Curl, Dumbbell_Bicep_Curl: anatomical shorts from YouTube (Muscle Science 3D and similar).
+Thigh_Abductor: dos fotogramas de «Seated Hip Abduction» (YouTube short, ZBQk4FRQdFQ) (YouTube), uso personal en la app.
+Thigh_Adductor: dos fotogramas de «Expand Your Thighs Workout with Seated Hip Adduction» (YouTube short @lyfta, JwzgcvhuyTc) (YouTube), uso personal en la app.
+Thigh_Abductor, Thigh_Adductor: YouTube shorts ZBQk4FRQdFQ and JwzgcvhuyTc (@lyfta).

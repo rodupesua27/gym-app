@@ -923,15 +923,22 @@
       run = prev !== null && t - prev <= dayMs * 1.5 ? run + 1 : 1;
       prev = t; best = Math.max(best, run);
     });
-    // Calendario: últimas 4 semanas (de lunes a domingo), con hoy resaltado.
-    const calStart = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() - 21);
-    const cal = [...Array(28)].map((_, i) => new Date(calStart.getFullYear(), calStart.getMonth(), calStart.getDate() + i));
+    // Calendario del mes (de lunes a domingo); se puede cambiar de mes con las flechas.
+    const calBase = calM || new Date(now.getFullYear(), now.getMonth(), 1);
+    const calFirst = new Date(calBase.getFullYear(), calBase.getMonth(), 1);
+    const calOff = (calFirst.getDay() + 6) % 7;
+    const calDim = new Date(calBase.getFullYear(), calBase.getMonth() + 1, 0).getDate();
+    const calN = Math.ceil((calOff + calDim) / 7) * 7;
+    const cal = [...Array(calN)].map((_, i) => new Date(calFirst.getFullYear(), calFirst.getMonth(), 1 - calOff + i));
+    const calTitle = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(calFirst);
+    const calLabel = calTitle.charAt(0).toUpperCase() + calTitle.slice(1);
     return `<h1>Registro</h1>
       <section class="card wk" style="cursor:default">
         <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b></div>
           <div style="text-align:right"><small class="muted">Entrenos mes</small><br><b>${thisMonth}</b></div></div>
         <div class="week" style="margin-top:14px">${days.map((d, i) => `<div class="wd"><small>${L[i]}</small><span class="dot ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}"><b>${d.getDate()}</b></span></div>`).join('')}</div>
-        <div class="cal">${cal.map(d => `<i class="${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
+        <div class="calhead"><button class="btn small" data-act="calPrev" aria-label="Mes anterior">‹</button><b>${calLabel}</b><button class="btn small" data-act="calNext" aria-label="Mes siguiente">›</button></div>
+        <div class="cal">${cal.map(d => `<i class="${d.getMonth() !== calFirst.getMonth() ? 'out' : ''} ${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
       </section>
       ${SYNC.id ? '' : '<button class="btn full" style="margin-top:12px" data-act="syncSetup">Activar copia en la nube (para no perder tus datos)</button>'}
       ${rankCard()}
@@ -1127,7 +1134,7 @@
   }
 
   // Comparación de fuerza por zona con tu yo de hace 1, 3 o 9 meses
-  let cmpM = 1, histOpen = false;
+  let cmpM = 1, histOpen = false, calM = null;
   function radarCard() {
     const now = zoneScores();
     const atD = new Date(); atD.setMonth(atD.getMonth() - cmpM);
@@ -1557,6 +1564,12 @@
     else if (a === 'toggleHist') { histOpen = !histOpen; render(); }
     else if (a === 'bAll') { bAll = !bAll; render(); }
     else if (a === 'cmp') { const m = +t.dataset.m; cmpM = cmpM === m ? 0 : m; render(); }
+    else if (a === 'calPrev' || a === 'calNext') {
+      const n = new Date();
+      const b = calM || new Date(n.getFullYear(), n.getMonth(), 1);
+      calM = new Date(b.getFullYear(), b.getMonth() + (a === 'calNext' ? 1 : -1), 1);
+      render();
+    }
     else if (a === 'openBody') {
       const b = body.find(x => String(x.ts) === t.dataset.ts);
       if (!b) return;

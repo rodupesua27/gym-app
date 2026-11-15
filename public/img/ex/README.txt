@@ -21,3 +21,6 @@ Leverage_Iso_Row: dos fotogramas de «Chest-Supported Row | 3D Back Muscle Anato
 Hammer_Curls: dos fotogramas de «Dumbbell Hammer Curl | 5-Step Perfect Form & 3D Arm Anatomy» Muscle Science 3D (YouTube short, HgpTNoK8wfA) (YouTube), uso personal en la app.
 Leg_Extensions: dos fotogramas de «Leg Extension | 3D Quadriceps Muscle Anatomy» Muscle Science 3D (YouTube short, 6N-y7srMy6E) (YouTube), uso personal en la app.
 Muscle Science 3D / otros shorts de YouTube (fotogramas): Hammer_Curls, Leg_Extensions, Cable_Rope_Overhead_Triceps_Extension, Leverage_Iso_Row, Wide-Grip_Lat_Pulldown, Triceps_Pushdown_-_Rope_Attachment, Tricep_Dumbbell_Kickback.
+Cable_Crunch: dos fotogramas de «Cable Rope Crunch | 3D Abs Anatomy» Muscle Science 3D (YouTube short, QmRNZFyEpCc) (YouTube), uso personal en la app.
+Barbell_Hip_Thrust: dos fotogramas de «Bar Hip Thrust 3D Animation» (YouTube short, 3jdtsvYzM3k) (YouTube), uso personal en la app.
+Cable_Crunch (Muscle Science 3D, QmRNZFyEpCc) y Barbell_Hip_Thrust (3jdtsvYzM3k): fotogramas de YouTube shorts.

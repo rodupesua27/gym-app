@@ -24,3 +24,8 @@ Muscle Science 3D / otros shorts de YouTube (fotogramas): Hammer_Curls, Leg_Exte
 Cable_Crunch: dos fotogramas de «Cable Rope Crunch | 3D Abs Anatomy» Muscle Science 3D (YouTube short, QmRNZFyEpCc) (YouTube), uso personal en la app.
 Barbell_Hip_Thrust: dos fotogramas de «Bar Hip Thrust 3D Animation» (YouTube short, 3jdtsvYzM3k) (YouTube), uso personal en la app.
 Cable_Crunch (Muscle Science 3D, QmRNZFyEpCc) y Barbell_Hip_Thrust (3jdtsvYzM3k): fotogramas de YouTube shorts.
+Plank: dos fotogramas de «What Happens to Your Muscles During a Plank? 3D Anatomy» @musclevision1 (YouTube short, CE6bKwWTyAk) (YouTube), uso personal en la app.
+Hyperextensions_Back_Extensions: dos fotogramas de «Back extension 3D animation» @CourageOffitness (YouTube short, P2eORx4nY_4) (YouTube), uso personal en la app.
+Incline_Dumbbell_Curl: dos fotogramas de «Incline Dumbbell Curl | Biceps 3D Anatomy» (YouTube short, KLnCQZfkhI0) (YouTube), uso personal en la app.
+Dumbbell_Bicep_Curl: dos fotogramas de «Dumbbell Biceps Curl | 3D Muscle Anatomy» (YouTube short, VfMYbv_1z5Y) (YouTube), uso personal en la app.
+Plank, Hyperextensions, Incline_Dumbbell_Curl, Dumbbell_Bicep_Curl: anatomical shorts from YouTube (Muscle Science 3D and similar).

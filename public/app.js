@@ -408,6 +408,8 @@
         if (ok) { sessions = sessions.filter(x => x.id !== id); save(K.s, sessions); document.body.removeChild(o); render(); }
       }
     });
+    // Fotos sin carga diferida: al añadir o quitar series cambia la altura y iOS volvía a cargar las fotos lazy (parpadeo).
+    o.querySelectorAll('img[loading]').forEach(i => i.removeAttribute('loading'));
     document.body.appendChild(o);
     return o;
   }

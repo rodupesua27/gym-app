@@ -329,7 +329,7 @@
     o.className = 'fpage sp';
     o.innerHTML = `<div class="ahead"><div style="min-width:0"><div class="atitle" style="font-size:17px">${esc(s.name)}</div>
         <div class="asub" style="font-size:13px">${esc(date)}</div></div><button class="btn small" data-close="1">Volver</button></div>
-      <p class="muted" style="margin:0 4px 14px"><small>${min} min · ${thousands(volOf(s.exercises, false))} kg · ${nsets} series</small></p>
+      <p class="muted" style="margin:0 4px 14px"><small data-psum>${min} min · ${thousands(volOf(s.exercises, false))} kg · ${nsets} series</small></p>
       ${s.cardio ? `<section class="ccard"><div class="row between"><b>${esc(s.cardio.title)}</b><span class="pill">${s.cardio.min} min</span></div></section>` : ''}
       ${s.exercises.map((ex, ei) => { const cnt = { W: 0, N: 0 }; return `<section class="ex">
         <div class="exh"><span class="exth">${thumb(ex.name, 'th')}</span><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b>${ex.reps ? `<small>${ex.reps} reps · descanso ${dur(ex.rest)}</small>` : ''}</div><span class="ecnt">${ex.sets.filter(filled).length}/${ex.sets.length}</span></div>
@@ -344,6 +344,11 @@
     o.addEventListener('touchmove', ev => { if (o.scrollHeight <= o.clientHeight + 1) ev.preventDefault(); }, { passive: false });
     // iOS coloca el cursor al final después de enfocar, así que se selecciona con un pequeño retraso.
     o.addEventListener('focusin', ev => { const el = ev.target; if (el.matches && el.matches('input[data-f]')) setTimeout(() => el.select(), 60); });
+    // Mantiene al día la línea de resumen (minutos · kg · series) al editar.
+    const updSum = () => {
+      const el = o.querySelector('[data-psum]');
+      if (el) el.textContent = `${min} min · ${thousands(volOf(s.exercises, false))} kg · ${s.exercises.reduce((n, e) => n + e.sets.length, 0)} series`;
+    };
     o.addEventListener('input', ev => {
       const inp = ev.target.closest && ev.target.closest('input[data-f]');
       if (!inp) return;
@@ -353,6 +358,7 @@
       set[inp.dataset.f] = v === '' || isNaN(+v) ? '' : +v;
       if (set.kg !== '' && set.reps !== '') set.done = true;
       save(K.s, sessions);
+      updSum();
       row.classList.toggle('done', filled(set));
       const cnt = row.closest('.ex').querySelector('.ecnt');
       cnt.textContent = s.exercises[+row.dataset.ei].sets.filter(filled).length + '/' + s.exercises[+row.dataset.ei].sets.length;
@@ -368,6 +374,7 @@
         const st = ex.sets[+row.dataset.si];
         st.t = st.t === 'W' ? 'N' : 'W';
         save(K.s, sessions);
+        updSum();
         const cnt = { W: 0, N: 0 };
         const rows = row.closest('.ex').querySelectorAll('.set');
         ex.sets.forEach((x, si) => {

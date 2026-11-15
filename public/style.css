@@ -436,3 +436,5 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 [data-pdate] { box-sizing: border-box; background: var(--surface2); color: var(--text); border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: 16px; -webkit-appearance: none; appearance: none; min-height: 44px; }
 .xsetbtns { display: flex; gap: 8px; margin-top: 10px; }
 .xsetbtns .btn { flex: 1; }
+.xmv { display: inline-flex; gap: 4px; flex: none; }
+.xmv .btn { padding: 4px 8px; }

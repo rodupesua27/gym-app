@@ -333,7 +333,7 @@
       <p class="muted" style="margin:0 4px 14px"><small data-psum>${min} min · ${thousands(volOf(s.exercises, false))} kg · ${nsets} series</small></p>
       ${s.cardio ? `<section class="ccard"><div class="row between"><b>${esc(s.cardio.title)}</b><span class="pill">${s.cardio.min} min</span></div></section>` : ''}
       ${s.exercises.map((ex, ei) => { const cnt = { W: 0, N: 0 }; return `<section class="ex" data-ei="${ei}">
-        <div class="exh"><span class="exth">${thumb(ex.name, 'th')}</span><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b>${ex.reps ? `<small>${ex.reps} reps · descanso ${dur(ex.rest)}</small>` : ''}</div><span class="ecnt">${ex.sets.filter(filled).length}/${ex.sets.length}</span></div>
+        <div class="exh"><span class="exth">${thumb(ex.name, 'th')}</span><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b>${ex.reps ? `<small>${ex.reps} reps · descanso ${dur(ex.rest)}</small>` : ''}</div><span class="xmv"><button class="btn small" data-pmove="${ei}" data-d="-1" aria-label="Subir ejercicio">↑</button><button class="btn small" data-pmove="${ei}" data-d="1" aria-label="Bajar ejercicio">↓</button></span><span class="ecnt">${ex.sets.filter(filled).length}/${ex.sets.length}</span></div>
         <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
         ${ex.sets.map((x, si) => { const idx = cnt[x.t]++; const p = prevSet(ex, si); return `<div class="set ${filled(x) ? 'done' : ''}" data-ei="${ei}" data-si="${si}">
           <button class="tp ${x.t === 'W' ? 'w' : ''}" data-ptype="1" style="display:flex;align-items:center;justify-content:center" aria-label="Cambiar tipo de serie">${x.t === 'W' ? 'C' : idx + 1}</button>
@@ -399,6 +399,21 @@
         });
         sec.querySelector('.ecnt').textContent = ex.sets.filter(filled).length + '/' + ex.sets.length;
         updSum();
+      }
+      else if (b.dataset.pmove !== undefined) {
+        const i = +b.dataset.pmove, d = +b.dataset.d, j = i + d;
+        if (j < 0 || j >= s.exercises.length) return;
+        [s.exercises[i], s.exercises[j]] = [s.exercises[j], s.exercises[i]];
+        save(K.s, sessions);
+        const secs = o.querySelectorAll('section.ex');
+        if (d < 0) secs[j].parentNode.insertBefore(secs[i], secs[j]);
+        else secs[j].parentNode.insertBefore(secs[j], secs[i]);
+        // Renumerar índices en el DOM para que las filas sigan apuntando al ejercicio correcto.
+        o.querySelectorAll('section.ex').forEach((el, k) => {
+          el.dataset.ei = k;
+          el.querySelectorAll('.set').forEach(r => { r.dataset.ei = k; });
+          el.querySelectorAll('[data-pmove]').forEach(x => { x.dataset.pmove = k; });
+        });
       }
       else if (b.dataset.addpast) {
         const added = await addExercise(s);
@@ -970,6 +985,8 @@
         <div class="exf" data-e="${ei}">
           <button class="btn small" data-act="addSet">+ Serie</button>
           <button class="btn small" data-act="delSet">− Serie</button>
+          <button class="btn small" data-act="moveEx" data-d="-1" aria-label="Subir ejercicio">↑</button>
+          <button class="btn small" data-act="moveEx" data-d="1" aria-label="Bajar ejercicio">↓</button>
           <button class="btn small danger" data-act="delEx">Quitar</button>
         </div>
         ${candidatesOf(ex.orig || ex.name).length ? `<button class="btn full" style="margin-top:8px" data-act="swapEx" data-e="${ei}">Cambiar ejercicio</button>` : ''}
@@ -1113,7 +1130,8 @@
   let cmpM = 1, histOpen = false;
   function radarCard() {
     const now = zoneScores();
-    const at = cmpM ? Date.now() - cmpM * 30.44 * 86400000 : 0;
+    const atD = new Date(); atD.setMonth(atD.getMonth() - cmpM);
+    const at = cmpM ? atD.getTime() : 0;
     const hasPrev = cmpM && sessions.some(x => x.start <= at);
     const prev = hasPrev ? zoneScores(at) : null;
     const lbl = cmpM === 1 ? 'Hace 1 mes' : 'Hace ' + cmpM + ' meses';
@@ -1467,6 +1485,13 @@
           ex.reps = np.reps; ex.rest = np.rest;
           if (!ex.sets.some(x => x.done)) ex.sets = mkEx(pick, np.n, np.w, np.reps, np.rest).sets;
         }
+        persist(); render();
+      }
+    }
+    else if (a === 'moveEx') {
+      const j = ei + (+t.dataset.d);
+      if (j >= 0 && j < active.exercises.length) {
+        [active.exercises[ei], active.exercises[j]] = [active.exercises[j], active.exercises[ei]];
         persist(); render();
       }
     }

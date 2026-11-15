@@ -99,7 +99,7 @@ window.ROUTINES = [
     short: 'Espalda y brazos',
     exercises: [
       { name: 'Jalón al pecho agarre invertido (cable)', sets: 6, warmup: 2, reps: '8-12', rest: 120 },
-      { name: 'Remo inclinado (barra)', alt: ["Face pull en polea"], sets: 4, reps: '9-11', rest: 120 },
+      { name: 'Remo sentado (máquina)', alt: ["Remo inclinado (barra)"], sets: 4, reps: '9-11', rest: 120 },
       { name: 'Encogimiento de hombros (mancuerna)', sets: 3, reps: '10-12', rest: 90 },
       { name: 'Curl de bíceps (mancuerna)', sets: 3, reps: '8-10', rest: 75 },
       { name: 'Curl martillo (mancuerna)', sets: 3, reps: '8-12', rest: 75 },
@@ -131,5 +131,6 @@ window.ALT_PLAN = {
   'Elevación lateral sentado en polea': { sets: 3, reps: '10-15', rest: 75 },
   'Pájaro en polea (deltoides posterior)': { sets: 3, reps: '12-20', rest: 60 },
   'Patada de tríceps con mancuerna': { sets: 3, reps: '12-15', rest: 60 },
-  'Face pull en polea': { sets: 3, reps: '12-20', rest: 60 }
+  'Face pull en polea': { sets: 3, reps: '12-20', rest: 60 },
+  'Remo inclinado (barra)': { sets: 4, reps: '9-11', rest: 120 }
 };

@@ -267,7 +267,8 @@
     } catch (e) { SYNC.msg = 'Sin conexión: se reintentará'; }
     try { localStorage.setItem('gym.syncrev', JSON.stringify(SYNC.rev)); localStorage.setItem('gym.syncdirty', JSON.stringify(SYNC.dirty)); localStorage.setItem('gym.synct', JSON.stringify(SYNC.t)); } catch (e) {}
     SYNC.busy = false;
-    if (!active && !(document.activeElement && document.activeElement.tagName === 'INPUT')) render();
+    // Con una pantalla a pantalla completa abierta no se redibuja por debajo (provocaba parpadeos en las fotos).
+    if (!active && !document.querySelector('.fpage') && !(document.activeElement && document.activeElement.tagName === 'INPUT')) render();
   }
   async function syncSetup() {
     const v = await sheet('<h3>Copia en la nube</h3><p class="muted">Elige una frase secreta de 4 palabras o más. Con ella recuperas tus datos en cualquier móvil. Guárdala: si la pierdes, no se puede recuperar.</p><input id="sph" type="text" autocomplete="off" autocapitalize="none" placeholder="frase secreta" style="width:100%;margin-top:10px">',

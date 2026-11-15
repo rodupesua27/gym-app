@@ -937,8 +937,8 @@
         <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b></div>
           <div style="text-align:right"><small class="muted">Entrenos mes</small><br><b>${thisMonth}</b></div></div>
         <div class="week" style="margin-top:14px">${days.map((d, i) => `<div class="wd"><small>${L[i]}</small><span class="dot ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}"><b>${d.getDate()}</b></span></div>`).join('')}</div>
-        <div class="calhead"><b>${calLabel}</b></div>
-        <div class="cal">${cal.map(d => `<i class="${d.getMonth() !== calFirst.getMonth() ? 'out' : ''} ${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
+        <div class="calslide"><div class="calhead"><b>${calLabel}</b></div>
+        <div class="cal">${cal.map(d => `<i class="${d.getMonth() !== calFirst.getMonth() ? 'out' : ''} ${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div></div>
       </section>
       ${SYNC.id ? '' : '<button class="btn full" style="margin-top:12px" data-act="syncSetup">Activar copia en la nube (para no perder tus datos)</button>'}
       ${rankCard()}
@@ -1378,10 +1378,10 @@
   // ---------- arrastrar el calendario del registro para cambiar de mes (desliza como las pestañas) ----------
   (function () {
     let sx = 0, sy = 0, on = false, el = null, dx = 0, busy = false;
-    const grid = () => document.querySelector('.cal');
+    const grid = () => document.querySelector('.calslide');
     document.addEventListener('touchstart', ev => {
       if (busy) return;
-      on = !!(ev.target.closest && ev.target.closest('.cal'));
+      on = !!(ev.target.closest && ev.target.closest('.calslide'));
       if (!on) return;
       sx = ev.touches[0].clientX; sy = ev.touches[0].clientY; dx = 0; el = grid();
       if (el) el.style.transition = 'none';
@@ -1440,7 +1440,7 @@
       const t = ev.touches[0];
       sx = t.clientX; sy = t.clientY; st = Date.now();
       const el = ev.target;
-      ok = !(el.closest && el.closest('input, textarea, select, .fpage, .overlay, .sheet, .cal, .chart')) && !document.querySelector('.fpage, .overlay');
+      ok = !(el.closest && el.closest('input, textarea, select, .fpage, .overlay, .sheet, .calslide, .chart')) && !document.querySelector('.fpage, .overlay');
     }, { passive: true });
     const go = (x, y) => {
       if (!ok) return;

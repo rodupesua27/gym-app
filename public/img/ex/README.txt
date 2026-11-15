@@ -32,3 +32,9 @@ Plank, Hyperextensions, Incline_Dumbbell_Curl, Dumbbell_Bicep_Curl: anatomical s
 Thigh_Abductor: dos fotogramas de «Seated Hip Abduction» (YouTube short, ZBQk4FRQdFQ) (YouTube), uso personal en la app.
 Thigh_Adductor: dos fotogramas de «Expand Your Thighs Workout with Seated Hip Adduction» (YouTube short @lyfta, JwzgcvhuyTc) (YouTube), uso personal en la app.
 Thigh_Abductor, Thigh_Adductor: YouTube shorts ZBQk4FRQdFQ and JwzgcvhuyTc (@lyfta).
+Incline_Dumbbell_Press: dos fotogramas de «Incline Dumbbell Press | 3D Upper Chest Anatomy» (YouTube short, 3coFe6wfTVA) (YouTube), uso personal en la app.
+Cable_Seated_Lateral_Raise: dos fotogramas de «Cable Lateral Raise | 3D Shoulder Muscle Anatomy» (YouTube short, UXB34Dte28s) (YouTube), uso personal en la app.
+Cable_Rope_Overhead_Triceps_Extension: dos fotogramas de «Overhead Cable Triceps Extension | 3D Arm Anatomy» (Muscle Science 3D, YouTube short, cUg-mz7ZIZI) (YouTube), uso personal en la app.
+Hammer_Curls: dos fotogramas de «Hammer Curls: Keep the Neutral Grip» (YouTube short @Healthier-ae, CHjhzcNCNmM) (YouTube), uso personal en la app.
+Wide-Grip_Lat_Pulldown: dos fotogramas de «The Anatomy of a Perfect Lat Pulldown» (Muscle Verse 3D, YouTube short, dgj3YGfeF7c) (YouTube), uso personal en la app.
+Incline_Dumbbell_Press (3coFe6wfTVA), Cable_Seated_Lateral_Raise (UXB34Dte28s), Cable_Rope_Overhead_Triceps_Extension (cUg-mz7ZIZI), Hammer_Curls (CHjhzcNCNmM), Wide-Grip_Lat_Pulldown (dgj3YGfeF7c): YouTube shorts.

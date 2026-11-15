@@ -907,7 +907,7 @@
     const todayIso = isoDay(now);
     const mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7));
     const days = [...Array(7)].map((_, i) => new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i));
-    const set = new Set(sessions.map(s => isoDay(s.start)));
+    const set = new Set([...sessions.map(s => isoDay(s.start)), ...(active ? [isoDay(active.start)] : [])]);
     const weekIso = days.map(isoDay);
     const L = 'LMXJVSD';
     const thisMonth = sessions.filter(x => { const d = new Date(x.start); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth(); }).length;
@@ -1375,23 +1375,60 @@
 
   const toTop = () => { try { document.body.scrollTop = 0; window.scrollTo(0, 0); } catch (e) {} };
 
-  // ---------- arrastrar el calendario del registro para cambiar de mes ----------
+  // ---------- arrastrar el calendario del registro para cambiar de mes (desliza como las pestañas) ----------
   (function () {
-    let sx = 0, sy = 0, on = false;
+    let sx = 0, sy = 0, on = false, el = null, dx = 0, busy = false;
+    const grid = () => document.querySelector('.cal');
     document.addEventListener('touchstart', ev => {
+      if (busy) return;
       on = !!(ev.target.closest && ev.target.closest('.cal'));
-      if (on) { sx = ev.touches[0].clientX; sy = ev.touches[0].clientY; }
-    }, { passive: true });
-    document.addEventListener('touchend', ev => {
       if (!on) return;
-      on = false;
-      const t = ev.changedTouches[0];
-      const dx = t.clientX - sx, dy = t.clientY - sy;
-      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+      sx = ev.touches[0].clientX; sy = ev.touches[0].clientY; dx = 0; el = grid();
+      if (el) el.style.transition = 'none';
+    }, { passive: true });
+    document.addEventListener('touchmove', ev => {
+      if (!on || !el) return;
+      const t = ev.touches[0];
+      dx = t.clientX - sx;
+      if (Math.abs(dx) < Math.abs(t.clientY - sy) * 1.2 && Math.abs(dx) < 10) return;
+      el.style.transform = `translateX(${dx}px)`;
+    }, { passive: true });
+    const shift = (dir) => {
       const n = new Date();
       const b = calM || new Date(n.getFullYear(), n.getMonth(), 1);
-      calM = new Date(b.getFullYear(), b.getMonth() + (dx < 0 ? 1 : -1), 1);
-      render();
+      calM = new Date(b.getFullYear(), b.getMonth() + dir, 1);
+    };
+    document.addEventListener('touchend', () => {
+      if (!on || !el) return;
+      on = false;
+      const old = el; el = null;
+      const dir = dx < 0 ? 1 : -1;
+      if (Math.abs(dx) < 50) { // no llega al umbral: vuelve a su sitio
+        old.style.transition = 'transform .2s ease';
+        old.style.transform = 'translateX(0)';
+        return;
+      }
+      busy = true;
+      const w = old.offsetWidth;
+      old.style.transition = 'transform .22s ease, opacity .22s ease';
+      old.style.transform = `translateX(${dir > 0 ? -w : w}px)`;
+      old.style.opacity = '0';
+      setTimeout(() => {
+        shift(dir);
+        render();
+        const next = grid();
+        if (next) {
+          // entra por el lado contrario y se desliza a su sitio
+          next.style.transition = 'none';
+          next.style.transform = `translateX(${dir > 0 ? w : -w}px)`;
+          next.style.opacity = '0';
+          void next.offsetWidth;
+          next.style.transition = 'transform .22s ease, opacity .22s ease';
+          next.style.transform = 'translateX(0)';
+          next.style.opacity = '1';
+        }
+        busy = false;
+      }, 230);
     }, { passive: true });
   })();
 

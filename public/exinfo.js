@@ -298,11 +298,6 @@ window.EXINFO = {
   "m": ["Hombros"],
   "s": ["Espalda alta"]
  },
- "Elevación lateral sentado en polea": {
-  "img": "Cable_Seated_Lateral_Raise",
-  "m": ["Hombros"],
-  "s": []
- },
  "Elevación lateral y frontal con mancuerna": {
   "img": "Side_Laterals_to_Front_Raise",
   "m": ["Hombros"],

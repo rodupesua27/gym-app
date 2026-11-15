@@ -38,3 +38,6 @@ Cable_Rope_Overhead_Triceps_Extension: dos fotogramas de «Overhead Cable Tricep
 Hammer_Curls: dos fotogramas de «Hammer Curls: Keep the Neutral Grip» (YouTube short @Healthier-ae, CHjhzcNCNmM) (YouTube), uso personal en la app.
 Wide-Grip_Lat_Pulldown: dos fotogramas de «The Anatomy of a Perfect Lat Pulldown» (Muscle Verse 3D, YouTube short, dgj3YGfeF7c) (YouTube), uso personal en la app.
 Incline_Dumbbell_Press (3coFe6wfTVA), Cable_Seated_Lateral_Raise (UXB34Dte28s), Cable_Rope_Overhead_Triceps_Extension (cUg-mz7ZIZI), Hammer_Curls (CHjhzcNCNmM), Wide-Grip_Lat_Pulldown (dgj3YGfeF7c): YouTube shorts.
+Dumbbell_Shrug: dos fotogramas de «Dumbbell Shrug | 5-Step Perfect Form & 3D Trapezius Anatomy» (Muscle Science 3D, YouTube short, y_r6lfAPOs0) (YouTube), uso personal en la app.
+Machine_Preacher_Curls: dos fotogramas de «Machine Preacher Curl EXPLAINED» (YouTube short, ia-5xhOy19k) (YouTube), uso personal en la app.
+Dumbbell_Shrug (y_r6lfAPOs0), Machine_Preacher_Curls (ia-5xhOy19k): YouTube shorts.

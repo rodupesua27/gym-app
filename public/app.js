@@ -36,6 +36,7 @@
   let sessions = load(K.s, []);
   // Nombres antiguos de las sesiones de cardio.
   sessions.forEach(s => { s.name = String(s.name).replace('Cardio 1 · abdomen y cinta', 'Abdomen y cinta').replace('Cardio 2 · abdomen y comba', 'Abdomen y comba'); });
+  sessions.sort((a, b) => a.start - b.start);
   let active = load(K.a, null);
   let body = load(K.b, []);
   let diet = load(K.d, {});
@@ -437,7 +438,9 @@
         cardio: r && r.cardio ? { title: r.cardio.title, min: r.cardio.min, tip: r.cardio.tip, blocks: r.cardio.blocks, done: true } : null,
         exercises: r ? r.exercises.map(e => mkEx(e.name, e.sets, e.warmup || 0, e.reps, e.rest)) : []
       };
-      sessions.push(ses); save(K.s, sessions);
+      sessions.push(ses);
+      sessions.sort((a, b) => a.start - b.start); // siempre ordenadas por fecha del entreno, no por orden de alta
+      save(K.s, sessions);
       document.body.removeChild(o);
       render();
       sessionPage(ses.id);

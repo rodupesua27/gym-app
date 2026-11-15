@@ -1,5 +1,5 @@
 // Service worker: primero red (para que los cambios se vean al reabrir), con copia local sin conexión.
-var CACHE = 'gym-v37';
+var CACHE = 'gym-v38';
 
 self.addEventListener('install', function () { self.skipWaiting(); });
 
@@ -17,7 +17,7 @@ self.addEventListener('fetch', function (e) {
   var r = e.request;
   if (r.method !== 'GET' || new URL(r.url).origin !== self.location.origin || new URL(r.url).pathname.indexOf('/api/') === 0) return;
   // El vídeo de inicio lo sirve el navegador directamente (peticiones por rangos en iOS)
-  if (new URL(r.url).pathname === '/splash2.mp4') return;
+  if (new URL(r.url).pathname === '/splash3.mp4') return;
   // El modelo 3D pesa varios MB y no cambia: primero copia local
   if (new URL(r.url).pathname === '/body.bin') {
     e.respondWith(caches.match(r).then(function (m) {

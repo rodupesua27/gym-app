@@ -13,3 +13,11 @@ External_Rotation_with_Cable: dos fotogramas de «Cable External Rotation» @Fit
 Cable_Seated_Lateral_Raise: dos fotogramas de «Cable Lateral Raise | Side Delt 3D Anatomy» (YouTube short, GJVQtVqNtDs) (YouTube), uso personal en la app.
 Cable_Rear_Delt_Fly: dos fotogramas de «Cable Rear Delt Fly» #BodyBoostUSA (YouTube short, AalY5DQW8zw) (YouTube), uso personal en la app.
 Face_Pull: dos fotogramas de «Cable Face Pull | Rear Delt & Upper Back 3D Anatomy» (YouTube short, kmVaGZtqBRE) (YouTube), uso personal en la app.
+Triceps_Pushdown_-_Rope_Attachment: dos fotogramas de «Triceps Pushdown 3D Anatomy» (YouTube short, Yv6PgkMwaT0) (YouTube), uso personal en la app.
+Cable_Rope_Overhead_Triceps_Extension: dos fotogramas de «Overhead Cable Triceps Extension | 3D Arm Anatomy» Muscle Science 3D (YouTube short, cUg-mz7ZIZI) (YouTube), uso personal en la app.
+Tricep_Dumbbell_Kickback: dos fotogramas de «Dumbbell One Arm Kickback Extension» (YouTube short, HAbrOCarlY8) (YouTube), uso personal en la app.
+Wide-Grip_Lat_Pulldown: dos fotogramas de «Lat Pulldown | 5-Step Perfect Form & 3D Back Anatomy» (YouTube short, 8lHsFySrEBs) (YouTube), uso personal en la app.
+Leverage_Iso_Row: dos fotogramas de «Chest-Supported Row | 3D Back Muscle Anatomy» (YouTube short, GOtILEAnvk8) (YouTube), uso personal en la app.
+Hammer_Curls: dos fotogramas de «Dumbbell Hammer Curl | 5-Step Perfect Form & 3D Arm Anatomy» Muscle Science 3D (YouTube short, HgpTNoK8wfA) (YouTube), uso personal en la app.
+Leg_Extensions: dos fotogramas de «Leg Extension | 3D Quadriceps Muscle Anatomy» Muscle Science 3D (YouTube short, 6N-y7srMy6E) (YouTube), uso personal en la app.
+Muscle Science 3D / otros shorts de YouTube (fotogramas): Hammer_Curls, Leg_Extensions, Cable_Rope_Overhead_Triceps_Extension, Leverage_Iso_Row, Wide-Grip_Lat_Pulldown, Triceps_Pushdown_-_Rope_Attachment, Tricep_Dumbbell_Kickback.

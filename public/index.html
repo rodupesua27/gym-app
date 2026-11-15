@@ -11,16 +11,33 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="icon" type="image/png" href="/icon-192.png">
-<link rel="stylesheet" href="/style.css?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz">
+<link rel="stylesheet" href="/style.css?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz">
 <title>Gym</title>
+<style>#splash{position:fixed;inset:0;z-index:99999;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity .5s ease}#splash.out{opacity:0;pointer-events:none}#splash video{width:min(100vw,100vh,640px);height:min(100vw,100vh,640px);object-fit:contain;background:#000}</style>
 </head>
 <body>
+<div id="splash"><video id="splashv" src="/splash.mp4" poster="/splash.jpg" muted playsinline autoplay preload="auto"></video></div>
+<script>
+(function(){
+  var sp=document.getElementById('splash'),v=document.getElementById('splashv');
+  if(!sp)return;
+  var ready=false,ended=false,gone=false;
+  function hide(){ if(gone)return; gone=true; sp.classList.add('out'); setTimeout(function(){ if(sp.parentNode)sp.parentNode.removeChild(sp); },600); }
+  function check(){ if(ready&&ended)hide(); }
+  window.addEventListener('load',function(){ ready=true; check(); });
+  v.addEventListener('ended',function(){ ended=true; check(); });
+  v.addEventListener('error',function(){ ended=true; check(); });
+  sp.addEventListener('click',function(){ ended=true; check(); });
+  var pr=v.play&&v.play(); if(pr&&pr.catch)pr.catch(function(){ setTimeout(function(){ ended=true; check(); },1500); });
+  setTimeout(hide,9000);
+})();
+</script>
 <main id="view"></main>
 <div id="restbar"></div>
 <nav id="tabs"></nav>
-<script src="/routines.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
-<script src="/diet.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
-<script src="/exinfo.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
-<script src="/app.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/routines.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/diet.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/exinfo.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/app.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
 </body>
 </html>

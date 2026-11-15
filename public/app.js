@@ -331,7 +331,7 @@
         <div class="asub" style="font-size:13px">${esc(date)}</div></div><button class="btn small" data-close="1">Volver</button></div>
       <p class="muted" style="margin:0 4px 14px"><small data-psum>${min} min · ${thousands(volOf(s.exercises, false))} kg · ${nsets} series</small></p>
       ${s.cardio ? `<section class="ccard"><div class="row between"><b>${esc(s.cardio.title)}</b><span class="pill">${s.cardio.min} min</span></div></section>` : ''}
-      ${s.exercises.map((ex, ei) => { const cnt = { W: 0, N: 0 }; return `<section class="ex">
+      ${s.exercises.map((ex, ei) => { const cnt = { W: 0, N: 0 }; return `<section class="ex" data-ei="${ei}">
         <div class="exh"><span class="exth">${thumb(ex.name, 'th')}</span><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b>${ex.reps ? `<small>${ex.reps} reps · descanso ${dur(ex.rest)}</small>` : ''}</div><span class="ecnt">${ex.sets.filter(filled).length}/${ex.sets.length}</span></div>
         <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
         ${ex.sets.map((x, si) => { const idx = cnt[x.t]++; const p = prevSet(ex, si); return `<div class="set ${filled(x) ? 'done' : ''}" data-ei="${ei}" data-si="${si}">
@@ -367,34 +367,37 @@
       const b = ev.target.closest('button');
       if (!b) return;
       if (b.dataset.close) { document.body.removeChild(o); render(); }
-      else if (b.dataset.ptype !== undefined) {
-        // Solo se actualizan las filas de este ejercicio: redibujar la página recargaba las fotos (parpadeo).
-        const row = b.closest('.set');
-        const ex = s.exercises[+row.dataset.ei];
-        const st = ex.sets[+row.dataset.si];
-        st.t = st.t === 'W' ? 'N' : 'W';
+      else if (b.dataset.ptype !== undefined || b.dataset.padd !== undefined || b.dataset.pdel !== undefined) {
+        // Todo se actualiza en el mismo DOM (sin redibujar la página, que recargaba las fotos y parpadeaba).
+        const sec = b.closest('.ex');
+        const ei = +sec.dataset.ei;
+        const ex = s.exercises[ei];
+        if (b.dataset.ptype !== undefined) { const st = ex.sets[+b.closest('.set').dataset.si]; st.t = st.t === 'W' ? 'N' : 'W'; }
+        else if (b.dataset.padd !== undefined) {
+          ex.sets.push({ t: 'N', kg: '', reps: '', done: false });
+          sec.querySelector('.xsetbtns').insertAdjacentHTML('beforebegin', `<div class="set" data-ei="${ei}" data-si="${ex.sets.length - 1}"><button class="tp" data-ptype="1" style="display:flex;align-items:center;justify-content:center" aria-label="Cambiar tipo de serie">${ex.sets.length}</button><div class="pv">–</div><input data-f="kg" inputmode="decimal" value="" placeholder="" aria-label="kg"><input data-f="reps" inputmode="numeric" value="" placeholder="" aria-label="repeticiones"><span class="ck" style="display:flex;align-items:center;justify-content:center">${ICON.check}</span></div>`);
+        } else {
+          if (ex.sets.length <= 1) return;
+          ex.sets.pop();
+          const rows = sec.querySelectorAll('.set');
+          rows[rows.length - 1].remove();
+        }
         save(K.s, sessions);
-        updSum();
+        // Recalcula numeración, anterior, contador del ejercicio y resumen en el mismo DOM.
         const cnt = { W: 0, N: 0 };
-        const rows = row.closest('.ex').querySelectorAll('.set');
+        const rows = sec.querySelectorAll('.set');
         ex.sets.forEach((x, si) => {
           const idx = cnt[x.t]++;
           const r = rows[si];
+          r.dataset.si = si;
           const btn = r.querySelector('[data-ptype]');
           btn.textContent = x.t === 'W' ? 'C' : idx + 1;
           btn.classList.toggle('w', x.t === 'W');
           const p = prevSet(ex, si);
           r.querySelector('.pv').textContent = p ? kgTxt(p.kg) + ' × ' + p.reps : '–';
         });
-      }
-      else if (b.dataset.padd !== undefined || b.dataset.pdel !== undefined) {
-        const sc = o.scrollTop;
-        if (b.dataset.padd !== undefined) s.exercises[+b.dataset.padd].sets.push({ t: 'N', kg: '', reps: '', done: false });
-        else { const ss = s.exercises[+b.dataset.pdel].sets; if (ss.length > 1) ss.pop(); }
-        save(K.s, sessions);
-        document.body.removeChild(o);
-        const n = sessionPage(id);
-        if (n) n.scrollTop = sc;
+        sec.querySelector('.ecnt').textContent = ex.sets.filter(filled).length + '/' + ex.sets.length;
+        updSum();
       }
       else if (b.dataset.addpast) {
         const added = await addExercise(s);

@@ -41,3 +41,5 @@ Incline_Dumbbell_Press (3coFe6wfTVA), Cable_Seated_Lateral_Raise (UXB34Dte28s), 
 Dumbbell_Shrug: dos fotogramas de «Dumbbell Shrug | 5-Step Perfect Form & 3D Trapezius Anatomy» (Muscle Science 3D, YouTube short, y_r6lfAPOs0) (YouTube), uso personal en la app.
 Machine_Preacher_Curls: dos fotogramas de «Machine Preacher Curl EXPLAINED» (YouTube short, ia-5xhOy19k) (YouTube), uso personal en la app.
 Dumbbell_Shrug (y_r6lfAPOs0), Machine_Preacher_Curls (ia-5xhOy19k): YouTube shorts.
+Hanging_Leg_Raise: dos fotogramas de «Captains Chair Straight Leg Raise» (YouTube short @lyfta, Q-HRZLba_20) (YouTube), uso personal en la app.
+Hanging_Leg_Raise (silla romana): YouTube short Q-HRZLba_20 (@lyfta).

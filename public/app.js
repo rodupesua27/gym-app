@@ -1500,7 +1500,13 @@
     if (el) el.textContent = dur((Date.now() - active.start) / 1000);
     if (active.rest) {
       const left = (active.rest.end - Date.now()) / 1000;
-      if (left <= 0) { active.rest = null; pushCancel(); persist(); beep(); renderRest(); }
+      if (left <= 0) {
+        // Solo pitar si el descanso acaba mientras estás mirando la app; si ya había acabado (la app estaba cerrada o en segundo plano), en silencio
+        const late = -left * 1000;
+        active.rest = null; pushCancel(); persist();
+        if (late < 2500) beep();
+        renderRest();
+      }
       else {
         const tx = document.getElementById('restTxt'); if (tx) tx.textContent = dur(left);
         const f = document.getElementById('restFill'); if (f) f.style.width = (100 * left / active.rest.total) + '%';

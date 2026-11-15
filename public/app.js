@@ -973,7 +973,7 @@
               <div class="en"><b>${esc(e.name)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small></div>
               <span class="es">${e.sets} × ${esc(e.reps)}${e.warmup ? `<small><br>${e.warmup} calent.</small>` : ''}</span></button>`;
           }).join('')}</div>`
-          : `<div class="strip">${r.exercises.slice(0, 7).map(e => thumb(e.name, 'sth')).join('')}</div>`}
+          : ''}
           ${r.cardio ? cardioCard(r.cardio, false) : ''}
           <button class="btn accent full" data-act="start" data-id="${r.id}">Empezar rutina</button>
         </section>`;

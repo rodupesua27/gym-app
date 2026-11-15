@@ -399,15 +399,44 @@
   }
 
   async function addExercise() {
-    const names = [...new Set([
+    const catalog = Object.keys(window.EXINFO || {});
+    const extra = [...new Set([
       ...ROUTINES.flatMap(r => r.exercises.map(e => e.name)),
       ...sessions.flatMap(s => s.exercises.map(e => e.name))
-    ])].sort();
-    const v = await sheet(
-      `<h3>Añadir ejercicio</h3><input id="newex" list="exlist" placeholder="Nombre del ejercicio" autocomplete="off">` +
-      `<datalist id="exlist">${names.map(n => `<option value="${esc(n)}">`).join('')}</datalist>`,
-      [{ label: 'Cancelar', v: null }, { label: 'Añadir', cls: 'accent', v: o => o.querySelector('#newex').value.trim() }]
-    );
+    ])].filter(n => !catalog.includes(n));
+    const all = [...catalog, ...extra];
+    const fold = t => String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const v = await new Promise(resolve => {
+      const o = document.createElement('div');
+      o.className = 'fpage';
+      const groups = {};
+      all.forEach(n => { const g = groupOf(n) || 'Otros'; (groups[g] = groups[g] || []).push(n); });
+      const row = n => {
+        const i = exInfo(n);
+        return `<button class="swr" data-n="${esc(n)}" data-f="${esc(fold(n))}">
+          <div class="swt"><div class="en"><b>${esc(n)}</b><small>${i ? esc(i.m.join(', ')) : ''}</small></div></div>
+          ${i && i.img ? `<div class="swi"><img loading="lazy" alt="" src="${imgSrc(i, 0)}"></div>` : ''}</button>`;
+      };
+      const body = Object.keys(groups).sort((x, y) => x.localeCompare(y, 'es')).map(g =>
+        `<div class="egrp" data-grp><h2>${esc(g)}</h2>${groups[g].sort((x, y) => x.localeCompare(y, 'es')).map(row).join('')}</div>`).join('');
+      o.innerHTML = `<div class="fhead"><button class="btn small" data-close="1">‹ Volver</button><b>Añadir ejercicio</b></div>
+        <input id="exsearch" type="search" placeholder="Buscar ejercicio" autocomplete="off" style="margin:12px 0;width:100%">
+        <div id="exlistwrap">${body}</div>`;
+      const inp = o.querySelector('#exsearch');
+      inp.addEventListener('input', () => {
+        const q = fold(inp.value.trim());
+        o.querySelectorAll('.swr').forEach(b => { b.style.display = !q || b.dataset.f.includes(q) ? '' : 'none'; });
+        o.querySelectorAll('.egrp').forEach(g => { g.style.display = [...g.querySelectorAll('.swr')].some(b => b.style.display !== 'none') ? '' : 'none'; });
+      });
+      const done = v => { document.body.removeChild(o); resolve(v); };
+      o.addEventListener('click', ev => {
+        const b = ev.target.closest('button');
+        if (!b) return;
+        if (b.dataset.close) done(null);
+        else if (b.dataset.n) done(b.dataset.n);
+      });
+      document.body.appendChild(o);
+    });
     if (v) { active.exercises.push(mkEx(v, 3, 0, '', 90)); persist(); render(); }
   }
 

@@ -11,7 +11,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="icon" type="image/png" href="/icon-192.png">
-<link rel="stylesheet" href="/style.css?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz">
+<link rel="stylesheet" href="/style.css?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz">
 <title>Gym</title>
 <style>#splash{position:fixed;inset:0;z-index:99999;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity .5s ease}#splash.out{opacity:0;pointer-events:none}#splash video{width:min(100vw,100vh,640px);height:min(100vw,100vh,640px);object-fit:contain;background:#000}</style>
 </head>
@@ -21,23 +21,28 @@
 (function(){
   var sp=document.getElementById('splash'),v=document.getElementById('splashv');
   if(!sp)return;
-  var ready=false,ended=false,gone=false;
+  var ready=false,ended=false,gone=false,last=-1,still=0;
   function hide(){ if(gone)return; gone=true; sp.classList.add('out'); setTimeout(function(){ if(sp.parentNode)sp.parentNode.removeChild(sp); },600); }
   function check(){ if(ready&&ended)hide(); }
   window.addEventListener('load',function(){ ready=true; check(); });
   v.addEventListener('ended',function(){ ended=true; check(); });
-  v.addEventListener('error',function(){ ended=true; check(); });
   sp.addEventListener('click',function(){ ended=true; check(); });
-  var pr=v.play&&v.play(); if(pr&&pr.catch)pr.catch(function(){ setTimeout(function(){ ended=true; check(); },1500); });
-  setTimeout(hide,9000);
+  // Si el vídeo se queda parado (red lenta o iOS lo bloquea), no lo cortamos antes de tiempo: esperamos a que avance
+  setInterval(function(){
+    if(gone||ended)return;
+    if(v.currentTime>last+0.05){ last=v.currentTime; still=0; } else { still++; }
+    if(still>=12){ ended=true; check(); }
+  },500);
+  var pr=v.play&&v.play(); if(pr&&pr.catch)pr.catch(function(){ setTimeout(function(){ ended=true; check(); },2500); });
+  setTimeout(hide,25000);
 })();
 </script>
 <main id="view"></main>
 <div id="restbar"></div>
 <nav id="tabs"></nav>
-<script src="/routines.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
-<script src="/diet.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
-<script src="/exinfo.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
-<script src="/app.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/routines.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/diet.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/exinfo.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
+<script src="/app.js?v=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"></script>
 </body>
 </html>

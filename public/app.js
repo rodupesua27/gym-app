@@ -360,11 +360,28 @@
       const b = ev.target.closest('button');
       if (!b) return;
       if (b.dataset.close) { document.body.removeChild(o); render(); }
-      else if (b.dataset.ptype !== undefined || b.dataset.padd !== undefined || b.dataset.pdel !== undefined) {
-        const sc = o.scrollTop;
+      else if (b.dataset.ptype !== undefined) {
+        // Solo se actualizan las filas de este ejercicio: redibujar la página recargaba las fotos (parpadeo).
         const row = b.closest('.set');
-        if (b.dataset.ptype !== undefined) { const st = s.exercises[+row.dataset.ei].sets[+row.dataset.si]; st.t = st.t === 'W' ? 'N' : 'W'; }
-        else if (b.dataset.padd !== undefined) s.exercises[+b.dataset.padd].sets.push({ t: 'N', kg: '', reps: '', done: false });
+        const ex = s.exercises[+row.dataset.ei];
+        const st = ex.sets[+row.dataset.si];
+        st.t = st.t === 'W' ? 'N' : 'W';
+        save(K.s, sessions);
+        const cnt = { W: 0, N: 0 };
+        const rows = row.closest('.ex').querySelectorAll('.set');
+        ex.sets.forEach((x, si) => {
+          const idx = cnt[x.t]++;
+          const r = rows[si];
+          const btn = r.querySelector('[data-ptype]');
+          btn.textContent = x.t === 'W' ? 'C' : idx + 1;
+          btn.classList.toggle('w', x.t === 'W');
+          const p = prevSet(ex, si);
+          r.querySelector('.pv').textContent = p ? kgTxt(p.kg) + ' × ' + p.reps : '–';
+        });
+      }
+      else if (b.dataset.padd !== undefined || b.dataset.pdel !== undefined) {
+        const sc = o.scrollTop;
+        if (b.dataset.padd !== undefined) s.exercises[+b.dataset.padd].sets.push({ t: 'N', kg: '', reps: '', done: false });
         else { const ss = s.exercises[+b.dataset.pdel].sets; if (ss.length > 1) ss.pop(); }
         save(K.s, sessions);
         document.body.removeChild(o);

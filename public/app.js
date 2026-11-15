@@ -937,7 +937,7 @@
         <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b></div>
           <div style="text-align:right"><small class="muted">Entrenos mes</small><br><b>${thisMonth}</b></div></div>
         <div class="week" style="margin-top:14px">${days.map((d, i) => `<div class="wd"><small>${L[i]}</small><span class="dot ${set.has(weekIso[i]) ? 'on' : ''} ${weekIso[i] === todayIso ? 'today' : ''}"><b>${d.getDate()}</b></span></div>`).join('')}</div>
-        <div class="calhead"><button class="btn small" data-act="calPrev" aria-label="Mes anterior">‹</button><b>${calLabel}</b><button class="btn small" data-act="calNext" aria-label="Mes siguiente">›</button></div>
+        <div class="calhead"><b>${calLabel}</b></div>
         <div class="cal">${cal.map(d => `<i class="${d.getMonth() !== calFirst.getMonth() ? 'out' : ''} ${set.has(isoDay(d)) ? 'on' : ''} ${isoDay(d) === todayIso ? 'today' : ''}" title="${isoDay(d)}"></i>`).join('')}</div>
       </section>
       ${SYNC.id ? '' : '<button class="btn full" style="margin-top:12px" data-act="syncSetup">Activar copia en la nube (para no perder tus datos)</button>'}
@@ -1375,6 +1375,26 @@
 
   const toTop = () => { try { document.body.scrollTop = 0; window.scrollTo(0, 0); } catch (e) {} };
 
+  // ---------- arrastrar el calendario del registro para cambiar de mes ----------
+  (function () {
+    let sx = 0, sy = 0, on = false;
+    document.addEventListener('touchstart', ev => {
+      on = !!(ev.target.closest && ev.target.closest('.cal'));
+      if (on) { sx = ev.touches[0].clientX; sy = ev.touches[0].clientY; }
+    }, { passive: true });
+    document.addEventListener('touchend', ev => {
+      if (!on) return;
+      on = false;
+      const t = ev.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+      const n = new Date();
+      const b = calM || new Date(n.getFullYear(), n.getMonth(), 1);
+      calM = new Date(b.getFullYear(), b.getMonth() + (dx < 0 ? 1 : -1), 1);
+      render();
+    }, { passive: true });
+  })();
+
   // ---------- deslizar para cambiar de pestaña ----------
   (function () {
     const ORDER = ['registro', 'rutinas', 'dieta', 'progreso'];
@@ -1564,12 +1584,6 @@
     else if (a === 'toggleHist') { histOpen = !histOpen; render(); }
     else if (a === 'bAll') { bAll = !bAll; render(); }
     else if (a === 'cmp') { const m = +t.dataset.m; cmpM = cmpM === m ? 0 : m; render(); }
-    else if (a === 'calPrev' || a === 'calNext') {
-      const n = new Date();
-      const b = calM || new Date(n.getFullYear(), n.getMonth(), 1);
-      calM = new Date(b.getFullYear(), b.getMonth() + (a === 'calNext' ? 1 : -1), 1);
-      render();
-    }
     else if (a === 'openBody') {
       const b = body.find(x => String(x.ts) === t.dataset.ts);
       if (!b) return;

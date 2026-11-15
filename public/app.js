@@ -930,8 +930,8 @@
     const calDim = new Date(calBase.getFullYear(), calBase.getMonth() + 1, 0).getDate();
     const calN = Math.ceil((calOff + calDim) / 7) * 7;
     const cal = [...Array(calN)].map((_, i) => new Date(calFirst.getFullYear(), calFirst.getMonth(), 1 - calOff + i));
-    const calTitle = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(calFirst);
-    const calLabel = calTitle.charAt(0).toUpperCase() + calTitle.slice(1);
+    const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const calLabel = `${MESES[calFirst.getMonth()]} ${calFirst.getFullYear()}`;
     return `<h1>Registro</h1>
       <section class="card wk" style="cursor:default">
         <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b></div>

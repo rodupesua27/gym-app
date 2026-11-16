@@ -444,7 +444,7 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .wk { overflow: hidden; }
 /* Hoy: aro blanco; el relleno granate solo si hay entreno (en curso o hecho) */
 /* Hoy: aro blanco, anillo gris oscuro y centro gris claro; con entreno, el centro es granate */
-.wk .cal i.today { outline: none; border: 1.5px solid rgba(255,255,255,.3); box-sizing: border-box; background: #2a2a30; box-shadow: inset 0 0 0 3px #1c1c21; padding: 0; }
+.wk .cal i.today { outline: none; border: 1.5px solid #fff; box-sizing: border-box; background: #34343b; box-shadow: inset 0 0 0 3px #1c1c21; padding: 0; }
 .wk .cal i.today.on { background: var(--accent); background-clip: content-box; padding: 4px; }
 .calslide { margin-top: 16px; }
 .calslide .cal { margin-top: 12px; }

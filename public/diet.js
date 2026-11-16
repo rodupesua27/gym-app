@@ -2,7 +2,7 @@
 // Todo se hace con sartén y microondas, cocinando cada día.
 // kc / pr: kcal y proteína de cada ingrediente (misma posición que "ingredients").
 // Datos de etiqueta del usuario: Lidl (pan, pollo, yogur y queso Milbona, nata, huevos M), Real Valle (pavo), Tastino (tortillas), Nixe (atún), Hacendado (tomate frito), mayonesa (613 kcal/100 g).
-// Cereales Ultrapop: etiqueta de la caja (30 g = 115 kcal, 2,6 g proteína). Lomo de cerdo SPAR: no hay etiqueta en la base de datos; valores genéricos de lomo de cerdo magro (FatSecret, 120 kcal y 21 g proteína por 100 g). Estimaciones: mantequilla (sin datos), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, huevo medio entre M y L (60 g: unos 86 kcal y 7,6 g de proteína cada uno).
+// Cereales Ultrapop: etiqueta de la caja (30 g = 115 kcal, 2,6 g proteína). Lomo de cerdo SPAR: no hay etiqueta en la base de datos; valores genéricos de lomo de cerdo magro (FatSecret, 120 kcal y 21 g proteína por 100 g). Estimaciones: mantequilla (etiqueta: 749 kcal, 0,5 g de proteína y 82,5 g de grasa por 100 g), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, huevo medio entre M y L (60 g: unos 86 kcal y 7,6 g de proteína cada uno).
 window.DIET_TARGET = { kcal: 2700, protein: 120 };
 window.DIET = {
   slots: [
@@ -15,14 +15,14 @@ window.DIET = {
       id: 'd1', slot: 'desayuno', short: 'Bocadillo', name: 'Bocadillo de pavo y huevos',
       min: 10,
       ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', 'Mantequilla (10 g)', '2 huevos (M y L mezclados)', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
-      kc: [379, 20, 72, 172, 99, 75], pr: [11, 4, 0, 15, 1, 4],
+      kc: [379, 20, 75, 172, 99, 75], pr: [11, 4, 0, 15, 1, 4],
       steps: 'Huevos a la plancha en la sartén (3-4 min). Monta el bocadillo con mantequilla y pavo. Plátano y café aparte.'
     },
     {
       id: 'd2', slot: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur con proteína y plátano',
       min: 3,
       ingredients: ['140 g de pan Lidl (bocadillo)', 'Mantequilla (30 g)', 'Mermelada de fresa (20 g)', '1 yogur Milbona griego fresa (125 g)', '5 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
-      kc: [379, 216, 10, 151, 20, 99, 75], pr: [11, 0, 0, 3, 4, 1, 4],
+      kc: [379, 225, 10, 151, 20, 99, 75], pr: [11, 0, 0, 3, 4, 1, 4],
       steps: 'Sin cocinar. Para el día sin hambre o sin tiempo.',
       note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
     },

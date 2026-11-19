@@ -1586,8 +1586,18 @@
       }
     }
     else if (a === 'reorder') {
+      // Animación: cada tarjeta pasa de su altura anterior a la nueva y las de abajo se van juntando.
+      const secs = () => [...document.querySelectorAll('section.ex[data-e]')];
+      const before = secs().map(x => x.getBoundingClientRect().height);
       reorderMode = !reorderMode;
       render();
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) secs().forEach((x, i) => {
+        const h0 = before[i], h1 = x.getBoundingClientRect().height;
+        if (!h0 || Math.abs(h0 - h1) < 1) return;
+        x.style.overflow = 'hidden'; x.style.boxSizing = 'border-box';
+        const an = x.animate([{ height: h0 + 'px' }, { height: h1 + 'px' }], { duration: 350, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        an.onfinish = an.oncancel = () => { x.style.overflow = ''; x.style.boxSizing = ''; };
+      });
     }
     else if (a === 'moveEx') {
       const j = ei + (+t.dataset.d);

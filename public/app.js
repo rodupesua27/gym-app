@@ -1049,7 +1049,7 @@
   const imgSrc = (i, k) => `/img/ex/${encodeURIComponent(i.img)}/${k}.${i.ext || 'jpg'}`;
   const thumb = (n, cls) => {
     const i = exInfo(n);
-    return i && i.img ? `<img class="${cls}" loading="lazy" alt="" src="${imgSrc(i, 0)}">`
+    return i && i.img ? `<img class="${cls}" decoding="sync" alt="" src="${imgSrc(i, 0)}">`
              : `<div class="${cls} ph">${ICON.registro}</div>`;
   };
   function routineMuscles(r) {

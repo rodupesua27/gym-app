@@ -1019,7 +1019,7 @@
           <button class="ck" data-act="check" aria-label="Completar serie">${ICON.check}</button>
         </div>`;
       }).join('');
-      return `<section class="ex" data-e="${ei}">
+      return `<section class="ex${reorderMode ? ' rmode' : ''}" data-e="${ei}">
         <div class="exh">${reorderMode ? `<span class="dragh" data-drag="1" aria-label="Arrastrar para reordenar">≡</span>` : ''}<button class="exth" data-act="exinfo" data-ex="${esc(ex.name)}">${thumb(ex.name, 'th')}</button><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small></div><span class="ecnt" id="ec${ei}">${ex.sets.filter(s => s.done).length}/${ex.sets.length}</span></div>
         <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
         ${rows}
@@ -1038,7 +1038,7 @@
         <div class="pbar"><i id="pbar" style="width:${total ? Math.round(done * 100 / total) : 0}%"></i></div></div>
       <div class="ahead-sp"></div>
       ${exs || '<p class="muted">Sesión libre: añade tu primer ejercicio.</p>'}
-      <button class="btn full" data-act="addEx">+ Añadir ejercicio</button>
+      ${reorderMode ? '<button class="btn full accent" data-act="reorder">Listo</button>' : '<button class="btn full" data-act="addEx">+ Añadir ejercicio</button>'}
       ${active.cardio ? '<div style="height:14px"></div>' + cardioCard(active.cardio, true) : ''}
       <button class="btn full danger" style="margin-top:10px" data-act="cancel">Cancelar entrenamiento</button>`;
   }

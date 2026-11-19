@@ -450,3 +450,7 @@ section.ex.dragging { position: relative; z-index: 5; opacity: .9; box-shadow: 0
 .wk .cal i.today.on { background: var(--accent); background-clip: content-box; padding: 4px; }
 .calslide { margin-top: 16px; }
 .calslide .cal { margin-top: 12px; }
+
+section.ex.rmode > :not(.exh) { display: none; }
+section.ex.rmode { padding-bottom: 4px; }
+section.ex.rmode .ecnt { display: none; }

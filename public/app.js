@@ -1,6 +1,40 @@
 (function () {
   'use strict';
 
+  let reorderMode = false;
+  let drag = null;
+  document.addEventListener('pointerdown', e => {
+    const h = e.target.closest && e.target.closest('[data-drag]');
+    if (!h || !reorderMode || !active) return;
+    e.preventDefault();
+    const sec = h.closest('section.ex');
+    const from = +sec.dataset.e;
+    const rects = [...document.querySelectorAll('section.ex[data-e]')].map(s => s.getBoundingClientRect());
+    drag = { from, to: from, sec, y0: e.clientY, rects };
+    sec.classList.add('dragging');
+  }, { passive: false });
+  document.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dy = e.clientY - drag.y0;
+    drag.sec.style.transform = `translateY(${dy}px)`;
+    const r = drag.rects[drag.from];
+    const center = r.top + r.height / 2 + dy;
+    drag.to = drag.rects.filter((q, i) => i !== drag.from && q.top + q.height / 2 < center).length;
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    const { from, to } = drag;
+    drag = null;
+    if (to !== from && active) {
+      const [moved] = active.exercises.splice(from, 1);
+      active.exercises.splice(to, 0, moved);
+      persist();
+    }
+    render();
+  };
+  document.addEventListener('pointerup', endDrag);
+  document.addEventListener('pointercancel', endDrag);
+
   let ROUTINES = window.ROUTINES || [];
   try { if (ROUTINES.length) localStorage.setItem('gym.routinesCache', JSON.stringify(ROUTINES)); else ROUTINES = JSON.parse(localStorage.getItem('gym.routinesCache') || '[]'); } catch (e) {}
   const ALT = {};
@@ -986,16 +1020,15 @@
         </div>`;
       }).join('');
       return `<section class="ex" data-e="${ei}">
-        <div class="exh"><button class="exth" data-act="exinfo" data-ex="${esc(ex.name)}">${thumb(ex.name, 'th')}</button><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small></div><span class="ecnt" id="ec${ei}">${ex.sets.filter(s => s.done).length}/${ex.sets.length}</span></div>
+        <div class="exh">${reorderMode ? `<span class="dragh" data-drag="1" aria-label="Arrastrar para reordenar">≡</span>` : ''}<button class="exth" data-act="exinfo" data-ex="${esc(ex.name)}">${thumb(ex.name, 'th')}</button><div style="flex:1;min-width:0"><b>${esc(ex.name)}</b><small>${ex.reps ? ex.reps + ' reps · ' : ''}descanso ${dur(ex.rest)}</small></div><span class="ecnt" id="ec${ei}">${ex.sets.filter(s => s.done).length}/${ex.sets.length}</span></div>
         <div class="cols"><span>Serie</span><span>Anterior</span><span>Kg</span><span>Reps</span><span></span></div>
         ${rows}
         <div class="exf" data-e="${ei}">
           <button class="btn small" data-act="addSet">+ Serie</button>
           <button class="btn small" data-act="delSet">− Serie</button>
-          <button class="btn small" data-act="moveEx" data-d="-1" aria-label="Subir ejercicio">↑</button>
-          <button class="btn small" data-act="moveEx" data-d="1" aria-label="Bajar ejercicio">↓</button>
           <button class="btn small danger" data-act="delEx">Quitar</button>
         </div>
+        <button class="btn full" style="margin-top:8px" data-act="reorder">${reorderMode ? 'Listo' : 'Reordenar'}</button>
         ${candidatesOf(ex.orig || ex.name).length ? `<button class="btn full" style="margin-top:8px" data-act="swapEx" data-e="${ei}">Cambiar ejercicio</button>` : ''}
       </section>`;
     }).join('');
@@ -1202,7 +1235,7 @@
     let nextW = '';
     if (lastB) {
       const ld = new Date(lastB.ts); ld.setHours(0, 0, 0, 0);
-      const nd = new Date(ld); nd.setDate(nd.getDate() + 14);
+      const nd = new Date(ld); nd.setMonth(nd.getMonth() + 1);
       const t0 = new Date(); t0.setHours(0, 0, 0, 0);
       const dd = Math.round((nd - t0) / 86400000);
       const fd = nd.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
@@ -1551,6 +1584,10 @@
         }
         persist(); render();
       }
+    }
+    else if (a === 'reorder') {
+      reorderMode = !reorderMode;
+      render();
     }
     else if (a === 'moveEx') {
       const j = ei + (+t.dataset.d);

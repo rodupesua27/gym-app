@@ -966,7 +966,16 @@
     const cal = [...Array(calN)].map((_, i) => new Date(calFirst.getFullYear(), calFirst.getMonth(), 1 - calOff + i));
     const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     const calLabel = `${MESES[calFirst.getMonth()]} ${calFirst.getFullYear()}`;
+    // «Toca hoy»: la rutina siguiente a la del último entreno (en el orden de las rutinas).
+    let tocaH = '';
+    if (!active && ROUTINES.length) {
+      const lastR = sessions.slice().reverse().find(x => x.routineId && ROUTINES.some(r => r.id === x.routineId));
+      const li = lastR ? ROUTINES.findIndex(r => r.id === lastR.routineId) : -1;
+      const nr = ROUTINES[(li + 1) % ROUTINES.length];
+      tocaH = `<div class="toca"><div class="toca-tx"><small>Toca hoy</small><b>${esc(nr.name)} · ${esc(nr.short)}</b></div><button class="btn accent toca-btn" data-act="start" data-id="${nr.id}">Empezar entreno →</button></div>`;
+    }
     return `<h1>Registro</h1>
+      ${tocaH}
       <section class="card wk" style="cursor:default">
         <div class="wk-top"><div><small class="muted">Racha</small><br><b>${cur}</b></div>
           <div style="text-align:right"><small class="muted">Entrenos mes</small><br><b>${thisMonth}</b></div></div>

@@ -455,8 +455,8 @@ section.ex.rmode > :not(.exh) { display: none; }
 section.ex.rmode { padding-bottom: 4px; }
 section.ex.rmode .ecnt { display: none; }
 
-.toca { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
-.toca-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.toca-tx small { font-size: 12px; color: rgba(255,255,255,.4); }
-.toca-tx b { font-size: 18px; line-height: 1.25; }
-.toca-btn { flex: none; background: #7b1e2b; color: #fff; border: 0; border-radius: 10px; padding: 6px 10px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.toca { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 12px; padding: 12px 12px 12px 16px; }
+.toca-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 1px; }
+.toca-tx small { font-size: 12px; line-height: 1.2; color: rgba(255,255,255,.4); }
+.toca-tx b { font-size: 18px; line-height: 1.2; }
+.toca .toca-btn { flex: none; align-self: center; display: inline-flex; align-items: center; justify-content: center; min-height: 0; height: 34px; padding: 0 14px; font-size: 14px; line-height: 1; border-radius: 10px; white-space: nowrap; }

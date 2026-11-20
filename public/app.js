@@ -972,7 +972,7 @@
       const lastR = sessions.slice().reverse().find(x => x.routineId && ROUTINES.some(r => r.id === x.routineId));
       const li = lastR ? ROUTINES.findIndex(r => r.id === lastR.routineId) : -1;
       const nr = ROUTINES[(li + 1) % ROUTINES.length];
-      tocaH = `<div class="toca"><div class="toca-tx"><small>Toca hoy</small><b>${esc(nr.name)} · ${esc(nr.short)}</b></div><button class="btn accent toca-btn" data-act="start" data-id="${nr.id}">Empezar entreno →</button></div>`;
+      tocaH = `<section class="card toca" style="cursor:default"><div class="toca-tx"><small>Toca hoy</small><b>${esc(nr.name)} · ${esc(nr.short)}</b></div><button class="btn accent toca-btn" data-act="start" data-id="${nr.id}">Empezar entreno →</button></section>`;
     }
     return `<h1>Registro</h1>
       ${tocaH}

@@ -458,5 +458,5 @@ section.ex.rmode .ecnt { display: none; }
 .toca { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
 .toca-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .toca-tx small { font-size: 12px; color: rgba(255,255,255,.4); }
-.toca-tx b { font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.toca-btn { flex: none; background: #7b1e2b; color: #fff; border: 0; border-radius: 12px; padding: 10px 14px; font-weight: 600; white-space: nowrap; }
+.toca-tx b { font-size: 15px; line-height: 1.25; }
+.toca-btn { flex: none; background: #7b1e2b; color: #fff; border: 0; border-radius: 10px; padding: 7px 10px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }

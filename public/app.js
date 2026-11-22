@@ -741,11 +741,10 @@
     const last = body.length ? body.slice().sort((x, y) => x.ts - y.ts)[body.length - 1] : null;
     const bw = last ? +last.kg : 0;
     if (!(bw > 20)) return head + '<small class="muted">Anota tu peso en Progreso para calcular tu rango.</small></section>';
-    const vs = [], vg = [];
-    Object.keys(STD).forEach(n => { const rm = rmOf(n); if (rm) { const r = rm / bw; vs.push(vOf(r, STD[n])); vg.push(vOf(r * 1.2, STD[n])); } });
-    if (vs.length < 2) return head + '<small class="muted">Registra series (de 1 a 12 reps) en al menos 2 ejercicios con tabla (jalón, press inclinado, extensión de pierna, curl, remo, tríceps, mariposa, aductores…).</small></section>';
-    const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
-    const g = tierOf(avg(vs)), a = tierOf(avg(vg));
+    const avgZ = o => { const v = AXES.map(([z]) => o[z]).filter(x => x != null); return v.length ? v.reduce((x, y) => x + y, 0) / v.length : null; };
+    const zg = avgZ(zoneScores()), za = avgZ(zoneScores(null, 1.2));
+    if (zg == null) return head + '<small class="muted">Registra series (de 1 a 12 reps) en ejercicios de varias zonas para ver tu rango.</small></section>';
+    const g = tierOf(zg), a = tierOf(za);
     const half = (t, lbl) => `<div class="rk">${badge(t)}<small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;
     return head + `<div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div></section>`;
   }
@@ -757,17 +756,14 @@
     Hombros: 'Hombros', 'Bíceps': 'Brazos', 'Tríceps': 'Brazos', Antebrazos: 'Brazos', Abdominales: 'Core',
     'Cuádriceps': 'Piernas', Isquios: 'Piernas', Abductores: 'Piernas', Aductores: 'Piernas', 'Glúteos': 'Piernas', Gemelos: 'Piernas' };
   // Nivel de fuerza (0-8, misma escala que el rango) por zona: media de los ejercicios con tabla de esa zona.
-  function zoneScores(at) {
+  function zoneScores(at, f = 1) {
     const bs = body.slice().sort((x, y) => x.ts - y.ts);
     const last = at ? (bs.filter(b => b.ts <= at).pop() || bs[0]) : bs[bs.length - 1];
     const bw = last ? +last.kg : 0;
     const acc = {};
-    // Nivel general por zona: todos los ejercicios con tabla de esa zona; los que no haces cuentan como 0.
     if (bw > 20) Object.keys(STD).forEach(n => {
-      const z = AXOF[groupOf(n)];
-      if (!z) return;
-      const rm = rmOf(n, at);
-      (acc[z] = acc[z] || []).push(rm ? vOf(rm / bw, STD[n]) : 0);
+      const rm = rmOf(n, at), z = AXOF[groupOf(n)];
+      if (rm && z) (acc[z] = acc[z] || []).push(vOf(rm / bw * f, STD[n]));
     });
     const out = {};
     AXES.forEach(([z]) => { out[z] = acc[z] ? acc[z].reduce((a, b) => a + b, 0) / acc[z].length : null; });

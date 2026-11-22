@@ -762,9 +762,12 @@
     const last = at ? (bs.filter(b => b.ts <= at).pop() || bs[0]) : bs[bs.length - 1];
     const bw = last ? +last.kg : 0;
     const acc = {};
+    // Nivel general por zona: todos los ejercicios con tabla de esa zona; los que no haces cuentan como 0.
     if (bw > 20) Object.keys(STD).forEach(n => {
-      const rm = rmOf(n, at), z = AXOF[groupOf(n)];
-      if (rm && z) (acc[z] = acc[z] || []).push(vOf(rm / bw, STD[n]));
+      const z = AXOF[groupOf(n)];
+      if (!z) return;
+      const rm = rmOf(n, at);
+      (acc[z] = acc[z] || []).push(rm ? vOf(rm / bw, STD[n]) : 0);
     });
     const out = {};
     AXES.forEach(([z]) => { out[z] = acc[z] ? acc[z].reduce((a, b) => a + b, 0) / acc[z].length : null; });
@@ -790,7 +793,7 @@
     const bars = order.map(z => {
       if (sc[z] == null) return `<div class="zb"><div class="zt"><span>${z}</span><b>–</b></div><div class="zbar"><i style="width:0%"></i></div></div>`;
       const t = tierOf(sc[z]), pc = Math.round(t.pct * 100), nx = nextOf(t);
-      return `<div class="zb"><div class="zt"><span>${z}</span><b style="color:${TCOL[t.i]}">${t.name}</b></div><div class="zbar"><i style="width:${pc}%;background:${TCOL[t.i]}"></i></div><small class="muted zn">${nx ? pc + '% para ' + nx : 'Rango máximo'}</small></div>`;
+      return `<div class="zb"><div class="zt"><span>${z}</span><b style="color:${TCOL[t.i]}">${t.name}</b></div><div class="zbar"><i style="width:${pc}%;background:${TCOL[t.i]}"></i></div><small class="muted zn">${nx ? pc + '% de ' + t.name : 'Rango máximo'}</small></div>`;
     }).join('');
     return `<section class="card bodyc" style="cursor:default"><b class="rk-t">Tu cuerpo</b>
       <div class="bgrid"><div class="chart bfig" id="bodyhost"></div><div class="zbars">${bars}</div></div>

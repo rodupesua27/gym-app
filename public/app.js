@@ -746,10 +746,7 @@
     if (vs.length < 2) return head + '<small class="muted">Registra series (de 1 a 12 reps) en al menos 2 ejercicios con tabla (jalón, press inclinado, extensión de pierna, curl, remo, tríceps, mariposa, aductores…).</small></section>';
     const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
     const g = tierOf(avg(vs)), a = tierOf(avg(vg));
-    const half = (t, lbl) => {
-      const nx = nextOf(t), pc = Math.round(t.pct * 100);
-      return `<div class="rk">${badge(t)}<div class="rk-r"><small class="muted">${lbl}</small> <b style="color:${TCOL[t.i]}">${t.name}</b></div><div class="rkbar"><i style="width:${pc}%;background:${TCOL[t.i]}"></i></div><small class="muted">${nx ? pc + '% para ' + nx : 'Rango máximo'}</small></div>`;
-    };
+    const half = (t, lbl) => `<div class="rk">${badge(t)}<small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;
     return head + `<div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div></section>`;
   }
 
@@ -790,8 +787,11 @@
     const sc = zoneScores();
     const any = AXES.some(([z]) => sc[z] != null);
     const order = ['Pecho', 'Espalda', 'Hombros', 'Brazos', 'Core', 'Piernas'];
-    const bars = order.map(z => { const pc = sc[z] == null ? 0 : Math.round(Math.min(1, sc[z] / 8) * 100);
-      return `<div class="zb"><div class="zt"><span>${z}</span><b>${sc[z] == null ? '–' : pc + ' %'}</b></div><div class="zbar"><i style="width:${pc}%"></i></div></div>`; }).join('');
+    const bars = order.map(z => {
+      if (sc[z] == null) return `<div class="zb"><div class="zt"><span>${z}</span><b>–</b></div><div class="zbar"><i style="width:0%"></i></div></div>`;
+      const t = tierOf(sc[z]), pc = Math.round(t.pct * 100), nx = nextOf(t);
+      return `<div class="zb"><div class="zt"><span>${z}</span><b style="color:${TCOL[t.i]}">${t.name}</b></div><div class="zbar"><i style="width:${pc}%;background:${TCOL[t.i]}"></i></div><small class="muted zn">${nx ? pc + '% para ' + nx : 'Rango máximo'}</small></div>`;
+    }).join('');
     return `<section class="card bodyc" style="cursor:default"><b class="rk-t">Tu cuerpo</b>
       <div class="bgrid"><div class="chart bfig" id="bodyhost"></div><div class="zbars">${bars}</div></div>
       ${any ? '' : '<small class="muted">Anota tu peso en Progreso y registra series (1–12 reps) para ver tu fuerza por zona.</small>'}<small class="muted bcred">Modelo: Diego Luján García (CC BY 4.0)</small></section>`;

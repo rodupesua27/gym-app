@@ -167,7 +167,14 @@
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); });
 
   // ---------- hojas modales ----------
-  function sheet(html, buttons) {
+  // Selectores tipo alarma del iPhone: columnas que se deslizan y se ajustan al número central.
+  const WH = 40;
+  function wheel(id, max) {
+    const items = [...Array(max + 1)].map((_, i) => `<div class="wi">${String(i).padStart(2, '0')}</div>`).join('');
+    return `<div class="wheel" id="${id}"><div class="wpad"></div>${items}<div class="wpad"></div></div>`;
+  }
+  const wval = el => Math.max(0, Math.round(el.scrollTop / WH));
+  function sheet(html, buttons, onOpen) {
     return new Promise(resolve => {
       const o = document.createElement('div');
       o.className = 'overlay';
@@ -186,6 +193,7 @@
         }
       });
       document.body.appendChild(o);
+      if (onOpen) onOpen(o);
       const inp = o.querySelector('input');
       if (inp) inp.focus();
     });
@@ -628,10 +636,10 @@
       const r = await sheet(
         `<h3>¿Seguro que ha durado ${Math.floor(tot / 60)} h ${tot % 60} min?</h3>
          <p class="muted">Es un entrenamiento muy largo. Si te dejaste el cronómetro en marcha, corrige la duración.</p>
-         <div class="grid2"><label class="fl"><small class="muted">Horas</small><input id="dh" inputmode="numeric" value="${Math.floor(tot / 60)}"></label>
-         <label class="fl"><small class="muted">Minutos</small><input id="dm" inputmode="numeric" value="${tot % 60}"></label></div>`,
+         <div class="wheels">${wheel('dh', 23)}<span class="wsep">h</span>${wheel('dm', 59)}<span class="wsep">min</span><div class="wband"></div></div>`,
         [{ label: 'Seguir entrenando', v: null },
-         { label: 'Guardar', cls: 'accent', v: o => ({ h: num(o.querySelector('#dh').value), m: num(o.querySelector('#dm').value) }) }]
+         { label: 'Guardar', cls: 'accent', v: o => ({ h: wval(o.querySelector('#dh')), m: wval(o.querySelector('#dm')) }) }],
+        o => { o.querySelector('#dh').scrollTop = Math.floor(tot / 60) * WH; o.querySelector('#dm').scrollTop = (tot % 60) * WH; }
       );
       if (!r) return;
       const mins = (isNaN(r.h) ? 0 : r.h) * 60 + (isNaN(r.m) ? 0 : r.m);
@@ -714,6 +722,12 @@
     const i = Math.floor(v), sub = Math.min(2, Math.floor((v - i) * 3));
     return { i, name: TIERS[i] + ' ' + (sub + 1), sub: sub + 1, pct: (v - i) * 3 - sub };
   }
+  // Siguiente subrango (p. ej. «Platino 2») para mostrar cuánto falta.
+  function nextOf(t) {
+    if (t.i >= 8) return null;
+    if (t.sub < 3) return TIERS[t.i] + ' ' + (t.sub + 1);
+    return t.i < 7 ? TIERS[t.i + 1] + ' 1' : 'Radiante';
+  }
   // Insignia propia (escudo con galones); no copia ningún icono existente.
   function badge(t) {
     const c = TCOL[t.i];
@@ -732,7 +746,10 @@
     if (vs.length < 2) return head + '<small class="muted">Registra series (de 1 a 12 reps) en al menos 2 ejercicios con tabla (jalón, press inclinado, extensión de pierna, curl, remo, tríceps, mariposa, aductores…).</small></section>';
     const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
     const g = tierOf(avg(vs)), a = tierOf(avg(vg));
-    const half = (t, lbl) => `<div class="rk">${badge(t)}<small class="muted">${lbl}</small><b style="color:${TCOL[t.i]}">${t.name}</b><div class="rkbar"><i style="width:${Math.round(t.pct * 100)}%;background:${TCOL[t.i]}"></i></div></div>`;
+    const half = (t, lbl) => {
+      const nx = nextOf(t), pc = Math.round(t.pct * 100);
+      return `<div class="rk">${badge(t)}<div class="rk-r"><small class="muted">${lbl}</small> <b style="color:${TCOL[t.i]}">${t.name}</b></div><div class="rkbar"><i style="width:${pc}%;background:${TCOL[t.i]}"></i></div><small class="muted">${nx ? pc + '% para ' + nx : 'Rango máximo'}</small></div>`;
+    };
     return head + `<div class="rk2">${half(a, 'Gente en general')}${half(g, 'Gente de gimnasio')}</div></section>`;
   }
 

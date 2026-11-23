@@ -118,7 +118,9 @@ window.ROUTINES = [
       { name: 'Empuje de cadera (máquina)', sets: 3, reps: '8-10', rest: 120 },
       { name: 'Curl de pierna acostado (máquina)', sets: 4, reps: '10-12', rest: 90 },
       { name: 'Pantorrilla en prensa, puntas hacia fuera', sets: 4, reps: '10-15', rest: 75 },
-      { name: 'Pantorrilla en prensa, puntas hacia dentro', sets: 3, reps: '9-15', rest: 75 }
+      { name: 'Pantorrilla en prensa, puntas hacia dentro', sets: 3, reps: '9-15', rest: 75 },
+      { name: 'Abdominal corto con cable', sets: 3, reps: '12-15', rest: 60 },
+      { name: 'Elevación de piernas en máquina (silla romana)', sets: 3, reps: '10-12', rest: 60 }
     ]
   }
 ];

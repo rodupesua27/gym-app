@@ -41,7 +41,7 @@ window.ROUTINES = [
     name: 'Día 3',
     short: 'Pierna',
     exercises: [
-      { name: 'Extensión de pierna', sets: 6, warmup: 2, reps: '9-12', rest: 90 },
+      { name: 'Extensión de pierna', sets: 5, warmup: 2, reps: '9-12', rest: 90 },
       { name: 'Press de piernas', sets: 4, reps: '8-10', rest: 150 },
       { name: 'Curl de pierna acostado (máquina)', sets: 5, reps: '8-12', rest: 90 },
       { name: 'Abducción de cadera (máquina)', sets: 2, reps: '10-12', rest: 75 },
@@ -114,7 +114,7 @@ window.ROUTINES = [
     name: 'Día 7',
     short: 'Pierna y pantorrilla',
     exercises: [
-      { name: 'Extensión de pierna', sets: 4, warmup: 2, reps: '10-12', rest: 90 },
+      { name: 'Extensión de pierna', sets: 6, warmup: 2, reps: '10-12', rest: 90 },
       { name: 'Empuje de cadera (máquina)', sets: 3, reps: '8-10', rest: 120 },
       { name: 'Curl de pierna acostado (máquina)', sets: 4, reps: '10-12', rest: 90 },
       { name: 'Pantorrilla en prensa, puntas hacia fuera', sets: 4, reps: '10-15', rest: 75 },

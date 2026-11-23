@@ -14,14 +14,14 @@ window.DIET = {
     {
       id: 'd1', slot: 'desayuno', short: 'Bocadillo', name: 'Bocadillo de pavo y huevos',
       min: 10,
-      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', 'Mantequilla (10 g)', '2 huevos (M y L mezclados)', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
+      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', 'Mantequilla (10 g)', '2 huevos (M y L mezclados)', '1 plátano de Canarias', 'Café con leche'],
       kc: [379, 20, 75, 172, 99, 75], pr: [11, 4, 0, 15, 1, 4],
       steps: 'Huevos a la plancha en la sartén (3-4 min). Monta el bocadillo con mantequilla y pavo. Plátano y café aparte.'
     },
     {
       id: 'd2', slot: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur con proteína y plátano',
       min: 3,
-      ingredients: ['140 g de pan Lidl (bocadillo)', 'Mantequilla (30 g)', 'Mermelada de fresa (20 g)', '1 yogur Milbona griego fresa (125 g)', '5 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche desnatada sin lactosa (250 ml: mitad leche, mitad café) + 2 cucharillas de azúcar'],
+      ingredients: ['140 g de pan Lidl (bocadillo)', 'Mantequilla (30 g)', 'Mermelada de fresa (20 g)', '1 yogur Milbona griego fresa (125 g)', '5 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche'],
       kc: [379, 225, 10, 151, 20, 99, 75], pr: [11, 0, 0, 3, 4, 1, 4],
       steps: 'Sin cocinar. Para el día sin hambre o sin tiempo.',
       note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
@@ -36,9 +36,9 @@ window.DIET = {
     {
       id: 'd4', slot: 'desayuno', short: 'Bocadillo de lomo', name: 'Bocadillo de lomo de ternera con mayonesa',
       min: 8,
-      ingredients: ['140 g de pan Lidl (bocadillo)', '80 g de lomo de cerdo SPAR en lonchas (valores genéricos de lomo de cerdo magro)', '1 cucharada de mayonesa (15 g)'],
-      kc: [379, 96, 92], pr: [11, 17, 0],
-      steps: 'Lomo a la sartén sin aceite, 2-3 min por lado a fuego fuerte, hasta que quede dorado. Monta el bocadillo con la mayonesa.'
+      ingredients: ['140 g de pan Lidl (bocadillo)', '80 g de lomo de cerdo SPAR en lonchas (valores genéricos de lomo de cerdo magro)', '1 cucharada de mayonesa (15 g)', '2 huevos (M y L mezclados)', '1 plátano de Canarias', 'Café con leche'],
+      kc: [379, 96, 92, 172, 99, 75], pr: [11, 17, 0, 15, 1, 4],
+      steps: 'Lomo a la sartén sin aceite, 2-3 min por lado a fuego fuerte, hasta que quede dorado. Huevos a la plancha en la misma sartén, 3 min. Monta el bocadillo con la mayonesa y los huevos. Plátano y café con leche aparte.'
     },
     {
       id: 'c1', slot: 'comida', short: 'Arroz, pollo y huevos', name: 'Arroz con pollo, huevos y medio aguacate',

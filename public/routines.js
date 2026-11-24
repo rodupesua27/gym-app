@@ -1,12 +1,11 @@
 // Rutinas de entrenamiento. Este archivo es la fuente de verdad: Claude lo edita
 // cuando pides un cambio y la app lo recoge al abrirse.
-// Orden = semana de lunes a domingo. "cardio": bloques de cinta o carrera que se muestran en la sesión.
+// Orden = ciclo de 8 días (1 pecho, 2 espalda, 3 pierna, 4 cardio, 5 pecho, 6 espalda, 7 pierna, 8 cardio), sin días de la semana. "cardio": bloques de cinta o carrera que se muestran en la sesión.
 // "warmup": nº de series de calentamiento (las primeras) incluidas en "sets".
-window.ROUTINES_VERSION = '2026-11-15av';
+window.ROUTINES_VERSION = '2026-11-24b';
 window.ROUTINES = [
   {
     id: 'd1',
-    day: 'Lunes',
     name: 'Día 1',
     short: 'Pecho, hombro y tríceps',
     exercises: [
@@ -22,7 +21,6 @@ window.ROUTINES = [
   },
   {
     id: 'd2',
-    day: 'Martes',
     name: 'Día 2',
     short: 'Espalda y bíceps',
     exercises: [
@@ -37,7 +35,6 @@ window.ROUTINES = [
   },
   {
     id: 'd3',
-    day: 'Miércoles',
     name: 'Día 3',
     short: 'Pierna',
     exercises: [
@@ -53,7 +50,6 @@ window.ROUTINES = [
   },
   {
     id: 'c1',
-    day: 'Jueves',
     badge: '4',
     name: 'Día 4',
     short: 'Abdomen, lumbar y cinta',
@@ -77,7 +73,6 @@ window.ROUTINES = [
   },
   {
     id: 'd4',
-    day: 'Viernes',
     badge: '5',
     name: 'Día 5',
     short: 'Pecho, hombro y tríceps',
@@ -92,7 +87,6 @@ window.ROUTINES = [
   },
   {
     id: 'd5',
-    day: 'Sábado',
     badge: '6',
     name: 'Día 6',
     short: 'Espalda y brazos',
@@ -108,7 +102,6 @@ window.ROUTINES = [
   },
   {
     id: 'c2',
-    day: 'Domingo',
     badge: '7',
     name: 'Día 7',
     short: 'Pierna y pantorrilla',
@@ -117,11 +110,33 @@ window.ROUTINES = [
       { name: 'Empuje de cadera (máquina)', sets: 3, reps: '8-10', rest: 120 },
       { name: 'Curl de pierna acostado (máquina)', sets: 4, reps: '10-12', rest: 90 },
       { name: 'Pantorrilla en prensa, puntas hacia fuera', sets: 4, reps: '10-15', rest: 75 },
-      { name: 'Pantorrilla en prensa, puntas hacia dentro', sets: 3, reps: '9-15', rest: 75 },
-      { name: 'Abdominal corto con cable', sets: 3, reps: '12-15', rest: 60 },
-      { name: 'Elevación de piernas en máquina (silla romana)', sets: 3, reps: '10-12', rest: 60 }
+      { name: 'Pantorrilla en prensa, puntas hacia dentro', sets: 3, reps: '9-15', rest: 75 }
+    ]
+  },
+  {
+    id: 'c3',
+    badge: '8',
+    name: 'Día 8',
+    short: 'Abdomen, lumbar y cinta',
+    cardio: {
+      title: 'Cardio',
+      min: 35,
+      tip: 'Primero el abdomen y la zona lumbar, y después la cinta. Cinta: ritmo en el que puedas hablar en frases completas; si va bien, sube a 7 % de inclinación, pero nunca subas velocidad e inclinación a la vez.',
+      blocks: [
+        { name: 'Cinta · calentamiento', min: 5, desc: '4 km/h · 3 % de inclinación' },
+        { name: 'Cinta · parte principal', min: 25, desc: '5,5 km/h · 6 % de inclinación' },
+        { name: 'Cinta · vuelta a la calma', min: 5, desc: '4 km/h · 0 % de inclinación' }
+      ]
+    },
+    exercises: [
+      { name: 'Abdominal corto con cable', sets: 4, warmup: 2, reps: '12-15', rest: 60 },
+      { name: 'Crunch inverso', sets: 3, reps: '12-15', rest: 60 },
+      { name: 'Elevación de piernas en máquina (silla romana)', sets: 3, reps: '10-15', rest: 60 },
+      { name: 'Flexión lateral en polea (oblicuos)', sets: 3, reps: '12-15', rest: 60 },
+      { name: 'Hiperextensión lumbar', sets: 3, reps: '10-15', rest: 60 }
     ]
   }
+
 ];
 
 // Series y repeticiones propias de cada ejercicio alternativo (hipertrofia, hombro delicado).

@@ -1,5 +1,5 @@
 // Service worker: primero red (para que los cambios se vean al reabrir), con copia local sin conexión.
-var CACHE = 'gym-v99';
+var CACHE = 'gym-v100';
 
 self.addEventListener('install', function () { self.skipWaiting(); });
 

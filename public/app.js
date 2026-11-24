@@ -1426,7 +1426,8 @@
           <button class="btn small" data-act="dietOil" data-slot="${slot}" data-d="1">+</button>
         </div>
         <button class="btn small ${c.done ? '' : 'accent'}" style="margin-left:auto" data-act="dietDone" data-slot="${slot}">${c.done ? '✓ Comido' : 'Marcar comido'}</button>
-      </div></div>`;
+      </div>
+      <button class="mswap" data-act="dietChoose" data-slot="${slot}">Cambiar ${esc(((window.DIET.slots.find(x => x.id === slot) || {}).name || '').toLowerCase())}</button></div>`;
   }
   function viewDieta() {
     const D = window.DIET;
@@ -1439,7 +1440,8 @@
     const meals = D.slots.map(s => {
       const c = day[s.id];
       const sel = c ? D.options.find(o => o.id === c.opt) : null;
-      return `<div class="dhead"><h2>${esc(s.name)}</h2><button class="dbtn ${sel ? '' : 'on'}" data-act="dietChoose" data-slot="${s.id}">${sel ? 'Cambiar' : 'Elegir'}<span aria-hidden="true">›</span></button></div>
+      return `<div class="dhead"><h2>${esc(s.name)}</h2></div>
+        ${sel ? '' : `<button class="btn full accent" data-act="dietChoose" data-slot="${s.id}">Elegir ${esc(s.name.toLowerCase())}</button>`}
         ${sel ? mealCard(s.id, sel, c) : ''}`;
     }).join('');
     return `<h1>Dieta</h1>

@@ -1426,8 +1426,8 @@
           <button class="btn small" data-act="dietOil" data-slot="${slot}" data-d="1">+</button>
         </div>
         <button class="btn small ${c.done ? '' : 'accent'}" style="margin-left:auto" data-act="dietDone" data-slot="${slot}">${c.done ? '✓ Comido' : 'Marcar comido'}</button>
-      </div>
-      <button class="mswap" data-act="dietChoose" data-slot="${slot}">Cambiar ${esc(((window.DIET.slots.find(x => x.id === slot) || {}).name || '').toLowerCase())}</button></div>`;
+      </div></div>
+      <button class="mswap" data-act="dietChoose" data-slot="${slot}">Cambiar ${esc(((window.DIET.slots.find(x => x.id === slot) || {}).name || '').toLowerCase())}</button>`;
   }
   function viewDieta() {
     const D = window.DIET;

@@ -470,3 +470,5 @@ section.ex.rmode .ecnt { display: none; }
 .wband { position: absolute; left: 0; right: 0; top: 60px; height: 40px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); pointer-events: none; }
 .zn { display: block; font-size: 11px; margin-top: 3px; }
 .chl { margin: 8px 0 0; padding-left: 20px; font-size: 14px; line-height: 1.5; }
+.dchoose { justify-content: center; margin: 4px 0 14px; }
+.dchoose .chip { padding: 10px 22px; }

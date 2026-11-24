@@ -1418,7 +1418,7 @@
       const c = day[s.id];
       const sel = c ? D.options.find(o => o.id === c.opt) : null;
       return `<h2>${esc(s.name)}</h2>
-        <button class="btn full ${sel ? '' : 'accent'}" data-act="dietChoose" data-slot="${s.id}">${sel ? 'Cambiar ' : 'Elegir '}${esc(s.name.toLowerCase())}</button>
+        <div class="chips dchoose"><button class="chip ${sel ? '' : 'on'}" data-act="dietChoose" data-slot="${s.id}">${sel ? 'Cambiar ' : 'Elegir '}${esc(s.name.toLowerCase())}</button></div>
         ${sel ? mealCard(s.id, sel, c) : ''}`;
     }).join('');
     return `<h1>Dieta</h1>

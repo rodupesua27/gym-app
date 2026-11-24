@@ -1437,7 +1437,9 @@
     const tot = dietTotals(day);
     const pct = Math.min(100, 100 * tot.eaten / T.kcal);
     const ppct = Math.min(100, 100 * tot.prot / T.protein);
-    const meals = D.slots.map(s => {
+    // Lo pendiente arriba y lo ya comido al final (se mantiene el orden del día dentro de cada grupo).
+    const isDone = x => !!(day[x.id] && day[x.id].done);
+    const meals = D.slots.slice().sort((a, b) => isDone(a) - isDone(b)).map(s => {
       const c = day[s.id];
       const sel = c ? D.options.find(o => o.id === c.opt) : null;
       return `<div class="dhead"><h2>${esc(s.name)}</h2></div>

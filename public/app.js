@@ -1376,8 +1376,10 @@
       const o = document.createElement('div');
       o.className = 'fpage xpick';
       const nm = D.slots.find(x => x.id === slot).name.toLowerCase();
-      const secs = order.map(sl => `<div class="egrp"><h2>${esc(D.slots.find(x => x.id === sl).name)}</h2>${D.options.filter(x => x.slot === sl).map(x =>
-        `<button class="xrow" data-opt="${x.id}"><span class="xtx"><b>${esc(x.name)}${x.id === cur ? ' ✓' : ''}</b><small>${Math.round(x.kcal)} kcal · ${Math.round(x.p)} g proteína · ${x.min} min</small></span></button>`).join('')}</div>`).join('');
+      const strip = t => String(t).replace(/\s*\(.*?\)/g, '').replace(/^[\d½¼.,\s]+(latas?|cucharadas?|cucharillas?|lonchas?|huevos?|kg|ml|g|l)?\s*(de |del )?/i, m => /huevo/i.test(m) ? m.replace(/[\d½¼.,\s]+/, '') : '').replace(/^(de|del)\s+/i, '').trim();
+      const secs = order.map(sl => { const list = D.options.filter(x => x.slot === sl); return `<div class="egrp"><h2>${esc(D.slots.find(x => x.id === sl).name)} <span class="mcount">${list.length}</span></h2>${list.map(x => {
+        const ing = x.ingredients.map(strip).filter(Boolean).slice(0, 4).join(' · ');
+        return `<button class="mopt ${x.id === cur ? 'sel' : ''}" data-opt="${x.id}"><div class="mtop"><b>${esc(x.name)}</b>${x.id === cur ? '<span class="mtag">Elegido</span>' : ''}</div><div class="mpills"><span class="mp k">${Math.round(x.kcal)} kcal</span><span class="mp p">${Math.round(x.p)} g proteína</span><span class="mp">${x.min} min</span></div><small class="mi">${esc(ing)}</small></button>`; }).join('')}</div>`; }).join('');
       o.innerHTML = `<div class="xtop"><div class="xhead"><button class="btn small" data-close="1">‹ Volver</button><b>Elegir ${esc(nm)}</b></div></div><div id="exlistwrap">${secs}</div>`;
       const done = v => { document.body.removeChild(o); resolve(v); };
       o.addEventListener('click', ev => {

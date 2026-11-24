@@ -36,8 +36,8 @@ window.DIET = {
     {
       id: 'd4', slot: 'desayuno', short: 'Bocadillo de lomo', name: 'Bocadillo de lomo de ternera con mayonesa',
       min: 8,
-      ingredients: ['140 g de pan Lidl (bocadillo)', '80 g de lomo de cerdo SPAR en lonchas (valores genéricos de lomo de cerdo magro)', '1 cucharada de mayonesa (15 g)', '2 huevos (M y L mezclados)', '1 plátano de Canarias', 'Café con leche'],
-      kc: [379, 96, 92, 172, 99, 75], pr: [11, 17, 0, 15, 1, 4],
+      ingredients: ['140 g de pan Lidl (bocadillo)', '50 g de lomo de cerdo SPAR en lonchas (valores genéricos de lomo de cerdo magro)', '1 cucharada de mayonesa (15 g)', '2 huevos (M y L mezclados)', '1 plátano de Canarias', 'Café con leche'],
+      kc: [379, 60, 92, 172, 99, 75], pr: [11, 10.5, 0, 15, 1, 4],
       steps: 'Lomo a la sartén sin aceite, 2-3 min por lado a fuego fuerte, hasta que quede dorado. Huevos a la plancha en la misma sartén, 3 min. Monta el bocadillo con la mayonesa y los huevos. Plátano y café con leche aparte.'
     },
     {

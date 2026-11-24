@@ -1394,7 +1394,8 @@
     const pct = Math.min(100, 100 * tot.eaten / T.kcal);
     const ppct = Math.min(100, 100 * tot.prot / T.protein);
     const meals = D.slots.map(s => {
-      const opts = D.options.filter(o => o.slot === s.id);
+      const pool = s.id === 'comida' ? ['comida', 'cena'] : s.id === 'cena' ? ['cena', 'comida'] : [s.id];
+      const opts = pool.flatMap(sl => D.options.filter(o => o.slot === sl));
       const c = day[s.id];
       const sel = c ? opts.find(o => o.id === c.opt) : null;
       return `<h2>${esc(s.name)}</h2>

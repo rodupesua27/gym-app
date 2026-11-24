@@ -64,7 +64,11 @@
   const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
   const save = (k, v, quiet) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} if (!quiet && SYNCED.indexOf(k) >= 0) syncSoon(); };
   // ---------- copia en la nube ----------
-  const SYNCED = ['gym.sessions', 'gym.body', 'gym.diet', 'gym.profile'];
+  const SYNCED = ['gym.sessions', 'gym.body', 'gym.diet', 'gym.profile', 'gym.routineEdits'];
+  // Cambios que el usuario ha decidido guardar en una rutina (tienen prioridad sobre routines.js).
+  let rEdits = load('gym.routineEdits', {});
+  const applyEdits = () => ROUTINES.forEach(r => { if (Array.isArray(rEdits[r.id]) && rEdits[r.id].length) { r.exercises = rEdits[r.id].map(e => Object.assign({}, e)); r.exercises.forEach(e => { if (e.alt) ALT[e.name] = e.alt; }); } });
+  applyEdits();
   const SYNC = { id: load('gym.syncid', null), rev: load('gym.syncrev', 0), dirty: load('gym.syncdirty', false), t: load('gym.synct', 0), msg: '', busy: false, timer: null };
 
   let sessions = load(K.s, []);
@@ -258,7 +262,7 @@
   }
 
   const sha = async txt => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('gym-app:' + txt)))).map(b => b.toString(16).padStart(2, '0')).join('');
-  const snap = () => ({ v: 2, sessions, body, diet, profile });
+  const snap = () => ({ v: 2, sessions, body, diet, profile, rEdits });
   const hasData = d => d && ((d.sessions || []).length + (d.body || []).length) > 0;
   function syncSoon() {
     SYNC.dirty = true; try { localStorage.setItem('gym.syncdirty', 'true'); } catch (e) {}
@@ -269,6 +273,7 @@
     sessions = d.sessions || []; body = d.body || [];
     if (d.diet && typeof d.diet === 'object') diet = d.diet;
     if (d.profile && typeof d.profile === 'object') profile = d.profile;
+    if (d.rEdits && typeof d.rEdits === 'object') { rEdits = d.rEdits; save('gym.routineEdits', rEdits, true); applyEdits(); }
     sessions.forEach(s => { s.name = String(s.name).replace('Cardio 1 · abdomen y cinta', 'Abdomen y cinta').replace('Cardio 2 · abdomen y comba', 'Abdomen y comba'); });
     save(K.s, sessions, true); save(K.b, body, true); save(K.d, diet, true); save(K.p, profile, true);
   }
@@ -279,7 +284,8 @@
     body = body.concat((d.body || []).filter(x => !ts.has(x.ts))).sort((a, b) => a.ts - b.ts);
     diet = Object.assign({}, d.diet || {}, diet);
     profile = Object.assign({}, d.profile || {}, profile);
-    save(K.s, sessions, true); save(K.b, body, true); save(K.d, diet, true); save(K.p, profile, true);
+    rEdits = Object.assign({}, d.rEdits || {}, rEdits); applyEdits();
+    save('gym.routineEdits', rEdits, true); save(K.s, sessions, true); save(K.b, body, true); save(K.d, diet, true); save(K.p, profile, true);
   }
   async function syncCall(method, payload) {
     const r = await fetch('/api/sync', { method, headers: { 'content-type': 'application/json', 'x-sync-id': SYNC.id }, body: payload ? JSON.stringify(payload) : undefined, cache: 'no-store' });
@@ -653,6 +659,26 @@
     const cardio = active.cardio && active.cardio.done ? { title: active.cardio.title, min: active.cardio.min } : null;
     if (!exs.length && !cardio) { active = null; persist(); render(); return; }
 
+    // Como en Hevy: si has cambiado la estructura de la rutina, preguntar si se actualiza.
+    const rt = active.routineId ? ROUTINES.find(r => r.id === active.routineId) : null;
+    if (rt) {
+      const plan = active.exercises.map(e => ({ name: e.name, sets: e.sets.length, warmup: e.sets.filter(x => x.t === 'W').length, reps: e.reps, rest: e.rest }));
+      const old = rt.exercises.map(e => ({ name: e.name, sets: e.sets, warmup: e.warmup || 0 }));
+      const ch = [];
+      const on = old.map(e => e.name), nn = plan.map(e => e.name);
+      on.filter(n => !nn.includes(n)).forEach(n => ch.push(`Quitado: ${n}`));
+      nn.filter(n => !on.includes(n)).forEach(n => ch.push(`Añadido: ${n}`));
+      plan.forEach(e => { const o = old.find(x => x.name === e.name); if (o && (o.sets !== e.sets || o.warmup !== e.warmup)) ch.push(`${e.name}: ${o.sets} → ${e.sets} series`); });
+      if (!ch.length && on.length === nn.length && on.some((n, i) => n !== nn[i])) ch.push('Orden de ejercicios cambiado');
+      if (ch.length) {
+        const up = await sheet(`<h3>¿Actualizar la rutina?</h3><p class="muted">Has hecho cambios en ${esc(rt.name)} · ${esc(rt.short)}:</p><ul class="chl">${ch.map(c => `<li>${esc(c)}</li>`).join('')}</ul>`,
+          [{ label: 'Mantener original', v: false }, { label: 'Actualizar rutina', cls: 'accent', v: true }]);
+        if (up) {
+          const list = plan.map(e => { const o = rt.exercises.find(x => x.name === e.name); const r = { name: e.name, sets: e.sets, reps: e.reps, rest: e.rest }; if (e.warmup) r.warmup = e.warmup; if (o && o.alt) r.alt = o.alt; return r; });
+          rEdits[rt.id] = list; save('gym.routineEdits', rEdits); applyEdits();
+        }
+      }
+    }
     const end = endMs;
     const ses = { id: active.id, routineId: active.routineId, name: active.name, start: active.start, end, exercises: exs, cardio };
     const prs = prsOf(ses);

@@ -469,3 +469,4 @@ section.ex.rmode .ecnt { display: none; }
 .wsep { font-size: 14px; color: var(--muted, #8a8a93); width: 34px; }
 .wband { position: absolute; left: 0; right: 0; top: 60px; height: 40px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); pointer-events: none; }
 .zn { display: block; font-size: 11px; margin-top: 3px; }
+.chl { margin: 8px 0 0; padding-left: 20px; font-size: 14px; line-height: 1.5; }

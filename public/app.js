@@ -1371,7 +1371,19 @@
   function pickMeal(slot) {
     const D = window.DIET;
     const order = { desayuno: ['desayuno', 'comida', 'cena'], comida: ['comida', 'cena', 'desayuno'], cena: ['cena', 'comida', 'desayuno'] }[slot] || [slot];
-    const cur = (dayDiet()[slot] || {}).opt;
+    const day = dayDiet(), cur = (day[slot] || {}).opt;
+    const T = window.DIET_TARGET || { kcal: 2700, protein: 120 };
+    // Lo que ya tienes planificado en los otros apartados y lo que queda para este.
+    let usedK = 0, usedP = 0, free = 0;
+    D.slots.forEach(sl => {
+      const c = day[sl.id], o = c && D.options.find(x => x.id === c.opt);
+      if (sl.id === slot) { free++; return; }
+      if (o) { const v = optVals(o, c); usedK += v.k; usedP += v.p; } else free++;
+    });
+    const wantK = Math.max(0, T.kcal - usedK) / free, wantP = Math.max(0, T.protein - usedP) / free;
+    const score = x => Math.abs(x.kcal - wantK) / Math.max(wantK, 1) + 0.6 * Math.abs(x.p - wantP) / Math.max(wantP, 1);
+    const best = Math.min(...D.options.map(score));
+    const rec = new Set(D.options.filter(x => score(x) <= best + 0.1).map(x => x.id));
     return new Promise(resolve => {
       const o = document.createElement('div');
       o.className = 'fpage xpick';
@@ -1379,8 +1391,8 @@
       const strip = t => String(t).replace(/\s*\(.*?\)/g, '').replace(/^[\d½¼.,\s]+(latas?|cucharadas?|cucharillas?|lonchas?|huevos?|kg|ml|g|l)?\s*(de |del )?/i, m => /huevo/i.test(m) ? m.replace(/[\d½¼.,\s]+/, '') : '').replace(/^(de|del)\s+/i, '').trim();
       const secs = order.map(sl => { const list = D.options.filter(x => x.slot === sl); return `<div class="egrp"><h2>${esc(D.slots.find(x => x.id === sl).name)} <span class="mcount">${list.length}</span></h2>${list.map(x => {
         const ing = x.ingredients.map(strip).filter(Boolean).slice(0, 4).join(' · ');
-        return `<button class="mopt ${x.id === cur ? 'sel' : ''}" data-opt="${x.id}"><div class="mtop"><b>${esc(x.name)}</b>${x.id === cur ? '<span class="mtag">Elegido</span>' : ''}</div><div class="mpills"><span class="mp k">${Math.round(x.kcal)} kcal</span><span class="mp p">${Math.round(x.p)} g proteína</span><span class="mp">${x.min} min</span></div><small class="mi">${esc(ing)}</small></button>`; }).join('')}</div>`; }).join('');
-      o.innerHTML = `<div class="xtop"><div class="xhead"><button class="btn small" data-close="1">‹ Volver</button><b>Elegir ${esc(nm)}</b></div></div><div id="exlistwrap">${secs}</div>`;
+        return `<button class="mopt ${x.id === cur ? 'sel' : ''}" data-opt="${x.id}"><div class="mtop"><b>${esc(x.name)}</b>${x.id === cur ? '<span class="mtag">Elegido</span>' : ''}</div>${rec.has(x.id) ? '<div class="mrec">Recomendado</div>' : ''}<div class="mpills"><span class="mp k">${Math.round(x.kcal)} kcal</span><span class="mp p">${Math.round(x.p)} g proteína</span><span class="mp">${x.min} min</span></div><small class="mi">${esc(ing)}</small></button>`; }).join('')}</div>`; }).join('');
+      o.innerHTML = `<div class="xtop"><div class="xhead"><button class="btn small" data-close="1">‹ Volver</button><b>Elegir ${esc(nm)}</b></div></div><div id="exlistwrap"><div class="mgoal"><div><small>Objetivo del día</small><b>${thousands(T.kcal)} kcal · ${T.protein} g proteína</b></div><div><small>Ideal para ${esc(nm)}</small><b>≈ ${thousands(Math.round(wantK))} kcal · ${Math.round(wantP)} g</b></div></div>${secs}</div>`;
       const done = v => { document.body.removeChild(o); resolve(v); };
       o.addEventListener('click', ev => {
         const b = ev.target.closest('button');

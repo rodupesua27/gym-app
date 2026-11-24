@@ -1367,6 +1367,27 @@
     });
     return { eaten, prot, plan, planP };
   }
+  // Selector de comida: primero las opciones del propio apartado y después las de los otros dos.
+  function pickMeal(slot) {
+    const D = window.DIET;
+    const order = { desayuno: ['desayuno', 'comida', 'cena'], comida: ['comida', 'cena', 'desayuno'], cena: ['cena', 'comida', 'desayuno'] }[slot] || [slot];
+    const cur = (dayDiet()[slot] || {}).opt;
+    return new Promise(resolve => {
+      const o = document.createElement('div');
+      o.className = 'fpage xpick';
+      const nm = D.slots.find(x => x.id === slot).name.toLowerCase();
+      const secs = order.map(sl => `<div class="egrp"><h2>${esc(D.slots.find(x => x.id === sl).name)}</h2>${D.options.filter(x => x.slot === sl).map(x =>
+        `<button class="xrow" data-opt="${x.id}"><span class="xtx"><b>${esc(x.name)}${x.id === cur ? ' ✓' : ''}</b><small>${Math.round(x.kcal)} kcal · ${Math.round(x.p)} g proteína · ${x.min} min</small></span></button>`).join('')}</div>`).join('');
+      o.innerHTML = `<div class="xtop"><div class="xhead"><button class="btn small" data-close="1">‹ Volver</button><b>Elegir ${esc(nm)}</b></div></div><div id="exlistwrap">${secs}</div>`;
+      const done = v => { document.body.removeChild(o); resolve(v); };
+      o.addEventListener('click', ev => {
+        const b = ev.target.closest('button');
+        if (!b) return;
+        if (b.dataset.close) done(null); else if (b.dataset.opt) done(b.dataset.opt);
+      });
+      document.body.appendChild(o);
+    });
+  }
   function mealCard(slot, o, c) {
     const v = optVals(o, c);
     return `<div class="meal ${c.done ? 'done' : ''}">
@@ -1394,13 +1415,11 @@
     const pct = Math.min(100, 100 * tot.eaten / T.kcal);
     const ppct = Math.min(100, 100 * tot.prot / T.protein);
     const meals = D.slots.map(s => {
-      const pool = s.id === 'comida' ? ['comida', 'cena'] : s.id === 'cena' ? ['cena', 'comida'] : [s.id];
-      const opts = pool.flatMap(sl => D.options.filter(o => o.slot === sl));
       const c = day[s.id];
-      const sel = c ? opts.find(o => o.id === c.opt) : null;
+      const sel = c ? D.options.find(o => o.id === c.opt) : null;
       return `<h2>${esc(s.name)}</h2>
-        <div class="chips">${opts.map(o => `<button class="chip ${sel && sel.id === o.id ? 'on' : ''}" data-act="dietPick" data-slot="${s.id}" data-opt="${o.id}">${esc(o.short)}</button>`).join('')}</div>
-        ${sel ? mealCard(s.id, sel, c) : '<p class="muted"><small>Elige una opción.</small></p>'}`;
+        <button class="btn full ${sel ? '' : 'accent'}" data-act="dietChoose" data-slot="${s.id}">${sel ? 'Cambiar ' : 'Elegir '}${esc(s.name.toLowerCase())}</button>
+        ${sel ? mealCard(s.id, sel, c) : ''}`;
     }).join('');
     return `<h1>Dieta</h1>
       <div class="card" style="cursor:default">
@@ -1731,6 +1750,13 @@
     }
     else if (a === 'toggleR') { openR = openR === t.dataset.id ? null : t.dataset.id; render(); }
     else if (a === 'exinfo') exSheet(t.dataset.ex);
+    else if (a === 'dietChoose') {
+      const sl = t.dataset.slot, opt = await pickMeal(sl);
+      const day = dayDiet();
+      if (!opt || (day[sl] && day[sl].opt === opt)) return;
+      day[sl] = { opt, done: false, oil: 0, skip: [] };
+      saveDiet(); render();
+    }
     else if (a === 'dietPick') {
       const day = dayDiet(), sl = t.dataset.slot;
       if (day[sl] && day[sl].opt === t.dataset.opt) return;

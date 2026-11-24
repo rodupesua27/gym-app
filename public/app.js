@@ -1260,7 +1260,7 @@
     let nextW = '';
     if (lastB) {
       const ld = new Date(lastB.ts); ld.setHours(0, 0, 0, 0);
-      const nd = new Date(ld); nd.setMonth(nd.getMonth() + 1);
+      const nd = new Date(ld); nd.setDate(nd.getDate() + 14);
       const t0 = new Date(); t0.setHours(0, 0, 0, 0);
       const dd = Math.round((nd - t0) / 86400000);
       const fd = nd.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });

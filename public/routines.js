@@ -72,8 +72,7 @@ window.ROUTINES = [
       { name: 'Crunch inverso', sets: 3, reps: '12-15', rest: 60 },
       { name: 'Elevación de piernas en máquina (silla romana)', sets: 3, reps: '10-15', rest: 60 },
       { name: 'Flexión lateral en polea (oblicuos)', sets: 3, reps: '12-15', rest: 60 },
-      { name: 'Hiperextensión lumbar', sets: 3, reps: '10-15', rest: 60 },
-      { name: 'Plancha', sets: 2, reps: '30-45 s', rest: 45 }
+      { name: 'Hiperextensión lumbar', sets: 3, reps: '10-15', rest: 60 }
     ]
   },
   {

@@ -19,20 +19,12 @@ window.DIET = {
       steps: 'Huevos a la plancha en la sartén (3-4 min). Monta el bocadillo con mantequilla y pavo. Plátano y café aparte.'
     },
     {
-      id: 'd2', slot: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur con proteína y plátano',
+      id: 'd2', slot: 'desayuno', only: 'desayuno', short: 'Tostadas y yogur', name: 'Pan con mantequilla y mermelada, yogur con proteína y plátano',
       min: 3,
       ingredients: ['140 g de pan Lidl (bocadillo)', 'Mantequilla (15 g)', 'Mermelada de fresa (20 g)', '1 yogur Milbona griego fresa (125 g)', '5 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche'],
       kc: [379, 112, 10, 151, 20, 99, 75], pr: [11, 0, 0, 3, 4, 1, 4],
       steps: 'Sin cocinar. Para el día sin hambre o sin tiempo.',
       note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
-    },
-    {
-      id: 'd3', slot: 'desayuno', short: 'Cereales con leche', name: 'Cereales Ultrapop con leche, proteína y plátano',
-      min: 3,
-      ingredients: ['120 g de cereales Ultrapop (4 raciones, según etiqueta)', '400 ml de leche desnatada sin lactosa (la misma del café)', '20 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche'],
-      kc: [460, 132, 80, 99, 75], pr: [10.4, 14, 15.3, 1, 4],
-      steps: 'Sin cocinar. Cereales en un bol grande, la leche fría y la proteína mezclada con un poco de leche antes de echarla. Plátano y café aparte.',
-      note: 'Sin cocinar y sin hambre: es el desayuno rápido del día de prisas.'
     },
     {
       id: 'd4', slot: 'desayuno', short: 'Bocadillo de lomo', name: 'Bocadillo de lomo de ternera con mayonesa',

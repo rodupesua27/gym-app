@@ -1370,7 +1370,9 @@
   }
   // Selector de comida: primero las opciones del propio apartado y después las de los otros dos.
   function pickMeal(slot) {
-    const D = window.DIET;
+    const D0 = window.DIET;
+    // Lo que solo vale para el desayuno no se ofrece en la comida ni en la cena.
+    const D = Object.assign({}, D0, { options: D0.options.filter(x => !x.only || x.only === slot) });
     const order = { desayuno: ['desayuno', 'comida', 'cena'], comida: ['comida', 'cena', 'desayuno'], cena: ['cena', 'comida', 'desayuno'] }[slot] || [slot];
     const day = dayDiet(), cur = (day[slot] || {}).opt;
     const T = window.DIET_TARGET || { kcal: 2550, protein: 120 };
@@ -1419,9 +1421,17 @@
         if (b.dataset.close) done(null);
         else if (b.dataset.opt) {
           const x = D.options.find(q => q.id === b.dataset.opt);
-          const btns = SZ.map(z => { const v = window.dietSized(x, z); return { label: window.DIET_SIZES[z].name + ' · ' + Math.round(v.kcal) + ' kcal · ' + Math.round(v.p) + ' g' + (z === best[x.id] ? ' ★' : ''), cls: z === best[x.id] ? 'accent' : '', v: z }; });
-          btns.push({ label: 'Atrás', v: null });
-          sheet(`<h3>${esc(x.name)}</h3><p class="muted"><small>¿Qué tamaño? ★ = el que mejor encaja con lo que te falta hoy.</small></p>`, btns).then(z => { if (z) done({ opt: x.id, size: z }); });
+          const pg = document.createElement('div');
+          pg.className = 'fpage xpick';
+          const cards = ['r', 'n', 'l'].map(z => { const v = window.dietSized(x, z); return `<button class="mopt" data-z="${z}"><div class="mtop"><b>${esc(x.name)}</b>${z === best[x.id] ? '<span class="mtag">Recomendado</span>' : ''}</div><div class="mpills"><span class="mp">${window.DIET_SIZES[z].name}</span><span class="mp k">${Math.round(v.kcal)} kcal</span><span class="mp p">${Math.round(v.p)} g proteína</span></div></button>`; }).join('');
+          pg.innerHTML = `<div class="xtop"><div class="xhead"><button class="btn small" data-back="1">‹ Volver</button><b>Elige el tamaño</b></div></div><div id="exlistwrap"><div class="egrp">${cards}</div></div>`;
+          pg.addEventListener('click', e2 => {
+            const bb = e2.target.closest('button');
+            if (!bb) return;
+            if (bb.dataset.back) document.body.removeChild(pg);
+            else if (bb.dataset.z) { document.body.removeChild(pg); done({ opt: x.id, size: bb.dataset.z }); }
+          });
+          document.body.appendChild(pg);
         }
       });
       document.body.appendChild(o);

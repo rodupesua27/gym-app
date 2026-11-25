@@ -10,13 +10,12 @@ window.ROUTINES = [
     short: 'Pecho, hombro y tríceps',
     exercises: [
       { name: 'Press de banca inclinado (mancuerna)', alt: ["Aperturas en polea de abajo arriba"], sets: 5, warmup: 2, reps: '7-12', rest: 120 },
-      { name: 'Mariposa (Pec Deck)', sets: 3, reps: '5-15', rest: 90 },
-      { name: 'Cables cruzados (de arriba abajo)', sets: 4, reps: '8-15', rest: 90 },
-      { name: 'Elevación frontal con barra (cable)', alt: ["Elevación lateral y frontal con mancuerna", "Rotación externa en polea"], sets: 3, reps: '10', rest: 90 },
+      { name: 'Mariposa (Pec Deck)', sets: 2, reps: '5-15', rest: 90 },
+      { name: 'Cables cruzados (de arriba abajo)', sets: 3, reps: '8-15', rest: 90 },
+      { name: 'Elevación frontal con barra (cable)', alt: ["Elevación lateral y frontal con mancuerna", "Rotación externa en polea"], sets: 2, reps: '10', rest: 90 },
       { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Elevación lateral y frontal con mancuerna"], sets: 5, reps: '10-15', rest: 75 },
       { name: 'Pájaro en polea (deltoides posterior)', sets: 3, reps: '12-20', rest: 60 },
-      { name: 'Jalón de tríceps con barra V (polea)', sets: 3, reps: '7-16', rest: 90 },
-      { name: 'Extensión de tríceps por encima de la cabeza (cable)', alt: ["Patada de tríceps con mancuerna"], sets: 3, reps: '10-12', rest: 90 }
+      { name: 'Jalón de tríceps con barra V (polea)', sets: 3, reps: '7-16', rest: 90 }
     ]
   },
   {
@@ -93,13 +92,10 @@ window.ROUTINES = [
     exercises: [
       { name: 'Jalón al pecho agarre invertido (cable)', sets: 6, warmup: 2, reps: '8-12', rest: 120 },
       { name: 'Remo sentado (máquina)', alt: ["Remo inclinado (barra)"], sets: 4, reps: '9-11', rest: 120 },
-      { name: 'Encogimiento de hombros (mancuerna)', sets: 3, reps: '10-12', rest: 90 },
       { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Elevación lateral y frontal con mancuerna"], sets: 3, reps: '12-20', rest: 60 },
       { name: 'Pájaro en polea (deltoides posterior)', sets: 3, reps: '12-20', rest: 60 },
       { name: 'Curl de bíceps (mancuerna)', sets: 3, reps: '8-10', rest: 75 },
-      { name: 'Curl martillo (mancuerna)', sets: 3, reps: '8-12', rest: 75 },
-      { name: 'Curl de bíceps inclinado (mancuerna)', sets: 3, reps: '8-12', rest: 75 },
-      { name: 'Curl de muñeca (polea alta)', sets: 3, reps: '8-15', rest: 60 }
+      { name: 'Curl de bíceps inclinado (mancuerna)', sets: 3, reps: '8-12', rest: 75 }
     ]
   },
   {

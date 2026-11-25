@@ -14,7 +14,7 @@ window.ROUTINES = [
       { name: 'Cables cruzados (de arriba abajo)', sets: 3, reps: '8-15', rest: 90 },
       { name: 'Elevación frontal con barra (cable)', alt: ["Elevación lateral y frontal con mancuerna", "Rotación externa en polea"], sets: 2, reps: '10', rest: 90 },
       { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Elevación lateral y frontal con mancuerna"], sets: 5, reps: '10-15', rest: 75 },
-      { name: 'Pájaro en polea (deltoides posterior)', sets: 3, reps: '12-20', rest: 60 },
+      { name: 'Aperturas inversas en polea', sets: 3, reps: '12-20', rest: 75 },
       { name: 'Jalón de tríceps con barra V (polea)', sets: 3, reps: '7-16', rest: 90 },
       { name: 'Extensión de tríceps por encima de la cabeza (cable)', alt: ["Patada de tríceps con mancuerna"], sets: 3, reps: '10-12', rest: 90 }
     ]
@@ -79,8 +79,9 @@ window.ROUTINES = [
     exercises: [
       { name: 'Press de banca inclinado (mancuerna)', alt: ["Aperturas en polea de abajo arriba"], sets: 5, warmup: 2, reps: '8-12', rest: 120 },
       { name: 'Mariposa (Pec Deck)', sets: 3, reps: '10-15', rest: 90 },
+      { name: 'Elevación frontal con barra (cable)', alt: ["Elevación lateral y frontal con mancuerna", "Rotación externa en polea"], sets: 2, reps: '10', rest: 90 },
       { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Elevación lateral y frontal con mancuerna"], sets: 5, reps: '10-15', rest: 75 },
-      { name: 'Aperturas inversas en polea', alt: ["Pájaro en polea (deltoides posterior)"], sets: 4, reps: '12-20', rest: 75 },
+      { name: 'Aperturas inversas en polea', sets: 4, reps: '12-20', rest: 75 },
       { name: 'Jalón de tríceps con cuerda', sets: 3, reps: '10-15', rest: 75 },
       { name: 'Extensión de tríceps por encima de la cabeza (cable)', alt: ["Patada de tríceps con mancuerna"], sets: 3, reps: '10-12', rest: 90 }
     ]
@@ -145,7 +146,6 @@ window.ALT_PLAN = {
   'Elevación lateral y frontal con mancuerna': { sets: 3, reps: '12-15', rest: 60 },
   'Rotación externa en polea': { sets: 2, reps: '15-20', rest: 45 },
   'Elevación lateral sentado en polea': { sets: 3, reps: '10-15', rest: 75 },
-  'Pájaro en polea (deltoides posterior)': { sets: 3, reps: '12-20', rest: 60 },
   'Patada de tríceps con mancuerna': { sets: 3, reps: '12-15', rest: 60 },
   'Face pull en polea': { sets: 3, reps: '12-20', rest: 60 },
   'Remo inclinado (barra)': { sets: 4, reps: '9-11', rest: 120 }

@@ -44,7 +44,7 @@
     'Mariposa (Pec Deck)': 'pecho medio', 'Cables cruzados (de arriba abajo)': 'pecho inferior',
     'Elevación lateral (cable)': 'hombro lateral', 'Elevación lateral sentado en polea': 'hombro lateral', 'Elevación lateral y frontal con mancuerna': 'hombro lateral',
     'Elevación frontal con barra (cable)': 'hombro frontal',
-    'Pájaro en polea (deltoides posterior)': 'hombro posterior', 'Aperturas inversas en polea': 'hombro posterior', 'Face pull en polea': 'hombro posterior',
+    'Aperturas inversas en polea': 'hombro posterior', 'Face pull en polea': 'hombro posterior',
     'Rotación externa en polea': 'manguito',
     'Jalón al pecho (cable)': 'dorsal vertical', 'Jalón al pecho agarre invertido (cable)': 'dorsal vertical', 'Jalón al pecho a un brazo': 'dorsal vertical',
     'Remo sentado (máquina)': 'espalda horizontal', 'Remo inclinado (barra)': 'espalda horizontal', 'Remo en máquina (iso)': 'espalda horizontal',
@@ -705,7 +705,6 @@
     // Hombros: tabla de elevación lateral con mancuerna de StrengthLevel (hombres) usada como referencia aproximada para las variantes en polea
     'Elevación lateral (cable)': [0.08, 0.15, 0.30, 0.45, 0.68],
     'Elevación frontal con barra (cable)': [0.08, 0.17, 0.32, 0.48, 0.72],
-    'Pájaro en polea (deltoides posterior)': [0.08, 0.15, 0.30, 0.45, 0.68],
     'Aperturas inversas en polea': [0.08, 0.15, 0.30, 0.45, 0.68],
     'Jalón al pecho (cable)': [0.50, 0.75, 1.00, 1.50, 1.75],
     'Extensión de pierna': [0.50, 1.00, 1.25, 1.75, 2.50],

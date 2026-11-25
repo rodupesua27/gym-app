@@ -303,11 +303,6 @@ window.EXINFO = {
   "m": ["Hombros"],
   "s": []
  },
- "Pájaro en polea (deltoides posterior)": {
-  "img": "Cable_Rear_Delt_Fly",
-  "m": ["Hombros"],
-  "s": ["Espalda alta"]
- },
  "Patada de tríceps con mancuerna": {
   "img": "Tricep_Dumbbell_Kickback",
   "m": ["Tríceps"],

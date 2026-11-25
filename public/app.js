@@ -67,6 +67,8 @@
   const SYNCED = ['gym.sessions', 'gym.body', 'gym.diet', 'gym.profile', 'gym.routineEdits'];
   // Cambios que el usuario ha decidido guardar en una rutina (tienen prioridad sobre routines.js).
   let rEdits = load('gym.routineEdits', {});
+  // Migración única: el entreno de hombro cambió (más laterales), así que se descartan las ediciones guardadas de esos días.
+  if (!localStorage.getItem('gym.mig.hombro1')) { ['d1', 'd4', 'd5'].forEach(i => { delete rEdits[i]; }); try { localStorage.setItem('gym.routineEdits', JSON.stringify(rEdits)); localStorage.setItem('gym.mig.hombro1', '1'); } catch (e) {} }
   const applyEdits = () => ROUTINES.forEach(r => { if (Array.isArray(rEdits[r.id]) && rEdits[r.id].length) { r.exercises = rEdits[r.id].map(e => Object.assign({}, e)); r.exercises.forEach(e => { if (e.alt) ALT[e.name] = e.alt; }); } });
   applyEdits();
   const SYNC = { id: load('gym.syncid', null), rev: load('gym.syncrev', 0), dirty: load('gym.syncdirty', false), t: load('gym.synct', 0), msg: '', busy: false, timer: null };
@@ -701,10 +703,10 @@
   const STD = {
     'Press de banca inclinado (mancuerna)': [0.25, 0.35, 0.50, 0.65, 0.85],
     // Hombros: tabla de elevación lateral con mancuerna de StrengthLevel (hombres) usada como referencia aproximada para las variantes en polea
-    'Elevación lateral (cable)': [0.05, 0.10, 0.20, 0.30, 0.45],
-    'Elevación frontal con barra (cable)': [0.05, 0.11, 0.21, 0.32, 0.48],
-    'Pájaro en polea (deltoides posterior)': [0.05, 0.10, 0.20, 0.30, 0.45],
-    'Aperturas inversas en polea': [0.05, 0.10, 0.20, 0.30, 0.45],
+    'Elevación lateral (cable)': [0.08, 0.15, 0.30, 0.45, 0.68],
+    'Elevación frontal con barra (cable)': [0.08, 0.17, 0.32, 0.48, 0.72],
+    'Pájaro en polea (deltoides posterior)': [0.08, 0.15, 0.30, 0.45, 0.68],
+    'Aperturas inversas en polea': [0.08, 0.15, 0.30, 0.45, 0.68],
     'Jalón al pecho (cable)': [0.50, 0.75, 1.00, 1.50, 1.75],
     'Extensión de pierna': [0.50, 1.00, 1.25, 1.75, 2.50],
     'Curl de bíceps (mancuerna)': [0.10, 0.15, 0.30, 0.40, 0.55],

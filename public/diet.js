@@ -3,7 +3,7 @@
 // kc / pr: kcal y proteína de cada ingrediente (misma posición que "ingredients").
 // Datos de etiqueta del usuario: Lidl (pan, pollo, yogur y queso Milbona, nata, huevos M), Real Valle (pavo), Tastino (tortillas), Nixe (atún), Hacendado (tomate frito), mayonesa (613 kcal/100 g).
 // Cereales Ultrapop: etiqueta de la caja (30 g = 115 kcal, 2,6 g proteína). Lomo de cerdo SPAR: no hay etiqueta en la base de datos; valores genéricos de lomo de cerdo magro (FatSecret, 120 kcal y 21 g proteína por 100 g). Estimaciones: mantequilla (etiqueta: 749 kcal, 0,5 g de proteína y 82,5 g de grasa por 100 g), ternera picada, aguacate, yogur Milbona de 125 g (dato del usuario), plátano de Canarias (Ministerio), azúcar del café, huevo medio entre M y L (60 g: unos 86 kcal y 7,6 g de proteína cada uno).
-window.DIET_TARGET = { kcal: 2700, protein: 120 };
+window.DIET_TARGET = { kcal: 2550, protein: 120 };
 window.DIET = {
   slots: [
     { id: 'desayuno', name: 'Desayuno' },

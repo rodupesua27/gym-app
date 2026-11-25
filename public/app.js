@@ -1372,7 +1372,7 @@
     const D = window.DIET;
     const order = { desayuno: ['desayuno', 'comida', 'cena'], comida: ['comida', 'cena', 'desayuno'], cena: ['cena', 'comida', 'desayuno'] }[slot] || [slot];
     const day = dayDiet(), cur = (day[slot] || {}).opt;
-    const T = window.DIET_TARGET || { kcal: 2700, protein: 120 };
+    const T = window.DIET_TARGET || { kcal: 2550, protein: 120 };
     // Solo cuenta lo que ya has marcado como comido; lo demás se reparte entre los apartados pendientes.
     let usedK = 0, usedP = 0, free = 0;
     D.slots.forEach(sl => {
@@ -1431,7 +1431,7 @@
   }
   function viewDieta() {
     const D = window.DIET;
-    const T = window.DIET_TARGET || { kcal: 2700, protein: 120 };
+    const T = window.DIET_TARGET || { kcal: 2550, protein: 120 };
     if (!D) return '<h1>Dieta</h1><p class="muted">No hay datos de dieta.</p>';
     const day = dayDiet();
     const tot = dietTotals(day);
@@ -1455,7 +1455,7 @@
       </div>
       ${meals}
       <p class="muted" style="margin-top:16px"><small>Suplementos: creatina todos los días (sin kcal). La proteína del yogur ya va contada en el desayuno de yogur.</small></p>
-      <p class="muted" style="margin-top:20px"><small>Cifras aproximadas. Si en 3 semanas el peso no sube, sumamos aceite o mantequilla. Para cambiar el menú, dímelo en el chat.</small></p>`;
+      <p class="muted" style="margin-top:20px"><small>Cifras aproximadas. Objetivo de recomposición: peso estable o bajando muy despacio y cintura bajando. Se revisa cada 2 semanas con el peso y la cintura. Para cambiar el menú, dímelo en el chat.</small></p>`;
   }
 
   function renderRest() {

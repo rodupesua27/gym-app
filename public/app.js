@@ -1346,6 +1346,7 @@
     save(K.d, diet);
   }
   function optVals(o, c) {
+    o = window.dietSized(o, c.size);
     const skip = c.skip || [];
     if (!o.kc) return { k: o.kcal + (c.oil || 0) * OIL_KCAL, p: o.p };
     let k = 0, p = 0;
@@ -1383,9 +1384,17 @@
     const wantK = Math.max(0, T.kcal - usedK) / free, wantP = Math.max(0, T.protein - usedP) / free;
     const score = x => Math.abs(x.kcal - wantK) / Math.max(wantK, 1) + 0.6 * Math.abs(x.p - wantP) / Math.max(wantP, 1);
     // Recomendados: llegan a las kcal que faltan (de -8 % a +15 %) y no se quedan cortos de proteína; si no hay, el más cercano.
-    let rec = D.options.filter(x => x.kcal >= wantK * 0.92 && x.kcal <= wantK * 1.15 && x.p >= wantP * 0.85);
-    if (!rec.length) rec = D.options.filter(x => x.kcal >= wantK * 0.92).sort((a, b) => score(a) - score(b)).slice(0, 1);
-    if (!rec.length) rec = [D.options.slice().sort((a, b) => b.kcal - a.kcal)[0]];
+    // Cada plato se ofrece en ligero, normal y reforzado: se recomienda el tamaño que mejor encaja con lo que falta.
+    const SZ = ['l', 'n', 'r'];
+    const best = {};
+    D.options.forEach(x => {
+      let b = 'n', bs = 1e9;
+      SZ.forEach(z => { const v = window.dietSized(x, z), sc = score(v) + (v.p < wantP * 0.85 ? 0.3 : 0); if (sc < bs) { bs = sc; b = z; } });
+      best[x.id] = b;
+    });
+    const near = x => { const v = window.dietSized(x, best[x.id]); return v.kcal >= wantK * 0.92 && v.kcal <= wantK * 1.15 && v.p >= wantP * 0.85; };
+    let rec = D.options.filter(near);
+    if (!rec.length) rec = [D.options.slice().sort((a, b) => score(window.dietSized(a, best[a.id])) - score(window.dietSized(b, best[b.id])))[0]];
     rec = new Set(rec.map(x => x.id));
     const tt = dietTotals(day);
     return new Promise(resolve => {
@@ -1393,27 +1402,37 @@
       o.className = 'fpage xpick';
       const nm = D.slots.find(x => x.id === slot).name.toLowerCase();
       const strip = t => String(t).replace(/\s*\(.*?\)/g, '').replace(/^[\d½¼.,\s]+(latas?|cucharadas?|cucharillas?|lonchas?|huevos?|kg|ml|g|l)?\s*(de |del )?/i, m => /huevo/i.test(m) ? m.replace(/[\d½¼.,\s]+/, '') : '').replace(/^(de|del)\s+/i, '').trim();
-      const card = x => {
+      const card = (x0, inRec) => {
+        const x = inRec ? window.dietSized(x0, best[x0.id]) : x0;
         const ing = x.ingredients.map(strip).filter(Boolean).slice(0, 4).join(' · ');
-        return `<button class="mopt ${x.id === cur ? 'sel' : ''}" data-opt="${x.id}"><div class="mtop"><b>${esc(x.name)}</b>${x.id === cur ? '<span class="mtag">Elegido</span>' : ''}</div><div class="mpills"><span class="mp k">${Math.round(x.kcal)} kcal</span><span class="mp p">${Math.round(x.p)} g proteína</span><span class="mp">${x.min} min</span></div><small class="mi">${esc(ing)}</small></button>`;
+        const tag = inRec && best[x0.id] !== 'n' ? `<span class="mtag">${window.DIET_SIZES[best[x0.id]].name}</span>` : '';
+        return `<button class="mopt ${x.id === cur ? 'sel' : ''}" data-opt="${x.id}"><div class="mtop"><b>${esc(x.name)}</b>${x.id === cur ? '<span class="mtag">Elegido</span>' : tag}</div><div class="mpills"><span class="mp k">${Math.round(x.kcal)} kcal</span><span class="mp p">${Math.round(x.p)} g proteína</span><span class="mp">${x.min} min</span></div><small class="mi">${esc(ing)}</small></button>`;
       };
-      const recList = D.options.filter(x => rec.has(x.id)).sort((a, b) => Math.abs(a.kcal - wantK) - Math.abs(b.kcal - wantK) || Math.abs(a.p - wantP) - Math.abs(b.p - wantP));
-      const recSec = `<div class="egrp"><h2 class="mrech">Recomendado <span class="mcount">${recList.length}</span></h2>${recList.map(card).join('')}</div>`;
-      const secs = recSec + order.map(sl => { const list = D.options.filter(x => x.slot === sl); return `<div class="egrp"><h2>${esc(D.slots.find(x => x.id === sl).name)} <span class="mcount">${list.length}</span></h2>${list.map(card).join('')}</div>`; }).join('');
+      const recList = D.options.filter(x => rec.has(x.id)).map(x => [x, window.dietSized(x, best[x.id])]).sort((a, b) => Math.abs(a[1].kcal - wantK) - Math.abs(b[1].kcal - wantK) || Math.abs(a[1].p - wantP) - Math.abs(b[1].p - wantP)).map(a => a[0]);
+      const recSec = `<div class="egrp"><h2 class="mrech">Recomendado <span class="mcount">${recList.length}</span></h2>${recList.map(x => card(x, true)).join('')}</div>`;
+      const secs = recSec + order.map(sl => { const list = D.options.filter(x => x.slot === sl); return `<div class="egrp"><h2>${esc(D.slots.find(x => x.id === sl).name)} <span class="mcount">${list.length}</span></h2>${list.map(x => card(x, false)).join('')}</div>`; }).join('');
       o.innerHTML = `<div class="xtop"><div class="xhead"><button class="btn small" data-close="1">‹ Volver</button><b>Elegir ${esc(nm)}</b></div></div><div id="exlistwrap"><div class="mgoal"><div><small>Objetivo del día</small><b>${thousands(T.kcal)} kcal · ${T.protein} g proteína</b></div><div><small>Llevas hoy (comido)</small><b>${thousands(Math.round(tt.eaten))} kcal · ${Math.round(tt.prot)} g</b></div><div><small>Te falta</small><b>${thousands(Math.max(0, Math.round(T.kcal - tt.eaten)))} kcal · ${Math.max(0, Math.round(T.protein - tt.prot))} g</b></div><div><small>Ideal para ${esc(nm)}</small><b>≈ ${thousands(Math.round(wantK))} kcal · ${Math.round(wantP)} g</b></div></div>${secs}</div>`;
       const done = v => { document.body.removeChild(o); resolve(v); };
       o.addEventListener('click', ev => {
         const b = ev.target.closest('button');
         if (!b) return;
-        if (b.dataset.close) done(null); else if (b.dataset.opt) done(b.dataset.opt);
+        if (b.dataset.close) done(null);
+        else if (b.dataset.opt) {
+          const x = D.options.find(q => q.id === b.dataset.opt);
+          const btns = SZ.map(z => { const v = window.dietSized(x, z); return { label: window.DIET_SIZES[z].name + ' · ' + Math.round(v.kcal) + ' kcal · ' + Math.round(v.p) + ' g' + (z === best[x.id] ? ' ★' : ''), cls: z === best[x.id] ? 'accent' : '', v: z }; });
+          btns.push({ label: 'Atrás', v: null });
+          sheet(`<h3>${esc(x.name)}</h3><p class="muted"><small>¿Qué tamaño? ★ = el que mejor encaja con lo que te falta hoy.</small></p>`, btns).then(z => { if (z) done({ opt: x.id, size: z }); });
+        }
       });
       document.body.appendChild(o);
     });
   }
-  function mealCard(slot, o, c) {
-    const v = optVals(o, c);
+  function mealCard(slot, o0, c) {
+    const o = window.dietSized(o0, c.size);
+    const v = optVals(o0, c);
+    const szTag = c.size && c.size !== 'n' ? ` <small class="muted">· ${window.DIET_SIZES[c.size].name.toLowerCase()}</small>` : '';
     return `<div class="meal ${c.done ? 'done' : ''}">
-      <div class="row between"><b>${esc(o.name)}</b><span class="pill">${thousands(v.k)} kcal</span></div>
+      <div class="row between"><b>${esc(o.name)}${szTag}</b><span class="pill">${thousands(v.k)} kcal</span></div>
       <small>${v.p} g proteína · ${o.min} min${c.oil ? ' · +' + c.oil + ' cda aceite' : ''}</small>
       <ul class="ings">${o.ingredients.map((i, n) => { const off = (c.skip || []).includes(n); return `<li><button class="ing ${off ? 'off' : ''}" data-act="dietIng" data-slot="${slot}" data-i="${n}"><span class="ck2">${off ? '' : '✓'}</span><span>${esc(i)}</span></button></li>`; }).join('')}</ul>
       ${(c.skip || []).length ? `<p class="muted"><small>Sin: ${(c.skip || []).map(n => esc(o.ingredients[n].replace(/\s*\(.*\)$/, ''))).join(', ')}. Kcal y proteína ya descontadas.</small></p>` : ''}
@@ -1776,10 +1795,10 @@
     else if (a === 'toggleR') { openR = openR === t.dataset.id ? null : t.dataset.id; render(); }
     else if (a === 'exinfo') exSheet(t.dataset.ex);
     else if (a === 'dietChoose') {
-      const sl = t.dataset.slot, opt = await pickMeal(sl);
+      const sl = t.dataset.slot, pk = await pickMeal(sl);
       const day = dayDiet();
-      if (!opt || (day[sl] && day[sl].opt === opt)) return;
-      day[sl] = { opt, done: false, oil: 0, skip: [] };
+      if (!pk || (day[sl] && day[sl].opt === pk.opt && (day[sl].size || 'n') === pk.size)) return;
+      day[sl] = { opt: pk.opt, size: pk.size, done: false, oil: 0, skip: [] };
       saveDiet(); render();
     }
     else if (a === 'dietPick') {

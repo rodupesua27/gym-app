@@ -42,20 +42,6 @@ window.DIET = {
       steps: 'Lomo a la sartén sin aceite, 2-3 min por lado a fuego fuerte, hasta que quede dorado. Huevos a la plancha en la misma sartén, 3 min. Monta el bocadillo con la mayonesa y los huevos. Plátano y café con leche aparte.'
     },
     {
-      id: 'd5', slot: 'desayuno', short: 'Bocadillo ligero', name: 'Bocadillo ligero de pavo y huevos (día de comer menos)',
-      min: 8,
-      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', '2 huevos (M y L mezclados)', 'Café con leche'],
-      kc: [379, 20, 172, 75], pr: [11, 4, 15, 4],
-      steps: 'Huevos a la plancha en la sartén (3-4 min). Monta el bocadillo con el pavo y los huevos. Café con leche aparte.'
-    },
-    {
-      id: 'd6', slot: 'desayuno', short: 'Bocadillo reforzado', name: 'Bocadillo reforzado de pavo, 3 huevos y aguacate, con plátano (día de comer más)',
-      min: 10,
-      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', '3 huevos (M y L mezclados)', '½ aguacate', '1 plátano de Canarias', 'Café con leche'],
-      kc: [379, 20, 258, 160, 99, 75], pr: [11, 4, 23, 2, 1, 4],
-      steps: 'Huevos a la plancha en la sartén (4 min). Aplasta el aguacate sobre el pan, añade el pavo y los huevos. Plátano y café con leche aparte.'
-    },
-    {
       id: 'c1', slot: 'comida', short: 'Arroz, pollo y huevos', name: 'Arroz con pollo, huevos y medio aguacate',
       min: 15,
       ingredients: ['75 g de arroz seco (≈190 g cocido)', '200 g de pechuga de pollo Lidl', '2 huevos (M y L mezclados)', '½ aguacate', '½ cucharada de aceite de oliva'],
@@ -76,20 +62,6 @@ window.DIET = {
       ingredients: ['3 tortillas de trigo Tastino (40 g c/u)', '200 g de pechuga de pollo Lidl', '40 g de queso Gouda Milbona', '½ aguacate', '2 cucharadas de mayonesa (30 g)'],
       kc: [144, 206, 151, 160, 184], pr: [4.5, 48, 9, 2, 0],
       steps: 'Pollo en tiras finas en la sartén, 6-8 min. Calienta las tortillas 20 s en el microondas, rellena y enrolla.'
-    },
-    {
-      id: 'c4', slot: 'comida', short: 'Arroz y pollo ligero', name: 'Arroz con pollo y huevos, ligero (día de comer menos)',
-      min: 15,
-      ingredients: ['70 g de arroz seco (≈175 g cocido)', '200 g de pechuga de pollo Lidl', '2 huevos (M y L mezclados)'],
-      kc: [242, 206, 172], pr: [5.3, 48, 15],
-      steps: 'Pollo en tiras finas en la sartén, 6-8 min (sin aceite o con unas gotas). Huevos a la plancha en la misma sartén, 3 min. Arroz en el microondas.'
-    },
-    {
-      id: 'c5', slot: 'comida', short: 'Arroz y pollo reforzado', name: 'Arroz con pollo, huevos y aguacate, reforzado (día de comer más)',
-      min: 15,
-      ingredients: ['100 g de arroz seco (≈250 g cocido)', '200 g de pechuga de pollo Lidl', '2 huevos (M y L mezclados)', '½ aguacate', '1 cucharada de aceite de oliva'],
-      kc: [346, 206, 172, 160, 120], pr: [7.5, 48, 15, 2, 0],
-      steps: 'Pollo en tiras finas en la sartén con el aceite, 6-8 min. Huevos a la plancha, 3 min. Arroz en el microondas. Sirve con el aguacate.'
     },
     {
       id: 'n1', slot: 'cena', short: 'Pasta y ternera', name: 'Pasta con filete de ternera, tomate frito y queso',
@@ -119,20 +91,6 @@ window.DIET = {
       ingredients: ['110 g de pasta seca', '90 g de bacon en tiras', '60 ml de nata para cocinar', '30 g de queso Gouda Milbona rallado'],
       kc: [384, 260, 98, 113], pr: [13.2, 13.7, 1.5, 7],
       steps: 'Pasta en el microondas (tiempo del paquete +2 min). Bacon en la sartén 5-6 min, sin aceite. Añade la nata y caliéntala 2 min, echa el queso y remueve hasta que se funda. Mezcla con la pasta.'
-    },
-    {
-      id: 'n5', slot: 'cena', short: 'Pasta y ternera ligera', name: 'Pasta con filete de ternera y tomate frito, ligera (día de comer menos)',
-      min: 15,
-      ingredients: ['90 g de pasta seca', '200 g de filete de ternera (de carnicería, en tiras)', '100 g de tomate frito Hacendado'],
-      kc: [314, 260, 81], pr: [10.8, 42, 1],
-      steps: 'Pasta en el microondas (tiempo del paquete +2 min). Filete en tiras finas a la sartén 3-4 min, sin aceite. Añade el tomate frito 2 min y mezcla con la pasta.'
-    },
-    {
-      id: 'n6', slot: 'cena', short: 'Pasta y ternera reforzada', name: 'Pasta con filete de ternera, tomate frito y queso, reforzada (día de comer más)',
-      min: 15,
-      ingredients: ['130 g de pasta seca', '250 g de filete de ternera (de carnicería, en tiras)', '100 g de tomate frito Hacendado', '40 g de queso Gouda Milbona'],
-      kc: [454, 325, 81, 151], pr: [15.1, 52.5, 1, 9],
-      steps: 'Pasta en el microondas (tiempo del paquete +2 min). Filete en tiras finas a la sartén 3-4 min, sin aceite. Añade el tomate frito 2 min, mezcla con la pasta y cubre con el queso.'
     }
   ]
 };
@@ -141,3 +99,43 @@ window.DIET.options.forEach(o => {
   o.kcal = o.kc.reduce((a, b) => a + b, 0);
   o.p = o.pr.reduce((a, b) => a + b, 0);
 });
+
+// Tamaños: ligero / normal / reforzado. Se escalan solo los ingredientes principales (pan, arroz, pasta, carne, huevos, queso, aguacate…); café, plátano, aceite, salsas y lonchas se quedan igual.
+window.DIET_SIZES = { l: { name: 'Ligero', f: 0.7 }, n: { name: 'Normal', f: 1 }, r: { name: 'Reforzado', f: 1.25 } };
+(function () {
+  const cache = {};
+  const fmt = q => { const w = Math.floor(q + 1e-9), fr = q - w; const t = fr > 0.6 ? '¾' : fr > 0.4 ? '½' : fr > 0.15 ? '¼' : ''; return (w ? w : '') + (w && t ? ' ' : '') + t || '0'; };
+  window.dietSized = function (o, s) {
+    if (!o || !s || s === 'n') return o;
+    const key = o.id + s;
+    if (cache[key]) return cache[key];
+    const f = window.DIET_SIZES[s].f;
+    const ing = [], kc = [], pr = [];
+    o.ingredients.forEach((t, i) => {
+      const m = /^(½|¼|⅓|\d+(?:[.,]\d+)?)\s+(.*)$/.exec(t);
+      let r = 1, out = t;
+      if (m) {
+        const old = m[1] === '½' ? 0.5 : m[1] === '¼' ? 0.25 : m[1] === '⅓' ? 1 / 3 : parseFloat(m[1].replace(',', '.'));
+        const rest = m[2];
+        let step = 0, min = 0;
+        if (/^g de (?!proteína|cereales)/.test(rest) || /^g de cereales/.test(rest)) step = 5;
+        else if (/^ml de/.test(rest)) step = 10;
+        else if (/^(huevos|tortillas)/.test(rest)) { step = 1; min = 1; }
+        else if (/^aguacate/.test(rest)) { step = 0.25; min = 0.25; }
+        if (step && !/proteína|yogur|plátano/.test(t)) {
+          const nv = Math.max(min || step, Math.round(old * f / step + 1e-9) * step);
+          r = nv / old;
+          const nr = nv === Math.floor(nv) ? String(nv) : fmt(nv);
+          let rr = rest.replace(/≈(\d+) g/, (x, n) => '≈' + Math.round(n * r / 5) * 5 + ' g');
+          if (nv === 1) rr = rr.replace(/^huevos/, 'huevo').replace(/^tortillas/, 'tortilla');
+          out = nr + ' ' + rr;
+        }
+      }
+      ing.push(out); kc.push(o.kc[i] * r); pr.push(o.pr[i] * r);
+    });
+    const x = Object.assign({}, o, { ingredients: ing, kc, pr });
+    x.kcal = kc.reduce((a, b) => a + b, 0);
+    x.p = pr.reduce((a, b) => a + b, 0);
+    return (cache[key] = x);
+  };
+})();

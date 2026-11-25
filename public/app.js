@@ -1442,9 +1442,9 @@
     const meals = D.slots.slice().sort((a, b) => isDone(a) - isDone(b)).map(s => {
       const c = day[s.id];
       const sel = c ? D.options.find(o => o.id === c.opt) : null;
-      return `<div class="dhead"><h2>${esc(s.name)}</h2></div>
+      return `<div class="mslot" data-slot="${s.id}"><div class="dhead"><h2>${esc(s.name)}</h2></div>
         ${sel ? '' : `<button class="btn full accent" data-act="dietChoose" data-slot="${s.id}">Elegir ${esc(s.name.toLowerCase())}</button>`}
-        ${sel ? mealCard(s.id, sel, c) : ''}`;
+        ${sel ? mealCard(s.id, sel, c) : ''}</div>`;
     }).join('');
     return `<h1>Dieta</h1>
       <div class="card" style="cursor:default">
@@ -1790,7 +1790,19 @@
     }
     else if (a === 'dietDone') {
       const c = dayDiet()[t.dataset.slot];
-      if (c) { c.done = !c.done; saveDiet(); render(); }
+      if (c) {
+        // Animación: cada apartado se desliza desde donde estaba hasta su nuevo sitio.
+        const pos = () => { const m = {}; document.querySelectorAll('.mslot').forEach(x => { m[x.dataset.slot] = x.getBoundingClientRect().top; }); return m; };
+        const before = pos();
+        c.done = !c.done; saveDiet(); render();
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelectorAll('.mslot').forEach(x => {
+          const dy = (before[x.dataset.slot] || 0) - x.getBoundingClientRect().top;
+          if (Math.abs(dy) < 2) return;
+          x.style.position = 'relative'; x.style.zIndex = dy < 0 ? '2' : '1';
+          const an = x.animate([{ transform: `translateY(${dy}px)` }, { transform: 'translateY(0)' }], { duration: 480, easing: 'cubic-bezier(.22,.8,.24,1)' });
+          an.onfinish = an.oncancel = () => { x.style.position = ''; x.style.zIndex = ''; };
+        });
+      }
     }
     else if (a === 'dietIng') {
       const c = dayDiet()[t.dataset.slot];

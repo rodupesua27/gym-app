@@ -88,6 +88,7 @@ window.DIET = {
 };
 // Totales por opción: suma de sus ingredientes (los desmarcados se restan en la app).
 window.DIET.options.forEach(o => {
+  o.kc = o.kc.map(Math.round); o.pr = o.pr.map(Math.round);
   o.kcal = o.kc.reduce((a, b) => a + b, 0);
   o.p = o.pr.reduce((a, b) => a + b, 0);
 });
@@ -123,7 +124,7 @@ window.DIET_SIZES = { l: { name: 'Ligero', f: 0.7 }, n: { name: 'Normal', f: 1 }
           out = nr + ' ' + rr;
         }
       }
-      ing.push(out); kc.push(o.kc[i] * r); pr.push(o.pr[i] * r);
+      ing.push(out); kc.push(Math.round(o.kc[i] * r)); pr.push(Math.round(o.pr[i] * r));
     });
     const x = Object.assign({}, o, { ingredients: ing, kc, pr });
     x.kcal = kc.reduce((a, b) => a + b, 0);

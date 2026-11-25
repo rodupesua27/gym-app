@@ -27,11 +27,12 @@ window.DIET = {
       note: 'Sigue algo baja en proteína: compénsalo en la comida y la cena.'
     },
     {
-      id: 'd3', slot: 'desayuno', short: 'Cereales con leche', name: 'Cereales Ultrapop con leche desnatada sin lactosa',
-      min: 2,
-      ingredients: ['30 g de cereales Ultrapop (1 ración, según etiqueta)', '200 ml de leche desnatada sin lactosa (la misma del café)'],
-      kc: [115, 66], pr: [2.6, 7],
-      steps: 'Sin cocinar. Sirve los cereales en un bol y echa la leche fría.'
+      id: 'd3', slot: 'desayuno', short: 'Cereales con leche', name: 'Cereales Ultrapop con leche, proteína y plátano',
+      min: 3,
+      ingredients: ['120 g de cereales Ultrapop (4 raciones, según etiqueta)', '400 ml de leche desnatada sin lactosa (la misma del café)', '20 g de proteína HSN chocolate', '1 plátano de Canarias', 'Café con leche'],
+      kc: [460, 132, 80, 99, 75], pr: [10.4, 14, 15.3, 1, 4],
+      steps: 'Sin cocinar. Cereales en un bol grande, la leche fría y la proteína mezclada con un poco de leche antes de echarla. Plátano y café aparte.',
+      note: 'Sin cocinar y sin hambre: es el desayuno rápido del día de prisas.'
     },
     {
       id: 'd4', slot: 'desayuno', short: 'Bocadillo de lomo', name: 'Bocadillo de lomo de ternera con mayonesa',

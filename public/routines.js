@@ -40,10 +40,10 @@ window.ROUTINES = [
     exercises: [
       { name: 'Extensión de pierna', sets: 5, warmup: 2, reps: '9-12', rest: 90 },
       { name: 'Press de piernas', sets: 4, reps: '8-10', rest: 150 },
-      { name: 'Curl de pierna acostado (máquina)', sets: 5, reps: '8-12', rest: 90 },
+      { name: 'Peso muerto rumano (mancuernas)', sets: 3, reps: '8-12', rest: 120 },
       { name: 'Abducción de cadera (máquina)', sets: 2, reps: '10-12', rest: 75 },
       { name: 'Aducción de cadera (máquina)', sets: 2, reps: '10-12', rest: 75 },
-      { name: 'Empuje de cadera (máquina)', sets: 2, reps: '8-11', rest: 120 },
+      { name: 'Empuje de cadera (máquina)', sets: 3, reps: '8-11', rest: 120 },
       { name: 'Pantorrilla en prensa, puntas hacia fuera', sets: 3, reps: '10-15', rest: 75 },
       { name: 'Pantorrilla en prensa, puntas hacia dentro', sets: 3, reps: '9-15', rest: 75 }
     ]

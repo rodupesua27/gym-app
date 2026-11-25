@@ -94,6 +94,7 @@ window.ROUTINES = [
       { name: 'Remo sentado (máquina)', alt: ["Remo inclinado (barra)"], sets: 4, reps: '9-11', rest: 120 },
       { name: 'Encogimiento de hombros (mancuerna)', sets: 3, reps: '10-12', rest: 90 },
       { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Elevación lateral y frontal con mancuerna"], sets: 3, reps: '12-20', rest: 60 },
+      { name: 'Pájaro en polea (deltoides posterior)', sets: 3, reps: '12-20', rest: 60 },
       { name: 'Curl de bíceps (mancuerna)', sets: 3, reps: '8-10', rest: 75 },
       { name: 'Curl martillo (mancuerna)', sets: 3, reps: '8-12', rest: 75 },
       { name: 'Curl de bíceps inclinado (mancuerna)', sets: 3, reps: '8-12', rest: 75 },

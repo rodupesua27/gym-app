@@ -10,7 +10,7 @@ window.ROUTINES = [
     short: 'Pecho, hombro y tríceps',
     exercises: [
       { name: 'Press de banca inclinado (mancuerna)', alt: ["Aperturas en polea de abajo arriba"], sets: 5, warmup: 2, reps: '7-12', rest: 120 },
-      { name: 'Mariposa (Pec Deck)', sets: 2, reps: '5-15', rest: 90 },
+      { name: 'Mariposa (Pec Deck)', sets: 3, reps: '5-15', rest: 90 },
       { name: 'Cables cruzados (de arriba abajo)', sets: 3, reps: '8-15', rest: 90 },
       { name: 'Elevación frontal con barra (cable)', alt: ["Elevación lateral y frontal con mancuerna", "Rotación externa en polea"], sets: 2, reps: '10', rest: 90 },
       { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Elevación lateral y frontal con mancuerna"], sets: 5, reps: '10-15', rest: 75 },

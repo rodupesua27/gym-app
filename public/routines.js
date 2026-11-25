@@ -92,7 +92,7 @@ window.ROUTINES = [
     name: 'Día 6',
     short: 'Espalda y brazos',
     exercises: [
-      { name: 'Jalón al pecho agarre invertido (cable)', sets: 4, warmup: 2, reps: '8-12', rest: 120 },
+      { name: 'Jalón al pecho agarre invertido (cable)', sets: 6, warmup: 2, reps: '8-12', rest: 120 },
       { name: 'Remo sentado (máquina)', alt: ["Remo inclinado (barra)"], sets: 3, reps: '9-11', rest: 120 },
       { name: 'Encogimiento de hombros (mancuerna)', sets: 2, reps: '10-12', rest: 90 },
       { name: 'Curl de bíceps (mancuerna)', sets: 3, reps: '8-10', rest: 75 },

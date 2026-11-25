@@ -92,7 +92,7 @@ window.ROUTINES = [
     short: 'Espalda y brazos',
     exercises: [
       { name: 'Jalón al pecho agarre invertido (cable)', sets: 4, warmup: 2, reps: '8-12', rest: 120 },
-      { name: 'Remo inclinado (barra)', alt: ["Remo sentado (máquina)"], sets: 3, reps: '8-10', rest: 120 },
+      { name: 'Remo sentado (máquina)', alt: ["Remo inclinado (barra)"], sets: 3, reps: '9-11', rest: 120 },
       { name: 'Encogimiento de hombros (mancuerna)', sets: 2, reps: '10-12', rest: 90 },
       { name: 'Elevación lateral (cable)', alt: ["Elevación lateral sentado en polea", "Elevación lateral y frontal con mancuerna"], sets: 3, reps: '12-20', rest: 60 },
       { name: 'Pájaro en polea (deltoides posterior)', sets: 3, reps: '12-20', rest: 60 },

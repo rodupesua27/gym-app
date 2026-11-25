@@ -14,8 +14,8 @@ window.DIET = {
     {
       id: 'd1', slot: 'desayuno', short: 'Bocadillo', name: 'Bocadillo de pavo y huevos',
       min: 10,
-      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', 'Mantequilla (10 g)', '2 huevos (M y L mezclados)', '1 plátano de Canarias', 'Café con leche'],
-      kc: [379, 20, 75, 172, 99, 75], pr: [11, 4, 0, 15, 1, 4],
+      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', 'Mantequilla (15 g)', '2 huevos (M y L mezclados)', '1 plátano de Canarias', 'Café con leche'],
+      kc: [379, 20, 112, 172, 99, 75], pr: [11, 4, 0, 15, 1, 4],
       steps: 'Huevos a la plancha en la sartén (3-4 min). Monta el bocadillo con mantequilla y pavo. Plátano y café aparte.'
     },
     {
@@ -43,15 +43,15 @@ window.DIET = {
     {
       id: 'c1', slot: 'comida', short: 'Arroz, pollo y huevos', name: 'Arroz con pollo, huevos y medio aguacate',
       min: 15,
-      ingredients: ['70 g de arroz seco (≈175 g cocido)', '200 g de pechuga de pollo Lidl', '2 huevos (M y L mezclados)', '½ aguacate', '½ cucharada de aceite de oliva'],
-      kc: [242, 206, 172, 160, 60], pr: [5.3, 48, 15, 2, 0],
+      ingredients: ['75 g de arroz seco (≈190 g cocido)', '200 g de pechuga de pollo Lidl', '2 huevos (M y L mezclados)', '½ aguacate', '½ cucharada de aceite de oliva'],
+      kc: [260, 206, 172, 160, 60], pr: [5.6, 48, 15, 2, 0],
       steps: 'Pollo en tiras finas en la sartén con aceite, 6-8 min: así queda jugoso y no seco. Huevos revueltos o a la plancha en la misma sartén, 3 min. Arroz en el microondas (bolsa lista o 1 parte de arroz por 2 de agua, 10-12 min).'
     },
     {
       id: 'c2', slot: 'comida', short: 'Pasta y atún', name: 'Pasta con atún y tomate frito',
       min: 12,
-      ingredients: ['100 g de pasta seca', '2 latas de atún Nixe al natural (80 g escurrido c/u)', '100 g de tomate frito Hacendado', '30 g de queso Gouda Milbona', '1 cucharada de aceite de oliva'],
-      kc: [349, 178, 81, 113, 120], pr: [12, 42, 1, 7, 0],
+      ingredients: ['105 g de pasta seca', '2 latas de atún Nixe al natural (80 g escurrido c/u)', '100 g de tomate frito Hacendado', '30 g de queso Gouda Milbona', '1 cucharada de aceite de oliva'],
+      kc: [366, 178, 81, 113, 120], pr: [12.6, 42, 1, 7, 0],
       steps: 'Pasta en el microondas: bol grande, agua cubriéndola y el tiempo del paquete +2 min. Escurre y mezcla con el atún y el tomate frito. Cubre con el queso rallado.',
       note: 'Con atún máximo 1-2 comidas por semana (2-4 latas).'
     },
@@ -65,15 +65,15 @@ window.DIET = {
     {
       id: 'n1', slot: 'cena', short: 'Pasta y ternera', name: 'Pasta con filete de ternera, tomate frito y queso',
       min: 15,
-      ingredients: ['110 g de pasta seca', '200 g de filete de ternera (de carnicería, en tiras)', '100 g de tomate frito Hacendado', '30 g de queso Gouda Milbona', 'Orégano'],
-      kc: [384, 260, 81, 113, 0], pr: [12.8, 42, 1, 7, 0],
+      ingredients: ['115 g de pasta seca', '200 g de filete de ternera (de carnicería, en tiras)', '100 g de tomate frito Hacendado', '30 g de queso Gouda Milbona', 'Orégano'],
+      kc: [401, 260, 81, 113, 0], pr: [13.4, 42, 1, 7, 0],
       steps: 'Pasta en el microondas (tiempo del paquete +2 min). Filete cortado en tiras finas, a la sartén 3-4 min a fuego fuerte (sin aceite, que ya tiene grasa). Añade el tomate frito 2 min. Mezcla con la pasta y cubre con queso.'
     },
     {
       id: 'n2', slot: 'cena', short: 'Bocadillo y tortilla', name: 'Bocadillo de pavo, queso y guacamole, y tortilla de 3 huevos',
       min: 8,
-      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', '20 g de queso Gouda Milbona', 'Guacamole: ⅓ de aguacate, zumo de ½ limón, sal y pimienta', '3 huevos (M y L mezclados)'],
-      kc: [379, 20, 75, 107, 258], pr: [11, 4, 5, 1, 23],
+      ingredients: ['140 g de pan Lidl (bocadillo)', '2 lonchas de pavo Real Valle (25 g)', '25 g de queso Gouda Milbona', 'Guacamole: ⅓ de aguacate, zumo de ½ limón, sal y pimienta', '3 huevos (M y L mezclados)'],
+      kc: [379, 20, 94, 107, 258], pr: [11, 4, 6, 1, 23],
       steps: 'Guacamole: machaca el aguacate con el limón, sal y pimienta (3 min). Tortilla de 3 huevos en la sartén, 4 min. Bocadillo con pavo, queso y guacamole.'
     },
     {

@@ -26,7 +26,7 @@ window.ROUTINES = [
     exercises: [
       { name: 'Jalón al pecho (cable)', sets: 5, warmup: 2, reps: '8-12', rest: 120 },
       { name: 'Remo sentado (máquina)', alt: ["Face pull en polea"], sets: 3, reps: '11-14', rest: 120 },
-      { name: 'Jalón al pecho a un brazo', sets: 3, reps: '9-14', rest: 90 },
+      { name: 'Pullover en polea', sets: 3, reps: '10-15', rest: 90 },
       { name: 'Encogimiento de hombros (mancuerna)', sets: 2, reps: '10-15', rest: 90 },
       { name: 'Curl predicador (máquina)', sets: 3, reps: '6-14', rest: 90 },
       { name: 'Curl martillo (mancuerna)', sets: 3, reps: '10-13', rest: 75 },
